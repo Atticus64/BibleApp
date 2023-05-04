@@ -1,0 +1,4 @@
+
+
+Boolean(window)
+
