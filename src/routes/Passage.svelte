@@ -118,6 +118,16 @@
 		if (book === '') return;
 		hasError = false;
 
+		const r = await fetch(`https://bible-api.deno.dev/api/book/${book}`);
+		const bookInfo = await r.json();
+
+		if (chapters > bookInfo.chapters) {
+			chapters = bookInfo.chapters;
+			if (chapter > chapters) {
+				chapter = 1;
+			}
+		}
+
 		loading = true;
 		const resp = await fetch(
 			`https://bible-api.deno.dev/api/${version === '' ? 'rv1960' : version}/book/${book}/${
