@@ -1,6 +1,10 @@
 <script script>
+	import { onMount } from 'svelte';
+	import { ALERT_TYPES, toastAlert } from './alert';
+
 	let book = 'genesis';
-	//import { toast } from 'wc-toast';
+	//import { toast, SvelteToast } from '@zerodevx/svelte-toast';
+
 	const books = [
 		'Genesis',
 		'Exodo',
@@ -70,6 +74,24 @@
 		'Apocalipsis'
 	];
 
+	let loading = true;
+	let hasError = false;
+	let error = '';
+
+	let data = {
+		chapters: 50,
+		testament: 'Antiguo Testamento',
+		name: 'Genesis',
+		chapter: '',
+		vers: [
+			{
+				study: '',
+				number: 0,
+				verse: ''
+			}
+		]
+	};
+
 	let chapters = 55;
 	let chapter = 0;
 	let versions = [
@@ -94,7 +116,9 @@
 
 	const getData = async () => {
 		if (book === '') return;
+		hasError = false;
 
+		loading = true;
 		const resp = await fetch(
 			`https://bible-api.deno.dev/api/${version === '' ? 'rv1960' : version}/book/${book}/${
 				chapter != 0 ? chapter : '1'
@@ -102,15 +126,25 @@
 		);
 
 		if (!resp.ok) {
-			const error = await resp.json();
+			loading = false;
+			hasError = true;
+			const errorJson = await resp.json();
 
-			if (error.message === 'Not found') {
+			if (errorJson.message === 'Not found') {
+				error = 'Not found';
 			}
+
+			toastAlert('No se pudo cargar el capitulo, coloque un capitulo correcto', ALERT_TYPES.ERROR);
 			return;
 		}
 
+		loading = false;
 		const data = await resp.json();
 		return data;
+	};
+
+	const handleClick = async () => {
+		toastAlert('click', ALERT_TYPES.ERROR);
 	};
 
 	async function handleChange() {
@@ -126,7 +160,7 @@
 	$: {
 		(async () => {
 			if (book !== '' || chapter !== 0 || version !== '') {
-				d = await handleChange();
+				data = await handleChange();
 			}
 		})();
 	}
@@ -138,12 +172,21 @@
 	}
 
 	let count = 0;
-	let d = handleChange();
+
+	onMount(async () => {
+		const resp = await fetch(`https://bible-api.deno.dev/api/rv1960/book/genesis/1`);
+
+		const chapter = await resp.json();
+		loading = false;
+		data = chapter;
+	});
 </script>
 
 <div>
+	<!--<SvelteToast />-->
+	<h1 class="text-6xl">Bible App</h1>
 	<wc-toast />
-	<button on:click={handleChange}>Change</button>
+	<button on:click={handleClick} class="hover:bg-red-700 p-5 bg-blue-600 text-white">Change</button>
 	<select
 		name="book"
 		bind:value={selected}
@@ -172,24 +215,30 @@
 		{/each}
 	</select>
 
-	<div>
-		{#await d}
-			<p>waiting</p>
-		{:then d}
-			<h3>{book.toUpperCase()} {d.chapter}</h3>
-			{#each d.vers as v}
-				{#if v.study}
-					<h4>{v.study}</h4>
-				{/if}
-				<p>
-					<b>
-						{v.number}
-					</b>
-					{v.verse}
-				</p>
-			{/each}
-		{/await}
-	</div>
+	{#if loading}
+		<p>cargando...</p>
+	{/if}
+
+	{#if !loading && !hasError}
+		<div>
+			{#await data}
+				<p>waiting</p>
+			{:then data}
+				<h3>{book.toUpperCase()} {data.chapter}</h3>
+				{#each data.vers as v}
+					{#if v.study}
+						<h4>{v.study}</h4>
+					{/if}
+					<p>
+						<b>
+							{v.number}
+						</b>
+						{v.verse}
+					</p>
+				{/each}
+			{/await}
+		</div>
+	{/if}
 </div>
 
 <style>
