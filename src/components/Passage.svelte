@@ -96,7 +96,7 @@
 	};
 
 	let chapters = 55;
-	let chapter = 0;
+	let chapter = 1;
 	let versions = [
 		{
 			url: 'rv1960',
@@ -116,8 +116,8 @@
 		}
 	];
 	let version = {
-		name: '',
-		url: ''
+		name: 'Reina Valera 1960',
+		url: 'rv1960'
 	};
 
 	const getData = async () => {
@@ -136,9 +136,9 @@
 
 		loading = true;
 		const resp = await fetch(
-			`https://bible-api.deno.dev/api/${version.url === '' ? 'rv1960' : version.url}/book/${book}/${
-				chapter != 0 ? chapter : '1'
-			}`
+			`https://bible-api.deno.dev/api/${
+				version.url === '' ? 'rv1960' : version.url
+			}/book/${book}/${chapter}`
 		);
 
 		if (!resp.ok) {
@@ -159,20 +159,23 @@
 		return data;
 	};
 
-	async function handleChange() {
-		const data = await getData();
-
-		chapters = data.chapters;
-
-		return data;
+	/**
+	 *
+	 * @param {string} book
+	 * @param {number} chapter
+	 * @param {{ name: string }} version
+	 */
+	function handleChange(book, chapter, version) {
+		(async () => {
+			if (book !== '' || chapter !== 0 || version.name !== '') {
+				data = await getData();
+				chapters = data.chapters;
+			}
+		})();
 	}
 
 	$: {
-		(async () => {
-			if (book !== '' || chapter !== 0 || version.name !== '') {
-				data = await handleChange();
-			}
-		})();
+		handleChange(book, chapter, version);
 	}
 
 	function setBook(b = '') {
@@ -224,7 +227,6 @@
 
 	onMount(async () => {
 		const resp = await fetch(`https://bible-api.deno.dev/api/rv1960/book/genesis/1`);
-
 		const chapter = await resp.json();
 		loading = false;
 		data = chapter;
@@ -236,7 +238,7 @@
 	<h1 class="text-6xl">Bible App</h1>
 
 	<wc-toast />
-	<section class="flex flex-row">
+	<section class="flex flex-row menu">
 		<div class="p-2 m-2">
 			<div
 				use:clickOutside
@@ -287,7 +289,7 @@
 					class="cursor-pointer block p-2 rounded ring-1 ring-gray-300 bg-white text-center"
 					on:click={unselectBook}
 				>
-					{book === '' ? 'Choose Book' : book}
+					{book === '' ? 'Choose Book' : formatName(book)}
 				</button>
 
 				{#if selectBook}
@@ -320,7 +322,7 @@
 				<button
 					id="selectBook"
 					type="button"
-					class="flex items-center justify-between rounded bg-white p-2 ring-1 ring-gray-300"
+					class="flex items-center w-[4rem] text-center justify-center rounded bg-white p-2 ring-1 ring-gray-300"
 					on:click={unselectChapter}
 				>
 					{chapter === 0 ? 'Select your chapter' : chapter}
@@ -374,12 +376,12 @@
 
 	{#if !loading && !hasError}
 		<div>
-			<h3>{formatName(book)}: {data.chapter}</h3>
+			<h3 class="text-3xl p-2">{formatName(book)}: {chapter}</h3>
 			{#each data.vers as v}
 				{#if v.study}
-					<h4>{v.study}</h4>
+					<h3 class="text-2xl p-2">{v.study}</h3>
 				{/if}
-				<p>
+				<p class="text-xl">
 					<b>
 						{v.number}
 					</b>
@@ -413,5 +415,16 @@
 	.btn-menu:hover {
 		--tw-bg-opacity: 1;
 		background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+	}
+
+	@media (max-width: 800px) {
+		.menu {
+			flex-direction: column;
+		}
+
+		.btn-menu {
+			width: 55%;
+			margin-top: 1rem;
+		}
 	}
 </style>
