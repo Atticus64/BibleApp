@@ -224,13 +224,6 @@
 		const [l, ...rest] = name;
 		return l.toUpperCase() + rest.join('');
 	}
-
-	onMount(async () => {
-		const resp = await fetch(`https://bible-api.deno.dev/api/rv1960/book/genesis/1`);
-		const chapter = await resp.json();
-		loading = false;
-		data = chapter;
-	});
 </script>
 
 <div>
@@ -238,7 +231,7 @@
 	<h1 class="text-6xl">Bible App</h1>
 
 	<wc-toast />
-	<section class="flex flex-row menu">
+	<section class="flex flex-row menu m-2">
 		<div class="p-2 m-2">
 			<div
 				use:clickOutside
@@ -371,11 +364,13 @@
 	</section>
 
 	{#if loading}
-		<p>cargando...</p>
+		<div class="max-md">
+			<p>cargando capitulo...</p>
+		</div>
 	{/if}
 
 	{#if !loading && !hasError}
-		<div>
+		<div class="max-md">
 			<h3 class="text-3xl p-2">{formatName(book)}: {chapter}</h3>
 			{#each data.vers as v}
 				{#if v.study}
