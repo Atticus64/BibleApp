@@ -19,3 +19,23 @@
 		the devtools network panel and reloading.
 	</p>
 </div>
+<a class="link" href="/">Volver al inicio</a>
+
+<style>
+	.link {
+		width: 19rem;
+		text-align: center;
+		padding: 2rem;
+		color: #fff;
+		margin: 2rem;
+		font-size: 1.5rem;
+		transition: all 0.3s;
+		font-weight: bold;
+		background-color: rgb(36, 148, 239);
+	}
+
+	.link:hover {
+		scale: 110%;
+		background-color: rgb(14, 109, 187);
+	}
+</style>

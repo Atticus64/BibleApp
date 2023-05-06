@@ -5,12 +5,9 @@
 	import { clickOutside } from '../../../../../utils/clickOutside.js';
 	import { goto } from '$app/navigation';
 	import { books, versions } from '../../../../../constants';
+	import Passage from '../../../../../components/Passage.svelte';
 
 	export let data;
-
-	function bar() {
-		window.location.pathname = `verse/${version}/${book}/${chapter}`;
-	}
 
 	let book = data.params.book;
 	let version = data.params.version;
@@ -42,6 +39,7 @@
 	const getData = async () => {
 		if (book === '') return;
 		hasError = false;
+		error = '';
 
 		const r = await fetch(`https://bible-api.deno.dev/api/book/${book}`);
 		const bookInfo = await r.json();
@@ -50,6 +48,7 @@
 			chapters = bookInfo.chapters;
 			if (chapter > chapters) {
 				chapter = 1;
+				goto(`/verse/${version}/${book}/${chapter}`);
 			}
 		}
 
@@ -65,17 +64,16 @@
 			hasError = true;
 			const errorJson = await resp.json();
 
-			if (errorJson.message === 'Not found') {
-				error = 'Not found';
-			}
+			error =
+				'No se encontro el capitulo, intentelo mas tarde o revise que sea correcta su busqueda';
 
 			toastAlert('No se pudo cargar el capitulo, coloque un capitulo correcto', ALERT_TYPES.ERROR);
 			return;
 		}
 
 		loading = false;
-		const info = await resp.json();
-		return info;
+		const chapInfo = await resp.json();
+		return chapInfo;
 	};
 
 	/**
@@ -303,23 +301,26 @@
 		</div>
 	{/if}
 
-	{#if !loading && !hasError}
+	{#if !loading && !hasError && info}
 		<div class="max-md">
 			<h3 class="text-3xl p-2">{formatName(book)}: {chapter}</h3>
-			{#each info.vers as v}
-				{#if v.study}
-					<h3 class="text-2xl p-2">{v.study}</h3>
-				{/if}
-				<p class="text-xl">
-					<b>
-						{v.number}
-					</b>
-					{v.verse}
-				</p>
-			{/each}
+			<Passage {info} />
 		</div>
 	{/if}
 </div>
+
+{#if hasError}
+	<div>
+		<h4><b> Ha ocurrido un error </b></h4>
+		<p>
+			{error}
+		</p>
+		<img
+			src="https://media.istockphoto.com/id/924949200/vector/404-error-page-or-file-not-found-icon.jpg?s=170667a&w=0&k=20&c=gsR5TEhp1tfg-qj1DAYdghj9NfM0ldfNEMJUfAzHGtU="
+			alt=""
+		/>
+	</div>
+{/if}
 
 <style>
 	:root {
