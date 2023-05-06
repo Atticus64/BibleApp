@@ -1,10 +1,18 @@
-<script script>
+<script>
+	/** @type {import('./$types').PageData} */
 	import { onMount } from 'svelte';
-	import { ALERT_TYPES, toastAlert } from '../routes/alert';
-	import { clickOutside } from '../utils/clickOutside.js';
-	import { books, versions } from '../constants';
+	import { ALERT_TYPES, toastAlert } from '../../../../alert';
+	import { clickOutside } from '../../../../../utils/clickOutside.js';
+	import { books, versions } from '../../../../../constants';
 
-	let book = 'genesis';
+	export let data;
+
+	function bar() {
+		window.location.pathname = `verse/${version}/${book}/${chapter}`;
+	}
+
+	let book = data.params.book;
+	let version = data.params.version;
 
 	let loading = true;
 	let hasError = false;
@@ -13,7 +21,7 @@
 	let selectChapter = false;
 	let selectVersion = false;
 
-	let data = {
+	let info = {
 		chapters: 50,
 		testament: 'Antiguo Testamento',
 		name: 'Genesis',
@@ -28,12 +36,7 @@
 	};
 
 	let chapters = 55;
-	let chapter = 1;
-
-	let version = {
-		name: 'Reina Valera 1960',
-		url: 'rv1960'
-	};
+	let chapter = Number(data.params.chapter);
 
 	const getData = async () => {
 		if (book === '') return;
@@ -52,7 +55,7 @@
 		loading = true;
 		const resp = await fetch(
 			`https://bible-api.deno.dev/api/${
-				version.url === '' ? 'rv1960' : version.url
+				version === '' ? 'rv1960' : version
 			}/book/${book}/${chapter}`
 		);
 
@@ -70,23 +73,23 @@
 		}
 
 		loading = false;
-		const data = await resp.json();
-		return data;
+		const info = await resp.json();
+		return info;
 	};
 
 	/**
 	 *
 	 * @param {string} book
 	 * @param {number} chapter
-	 * @param {{ name: string }} version
+	 * @param {string} version
 	 */
 	function handleChange(book, chapter, version) {
-		(async () => {
-			if (book !== '' || chapter !== 0 || version.name !== '') {
-				data = await getData();
-				chapters = data.chapters;
-			}
-		})();
+		//(async () => {
+		//	if (book !== '' || chapter !== 0 || version !== '') {
+		//		info = await getData();
+		//		chapters = info.chapters;
+		//	}
+		//})();
 	}
 
 	$: {
@@ -96,16 +99,19 @@
 	function setBook(b = '') {
 		book = b;
 		selectBook = false;
+		window.location.pathname = `/verse/${version}/${book}/${chapter}`;
 	}
 
-	function setVersion(v = { name: '', url: '' }) {
+	function setVersion(v = '') {
 		version = v;
 		selectVersion = false;
+		window.location.pathname = `/verse/${version}/${book}/${chapter}`;
 	}
 
 	function setChapter(c = 0) {
 		chapter = c;
 		selectChapter = false;
+		window.location.pathname = `/verse/${version}/${book}/${chapter}`;
 	}
 
 	function unselectBook() {
@@ -139,6 +145,11 @@
 		const [l, ...rest] = name;
 		return l.toUpperCase() + rest.join('');
 	}
+
+	onMount(async () => {
+		info = await getData();
+		chapters = info.chapters;
+	});
 </script>
 
 <div>
@@ -161,7 +172,7 @@
 					class="flex items-center justify-between rounded p-2 bg-white ring-1 ring-gray-300"
 					on:click={unselectVersion}
 				>
-					{version.name === '' ? 'Select your version' : version.name}
+					{version === '' ? 'Select your version' : version}
 				</button>
 
 				{#if selectVersion}
@@ -172,7 +183,7 @@
 							<button
 								class="cursor-pointer select-none p-2 hover:bg-gray-200"
 								on:click={() => {
-									setVersion(v);
+									setVersion(v.url);
 								}}
 							>
 								{v.name}
@@ -262,7 +273,7 @@
 					toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
 					return;
 				}
-				chapter -= 1;
+				setChapter((chapter -= 1));
 			}}>Capitulo anterior</button
 		>
 
@@ -273,7 +284,7 @@
 					toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
 					return;
 				}
-				chapter += 1;
+				setChapter((chapter += 1));
 			}}>Siguiente capitulo</button
 		>
 	</section>
@@ -287,7 +298,7 @@
 	{#if !loading && !hasError}
 		<div class="max-md">
 			<h3 class="text-3xl p-2">{formatName(book)}: {chapter}</h3>
-			{#each data.vers as v}
+			{#each info.vers as v}
 				{#if v.study}
 					<h3 class="text-2xl p-2">{v.study}</h3>
 				{/if}
