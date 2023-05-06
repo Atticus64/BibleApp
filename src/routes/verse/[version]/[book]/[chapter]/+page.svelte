@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { ALERT_TYPES, toastAlert } from '../../../../alert';
 	import { clickOutside } from '../../../../../utils/clickOutside.js';
+	import { goto } from '$app/navigation';
 	import { books, versions } from '../../../../../constants';
 
 	export let data;
@@ -83,49 +84,56 @@
 	 * @param {number} chapter
 	 * @param {string} version
 	 */
-	function handleChange(book, chapter, version) {
-		//(async () => {
-		//	if (book !== '' || chapter !== 0 || version !== '') {
-		//		info = await getData();
-		//		chapters = info.chapters;
-		//	}
-		//})();
+	async function handleChange(book, chapter, version) {
+		goto(`/verse/${version}/${book}/${chapter}`);
+		info = await getData();
 	}
 
-	$: {
-		handleChange(book, chapter, version);
+	/**
+	 * @param {string|number} value
+	 * @param {"version"|"book"|"chapter"} prop
+	 */
+	function updateData(value, prop) {
+		switch (prop) {
+			case 'version':
+				if (typeof value === 'string') {
+					version = value;
+					selectVersion = false;
+				}
+				break;
+			case 'book':
+				if (typeof value === 'string') {
+					book = value;
+					selectBook = false;
+				}
+				break;
+			case 'chapter':
+				if (typeof value === 'number') {
+					chapter = value;
+					selectChapter = false;
+				}
+				break;
+		}
+		handleChange(book, chapter, version).then();
 	}
 
-	function setBook(b = '') {
-		book = b;
-		selectBook = false;
-		window.location.pathname = `/verse/${version}/${book}/${chapter}`;
+	/**
+	 *
+	 * @param {"book"|"chapter"|"version"} selector
+	 */
+	function unSelect(selector) {
+		switch (selector) {
+			case 'book':
+				selectBook = !selectBook;
+				break;
+			case 'chapter':
+				selectChapter = !selectChapter;
+				break;
+			case 'version':
+				selectVersion = !selectVersion;
+				break;
+		}
 	}
-
-	function setVersion(v = '') {
-		version = v;
-		selectVersion = false;
-		window.location.pathname = `/verse/${version}/${book}/${chapter}`;
-	}
-
-	function setChapter(c = 0) {
-		chapter = c;
-		selectChapter = false;
-		window.location.pathname = `/verse/${version}/${book}/${chapter}`;
-	}
-
-	function unselectBook() {
-		selectBook = !selectBook;
-	}
-
-	function unselectChapter() {
-		selectChapter = !selectChapter;
-	}
-
-	function unselectVersion() {
-		selectVersion = !selectVersion;
-	}
-
 	/**
 	 *
 	 * @param {string} name
@@ -135,15 +143,15 @@
 			const words = name.split('-');
 			const acc = [];
 			for (const w of words) {
-				const [l, ...rest] = w;
-				const newName = l.toUpperCase() + rest.join('');
+				const [firstLetter, ...rest] = w;
+				const newName = firstLetter.toUpperCase() + rest.join('');
 				acc.push(newName);
 			}
 			return acc.join(' ');
 		}
 
-		const [l, ...rest] = name;
-		return l.toUpperCase() + rest.join('');
+		const [firstLetter, ...rest] = name;
+		return firstLetter.toUpperCase() + rest.join('');
 	}
 
 	onMount(async () => {
@@ -170,7 +178,7 @@
 					id="selectBook"
 					type="button"
 					class="flex items-center justify-between rounded p-2 bg-white ring-1 ring-gray-300"
-					on:click={unselectVersion}
+					on:click={() => unSelect('version')}
 				>
 					{version === '' ? 'Select your version' : version}
 				</button>
@@ -183,7 +191,7 @@
 							<button
 								class="cursor-pointer select-none p-2 hover:bg-gray-200"
 								on:click={() => {
-									setVersion(v.url);
+									updateData(v.url, 'version');
 								}}
 							>
 								{v.name}
@@ -206,7 +214,7 @@
 					id="selectBook"
 					type="button"
 					class="cursor-pointer block p-2 rounded ring-1 ring-gray-300 bg-white text-center"
-					on:click={unselectBook}
+					on:click={() => unSelect('book')}
 				>
 					{book === '' ? 'Choose Book' : formatName(book)}
 				</button>
@@ -215,14 +223,14 @@
 					<ul
 						class="h-[20rem] absolute overflow-auto flex flex-col list rounded bg-gray-50 ring-1 ring-gray-300"
 					>
-						{#each books as book}
+						{#each books as b}
 							<button
 								class="select-none p-2 hover:bg-gray-200"
 								on:click={() => {
-									setBook(book.toLowerCase());
+									updateData(b.toLowerCase(), 'book');
 								}}
 							>
-								{book}
+								{b}
 							</button>
 						{/each}
 					</ul>
@@ -242,7 +250,7 @@
 					id="selectBook"
 					type="button"
 					class="flex items-center w-[4rem] text-center justify-center rounded bg-white p-2 ring-1 ring-gray-300"
-					on:click={unselectChapter}
+					on:click={() => unSelect('chapter')}
 				>
 					{chapter === 0 ? 'Select your chapter' : chapter}
 				</button>
@@ -255,7 +263,7 @@
 							<button
 								class="cursor-pointer w-[5rem] select-none p-2 hover:bg-gray-200"
 								on:click={() => {
-									setChapter(c + 1);
+									updateData(c + 1, 'chapter');
 								}}
 							>
 								{c + 1}
@@ -273,7 +281,7 @@
 					toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
 					return;
 				}
-				setChapter((chapter -= 1));
+				updateData((chapter -= 1), 'chapter');
 			}}>Capitulo anterior</button
 		>
 
@@ -284,14 +292,14 @@
 					toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
 					return;
 				}
-				setChapter((chapter += 1));
+				updateData((chapter += 1), 'chapter');
 			}}>Siguiente capitulo</button
 		>
 	</section>
 
 	{#if loading}
 		<div class="max-md">
-			<p>cargando capitulo...</p>
+			<div class="loader" />
 		</div>
 	{/if}
 
@@ -314,6 +322,40 @@
 </div>
 
 <style>
+	:root {
+		--load-color: #e37b4f;
+	}
+
+	.loader {
+		width: 48px;
+		height: 48px;
+		display: inline-block;
+		position: relative;
+		border: 3px solid;
+		border-color: #0090de #0000 var(--load-color) #0000;
+		border-radius: 50%;
+		box-sizing: border-box;
+		animation: 1s rotate linear infinite;
+	}
+	.loader:before,
+	.loader:after {
+		content: '';
+		top: 0;
+		left: 0;
+		position: absolute;
+		border: 10px solid transparent;
+		border-bottom-color: var(--load-color);
+		transform: translate(-10px, 19px) rotate(-35deg);
+	}
+	.loader:after {
+		border-color: #0090de #0000 #0000;
+		transform: translate(32px, 3px) rotate(-35deg);
+	}
+	@keyframes rotate {
+		100% {
+			transform: rotate(360deg);
+		}
+	}
 	input:focus,
 	textarea:focus,
 	select:focus {
