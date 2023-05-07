@@ -159,7 +159,8 @@
 <style>
 	header {
 		display: flex;
-		height: 10rem;
+		height: 3rem;
+		padding: 2rem;
 		font-size: larger;
 		font-weight: bold;
 		justify-content: space-evenly;
@@ -217,7 +218,6 @@
 
 	nav a {
 		display: flex;
-		height: 100%;
 		align-items: center;
 		padding: 0 0.5rem;
 		color: var(--color-text);
