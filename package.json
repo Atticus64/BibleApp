@@ -30,6 +30,7 @@
 		"vite": "^4.3.0"
 	},
 	"dependencies": {
+		"@fontsource/montserrat": "^4.5.14",
 		"wc-toast": "^1.2.3"
 	},
 	"type": "module"

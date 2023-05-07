@@ -1,4 +1,4 @@
-@import '@fontsource/fira-mono';
+@import '@fontsource/montserrat';
 
 @tailwind base;
 @tailwind components;
@@ -16,7 +16,15 @@
 body {
 	min-height: 100vh;
 	margin: 0;
+	font-family: 'Montserrat', sans-serif;
 }
+
+/*@font-face {
+	font-family: 'Mona Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/static/fonts/Mona-Sans.ttf') format('ttf');
+}*/
 
 h1,
 h2,

@@ -48,7 +48,7 @@
 			chapters = bookInfo.chapters;
 			if (chapter > chapters) {
 				chapter = 1;
-				goto(`/verse/${version}/${book}/${chapter}`);
+				goto(`/chapter/${version}/${book}/${chapter}`);
 			}
 		}
 
@@ -83,7 +83,7 @@
 	 * @param {string} version
 	 */
 	async function handleChange(book, chapter, version) {
-		goto(`/verse/${version}/${book}/${chapter}`);
+		goto(`/chapter/${version}/${book}/${chapter}`);
 		info = await getData();
 	}
 
@@ -160,10 +160,9 @@
 
 <div>
 	<!--<SvelteToast />-->
-	<h1 class="text-6xl">Bible App</h1>
 
 	<wc-toast />
-	<section class="flex flex-row menu m-2">
+	<section class="grid menu m-2">
 		<div class="p-2 m-2">
 			<div
 				use:clickOutside
@@ -175,7 +174,7 @@
 				<button
 					id="selectBook"
 					type="button"
-					class="flex items-center justify-between rounded p-2 bg-white ring-1 ring-gray-300"
+					class="select flex items-center justify-between rounded p-2 bg-white ring-1 ring-gray-300"
 					on:click={() => unSelect('version')}
 				>
 					{version === '' ? 'Select your version' : version}
@@ -211,7 +210,7 @@
 				<button
 					id="selectBook"
 					type="button"
-					class="cursor-pointer block p-2 rounded ring-1 ring-gray-300 bg-white text-center"
+					class="select cursor-pointer block p-2 rounded ring-1 ring-gray-300 bg-white text-center"
 					on:click={() => unSelect('book')}
 				>
 					{book === '' ? 'Choose Book' : formatName(book)}
@@ -247,7 +246,7 @@
 				<button
 					id="selectBook"
 					type="button"
-					class="flex items-center w-[4rem] text-center justify-center rounded bg-white p-2 ring-1 ring-gray-300"
+					class="select flex items-center w-[4rem] text-center justify-center rounded bg-white p-2 ring-1 ring-gray-300"
 					on:click={() => unSelect('chapter')}
 				>
 					{chapter === 0 ? 'Select your chapter' : chapter}
@@ -327,6 +326,10 @@
 		--load-color: #e37b4f;
 	}
 
+	.menu {
+		grid-template-columns: repeat(5, 1fr);
+	}
+
 	.loader {
 		width: 48px;
 		height: 48px;
@@ -357,33 +360,42 @@
 			transform: rotate(360deg);
 		}
 	}
-	input:focus,
-	textarea:focus,
-	select:focus {
-		outline: none;
-	}
 
 	.list {
 		width: min-content;
 	}
 
+	:root {
+		--blue-bg: #7ecffb;
+		--green-bg: #c5ecdd;
+	}
+
 	.btn-menu {
-		padding: 1rem;
 		height: 4rem;
 		margin-left: 1rem;
 		margin-right: 1rem;
 		margin-top: 1rem;
-		border: 1px solid #cecece;
+		background-color: var(--blue-bg);
+		transition: all 0.3s;
+	}
+
+	.select {
+		background-color: var(--green-bg);
+		transition: all 0.4s;
+	}
+
+	.select:hover {
+		box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
 	}
 
 	.btn-menu:hover {
 		--tw-bg-opacity: 1;
-		background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+		scale: 115%;
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 860px) {
 		.menu {
-			flex-direction: column;
+			grid-template-columns: repeat(2, 1fr);
 		}
 
 		.btn-menu {

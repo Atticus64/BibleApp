@@ -18,10 +18,16 @@
 	{#if v.study}
 		<h3 class="text-2xl p-2">{v.study}</h3>
 	{/if}
-	<p class="text-xl">
+	<p class="text-xl verse">
 		<b>
 			{v.number}
 		</b>
 		{v.verse}
 	</p>
 {/each}
+
+<style>
+	.verse {
+		max-width: 75ch;
+	}
+</style>
