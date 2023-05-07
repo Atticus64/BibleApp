@@ -40,8 +40,8 @@
 	.link {
 		width: 19rem;
 		text-align: center;
-		height: 5rem;
 		padding: 1rem;
+		border-radius: 1rem;
 		color: #000;
 		margin: 2rem;
 		font-size: 1.2rem;
