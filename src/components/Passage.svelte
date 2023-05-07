@@ -30,4 +30,14 @@
 	.verse {
 		max-width: 75ch;
 	}
+
+	.verse {
+		font-size: large;
+	}
+
+	@media (max-width: 800px) {
+		.verse {
+			font-size: medium;
+		}
+	}
 </style>

@@ -5,7 +5,9 @@
 
 <div class="text-column grid gap-2 questions">
 	<div>
-		<h2 class="text-3xl font-bold p-2">¿Que versiones de la Biblia contiene la aplicación?</h2>
+		<h2 class="text-3xl font-bold p-2 question">
+			¿Que versiones de la Biblia contiene la aplicación?
+		</h2>
 		<div class="text-2xl">
 			<p>La aplicación contiene las versiones:</p>
 			<ul>
@@ -15,7 +17,7 @@
 				<li>Dios Habla Hoy</li>
 			</ul>
 		</div>
-		<h2 class="text-3xl font-bold p-2">¿La informacion proviene de una API?</h2>
+		<h2 class="text-3xl font-bold p-2 question">¿La informacion proviene de una API?</h2>
 		<div class="text-2xl">
 			<p>
 				Si utilizo una API que desarrolle, se llama BibleApi que es open-source y cualquiera la
@@ -38,7 +40,7 @@
 		</div>
 	</div>
 	<div>
-		<h2 class="text-3xl p-2 font-bold">¿Tienes algun problema con la aplicación?</h2>
+		<h2 class="text-3xl p-2 font-bold question">¿Tienes algun problema con la aplicación?</h2>
 		<div class="text-2xl">
 			<p>
 				Comunicate al correo
@@ -78,6 +80,14 @@
 	@media (max-width: 800px) {
 		.questions {
 			grid-template-columns: repeat(1, 1fr);
+		}
+
+		p {
+			font-size: medium;
+		}
+
+		.question {
+			font-size: x-large;
 		}
 	}
 </style>

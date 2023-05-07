@@ -8,7 +8,7 @@
 
 <main class="flex items-center land-menu">
 	<div class="flex flex-col">
-		<h3 class="text-4xl p-2 phrase">
+		<h3 class="p-2 phrase">
 			La aplicacion para <b class="study">Estudiar</b> y <b class="read">Leer</b> la Biblia que esperabas
 		</h3>
 		<div class="flex">
@@ -38,6 +38,18 @@
 
 	.btn-faq {
 		background-color: var(--green-bg);
+	}
+
+	.phrase {
+		font-size: xx-large;
+	}
+
+	.study {
+		font-size: xx-large;
+	}
+
+	.read {
+		font-size: xx-large;
 	}
 
 	.btn-faq:hover {
@@ -77,16 +89,20 @@
 	}
 
 	@media (max-width: 900px) {
-		.landing {
-			flex-direction: column;
-		}
-
 		.land-menu {
 			flex-direction: column;
 		}
 
 		.phrase {
-			font-size: xx-large;
+			font-size: x-large;
+		}
+
+		.study {
+			font-size: x-large;
+		}
+
+		.read {
+			font-size: x-large;
 		}
 
 		img {

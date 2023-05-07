@@ -328,6 +328,10 @@
 		justify-content: center;
 	}
 
+	a {
+		gap: 5px;
+	}
+
 	ul {
 		position: relative;
 		padding: 0;
