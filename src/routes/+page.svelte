@@ -6,9 +6,16 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<main class="flex flex-row align-middle justify-center items-center landing">
-	<a class="link btn-study" href="/chapter/rv1960/genesis/1">Estudiar la Biblia</a>
-	<a class="link btn-faq" href="/about">Preguntas frecuentes</a>
+<main class="flex items-center land-menu">
+	<div class="flex flex-col">
+		<h3 class="text-4xl p-2 phrase">
+			La aplicacion para <b class="study">Estudiar</b> y <b class="read">Leer</b> la Biblia que esperabas
+		</h3>
+		<div class="flex">
+			<a class="link btn-study" href="/chapter/rv1960/genesis/1">Estudiar la Biblia</a>
+			<a class="link btn-faq" href="/about">Preguntas frecuentes</a>
+		</div>
+	</div>
 	<img
 		src="https://cdni.iconscout.com/illustration/premium/thumb/online-study-2710520-2261196.png"
 		alt="study img"
@@ -37,6 +44,18 @@
 		background-color: #2ddb98;
 	}
 
+	.read {
+		background: linear-gradient(120deg, #1d9bf0, #8ecdf7);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.study {
+		background: linear-gradient(120deg, var(--green-bg), #2ddb98);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
 	.link {
 		width: 19rem;
 		text-align: center;
@@ -57,9 +76,17 @@
 		width: 50%;
 	}
 
-	@media (max-width: 600px) {
+	@media (max-width: 900px) {
 		.landing {
 			flex-direction: column;
+		}
+
+		.land-menu {
+			flex-direction: column;
+		}
+
+		.phrase {
+			font-size: xx-large;
 		}
 
 		img {
