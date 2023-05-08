@@ -1,24 +1,26 @@
 <script>
-	import { fade } from 'svelte/transition';
+	import { fade } from 'svelte/transition'
 	import {
 		MenuIcon,
 		LoginIcon,
 		SearchIcon,
 		BookOpenIcon,
 		NoteIcon,
-		QuestionMarkIcon
-	} from '../icons';
-	import Link from '../Link.svelte';
-	import Logo from '../Logo.svelte';
+		QuestionMarkIcon,
+	} from '../icons'
+	import Link from '../Link.svelte'
+	import Logo from '../Logo.svelte'
 
-	let mobileMenu = false;
+	let mobileMenu = false
 	function handleClick() {
-		mobileMenu = !mobileMenu;
+		mobileMenu = !mobileMenu
 	}
 </script>
 
-<header class="h-20">
-	<div class="h-full flex items-center justify-between px-3 max-w-screen-lg mx-auto">
+<header class="h-20 sticky top-0 bg-white">
+	<div
+		class="h-full flex items-center justify-between px-3 max-w-screen-lg mx-auto"
+	>
 		<Logo />
 
 		<div class="flex items-center gap-4 sm:hidden">
@@ -54,7 +56,10 @@
 </header>
 
 {#if mobileMenu}
-	<nav transition:fade={{ duration: 400 }} class="flex flex-col gap-4 items-center sm:hidden">
+	<nav
+		transition:fade={{ duration: 400 }}
+		class="sticky top-14 bg-[#c5dbce] py-2 flex flex-col gap-4 items-center sm:hidden"
+	>
 		<Link href="/search" text="Search">
 			<SearchIcon />
 		</Link>
