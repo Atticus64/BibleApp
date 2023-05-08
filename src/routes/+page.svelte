@@ -1,11 +1,15 @@
 <script>
+	import { page } from '$app/stores';
 	import Button from '../components/Button.svelte';
 	import headerImage from './../assets/headerImage.png';
+
+	let url = $page.url.toString() + 'src/assets/bible.jpg';
 </script>
 
 <svelte:head>
 	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<meta name="description" content="Aplicacion de la Biblia para leer y estudiar" />
+	<meta property="og:image" content={url} />
 </svelte:head>
 
 <div class="flex flex-col sm:flex-row items-center h-[100%] p-0 sm:p-6">
