@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { books, versions } from '../../../../../constants';
 	import Passage from '../../../../../components/Passage.svelte';
+	import Button from '../../../../../components/Button.svelte';
 
 	export let data;
 
@@ -159,26 +160,14 @@
 </script>
 
 <div>
-	<!--<SvelteToast />-->
-
 	<wc-toast />
-	<section class="grid menu m-2">
-		<div class="p-2 m-2">
-			<div
-				use:clickOutside
-				on:click_outside={() => {
-					selectVersion = false;
-				}}
-			>
+	<section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-12">
+		<div class="flex items-center gap-3 flex-1">
+			<div use:clickOutside on:click_outside={() => (selectVersion = false)} class="flex-1">
 				<h4>Version</h4>
-				<button
-					id="selectBook"
-					type="button"
-					class="select flex items-center justify-between rounded p-2 bg-white ring-1 ring-gray-300"
-					on:click={() => unSelect('version')}
-				>
+				<Button color="green" id="selectBook" on:click={() => unSelect('version')}>
 					{version === '' ? 'Select your version' : version}
-				</button>
+				</Button>
 
 				{#if selectVersion}
 					<ul
@@ -197,24 +186,12 @@
 					</ul>
 				{/if}
 			</div>
-		</div>
 
-		<div class="p-2 m-2">
-			<div
-				use:clickOutside
-				on:click_outside={() => {
-					selectBook = false;
-				}}
-			>
+			<div use:clickOutside on:click_outside={() => (selectBook = false)} class="flex-1">
 				<h4>Book</h4>
-				<button
-					id="selectBook"
-					type="button"
-					class="select cursor-pointer block p-2 rounded ring-1 ring-gray-300 bg-white text-center"
-					on:click={() => unSelect('book')}
-				>
+				<Button id="selectBook" on:click={() => unSelect('book')} color="green">
 					{book === '' ? 'Choose Book' : formatName(book)}
-				</button>
+				</Button>
 
 				{#if selectBook}
 					<ul
@@ -233,24 +210,12 @@
 					</ul>
 				{/if}
 			</div>
-		</div>
 
-		<div class="p-2 m-2">
-			<div
-				use:clickOutside
-				on:click_outside={() => {
-					selectChapter = false;
-				}}
-			>
+			<div use:clickOutside on:click_outside={() => (selectChapter = false)} class="flex-1">
 				<h4>Chapter</h4>
-				<button
-					id="selectBook"
-					type="button"
-					class="select flex items-center w-[4rem] text-center justify-center rounded bg-white p-2 ring-1 ring-gray-300"
-					on:click={() => unSelect('chapter')}
-				>
+				<Button id="selectBook" on:click={() => unSelect('chapter')} color="green">
 					{chapter === 0 ? 'Select your chapter' : chapter}
-				</button>
+				</Button>
 
 				{#if selectChapter}
 					<ul
@@ -271,27 +236,33 @@
 			</div>
 		</div>
 
-		<button
-			class="btn-menu"
-			on:click={() => {
-				if (chapter - 1 <= 0) {
-					toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
-					return;
-				}
-				updateData((chapter -= 1), 'chapter');
-			}}>Capitulo anterior</button
-		>
+		<div class="flex-1 flex items-center sm:self-end gap-4">
+			<Button
+				on:click={() => {
+					if (chapter - 1 <= 0) {
+						toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
+						return;
+					}
+					updateData((chapter -= 1), 'chapter');
+				}}
+				color="blue"
+			>
+				Capitulo anterior
+			</Button>
 
-		<button
-			class="btn-menu"
-			on:click={() => {
-				if (chapter + 1 > chapters) {
-					toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
-					return;
-				}
-				updateData((chapter += 1), 'chapter');
-			}}>Siguiente capitulo</button
-		>
+			<Button
+				on:click={() => {
+					if (chapter + 1 > chapters) {
+						toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
+						return;
+					}
+					updateData((chapter += 1), 'chapter');
+				}}
+				color="blue"
+			>
+				Siguiente capitulo
+			</Button>
+		</div>
 	</section>
 
 	{#if loading}
@@ -324,10 +295,6 @@
 <style>
 	:root {
 		--load-color: #e37b4f;
-	}
-
-	.menu {
-		grid-template-columns: repeat(5, 1fr);
 	}
 
 	.loader {
@@ -368,39 +335,5 @@
 	:root {
 		--blue-bg: #7ecffb;
 		--green-bg: #c5ecdd;
-	}
-
-	.btn-menu {
-		height: 4rem;
-		margin-left: 1rem;
-		margin-right: 1rem;
-		margin-top: 1rem;
-		background-color: var(--blue-bg);
-		transition: all 0.3s;
-	}
-
-	.select {
-		background-color: var(--green-bg);
-		transition: all 0.4s;
-	}
-
-	.select:hover {
-		box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
-	}
-
-	.btn-menu:hover {
-		--tw-bg-opacity: 1;
-		scale: 115%;
-	}
-
-	@media (max-width: 860px) {
-		.menu {
-			grid-template-columns: repeat(2, 1fr);
-		}
-
-		.btn-menu {
-			width: 55%;
-			margin-top: 1rem;
-		}
 	}
 </style>

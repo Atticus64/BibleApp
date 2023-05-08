@@ -1,5 +1,6 @@
 <script>
-	import headerImage from './../assets/headerImage.png'
+	import Button from '../components/Button.svelte';
+	import headerImage from './../assets/headerImage.png';
 </script>
 
 <svelte:head>
@@ -18,19 +19,16 @@
 		</h3>
 
 		<div class="flex items-center gap-10 text-xl font-bold py-6 px-2">
-			<a
+			<Button
 				href="/chapter/rv1960/genesis/1"
-				class="flex justify-center items-center rounded-[10px] w-[100%] h-[50px] bg-blue-500 hover:scale-110 hover:bg-blue-700 transition text-center"
+				color="blue"
+				className="hover:scale-105 transition-transform"
 			>
-				Estudiar la Biblia</a
-			>
-
-			<a
-				class="flex justify-center items-center rounded-[10px] w-[100%] h-[50px] bg-teal-200 hover:scale-110 hover:bg-teal-400 transition text-center"
-				href="/about"
-			>
-				Preguntas frecuentes</a
-			>
+				Estudiar la Biblia
+			</Button>
+			<Button href="/about" className="hover:scale-105 transition-transform">
+				Preguntas frecuentes
+			</Button>
 		</div>
 	</div>
 
