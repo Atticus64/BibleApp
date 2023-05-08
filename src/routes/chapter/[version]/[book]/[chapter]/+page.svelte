@@ -84,6 +84,14 @@
 	 * @param {string} version
 	 */
 	async function handleChange(book, chapter, version) {
+		localStorage.setItem(
+			'bookmark',
+			JSON.stringify({
+				version,
+				chapter,
+				book
+			})
+		);
 		goto(`/chapter/${version}/${book}/${chapter}`);
 		info = await getData();
 	}
@@ -154,6 +162,16 @@
 	}
 
 	onMount(async () => {
+		const bkString = localStorage.getItem('bookmark');
+
+		if (bkString) {
+			const bkmark = JSON.parse(bkString);
+
+			book = bkmark.book;
+			version = bkmark.version;
+			chapter = bkmark.chapter;
+		}
+
 		info = await getData();
 		chapters = info.chapters;
 	});
