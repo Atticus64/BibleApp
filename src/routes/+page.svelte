@@ -18,15 +18,15 @@
 			la Biblia que esperabas
 		</h3>
 
-		<div class="flex items-center gap-10 text-xl font-bold py-6 px-2">
+		<div class="flex items-center gap-10 text-xl font-bold py-6">
 			<Button
 				href="/chapter/rv1960/genesis/1"
 				color="blue"
-				className="hover:scale-105 transition-transform"
+				className="hover:scale-105 transition-transform p-8"
 			>
 				Estudiar la Biblia
 			</Button>
-			<Button href="/about" className="hover:scale-105 transition-transform">
+			<Button href="/about" className="hover:scale-105 transition-transform p-8">
 				Preguntas frecuentes
 			</Button>
 		</div>
