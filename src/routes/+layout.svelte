@@ -6,13 +6,11 @@
 <div class="flex flex-col justify-between max-w-[100vw] min-h-[100vh]">
 	<Navbar />
 
-	<main class="flex flex-col p-[1rem] w-[100%] max-w-[1360px] mx-[auto]">
+	<main class="flex flex-col p-4 w-full max-w-screen-xl mx-auto">
 		<slot />
 	</main>
 
-	<footer
-		class="flex flex-row justify-center hover:underline hover:cursor-pointer"
-	>
+	<footer class="flex flex-row justify-center hover:underline hover:cursor-pointer">
 		<p>
 			Developed with ♥ by
 			<a href="https://github.com/Atticus64" class="font-bold">Jonathan</a>
