@@ -1,10 +1,10 @@
 <script>
-	import Header from './Header.svelte';
+	import Navbar from '../components/navbar/navbar.svelte';
 	import './styles.css';
 </script>
 
 <div class="app">
-	<Header />
+	<Navbar />
 
 	<main>
 		<slot />
