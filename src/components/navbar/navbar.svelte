@@ -19,7 +19,7 @@
 
 <header class="h-20 sticky top-0 bg-white">
 	<div
-		class="h-full flex items-center justify-between px-3 max-w-screen-lg mx-auto"
+		class="h-full flex items-center justify-between px-3 max-w-screen-xl mx-auto"
 	>
 		<Logo />
 
