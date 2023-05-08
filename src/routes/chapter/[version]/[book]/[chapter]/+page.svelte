@@ -179,8 +179,8 @@
 
 <div>
 	<wc-toast />
-	<section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-12">
-		<div class="flex items-center gap-3 flex-1">
+	<section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-12">
+		<div class="flex flex-1 items-center gap-3">
 			<div use:clickOutside on:click_outside={() => (selectVersion = false)} class="flex-1">
 				<h4>Version</h4>
 				<Button color="green" id="selectBook" on:click={() => unSelect('version')}>
@@ -189,7 +189,7 @@
 
 				{#if selectVersion}
 					<ul
-						class="h-[17.5rem] ring-1 ring-gray-300 absolute overflow-auto flex flex-col list rounded bg-gray-50"
+						class="list absolute flex h-[17.5rem] flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
 					>
 						{#each versions as v}
 							<button
@@ -213,7 +213,7 @@
 
 				{#if selectBook}
 					<ul
-						class="h-[20rem] absolute overflow-auto flex flex-col list rounded bg-gray-50 ring-1 ring-gray-300"
+						class="list absolute flex h-[20rem] flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
 					>
 						{#each books as b}
 							<button
@@ -237,11 +237,11 @@
 
 				{#if selectChapter}
 					<ul
-						class="h-[20rem] w-[10rem] absolute overflow-auto flex flex-col list rounded bg-gray-50 ring-1 ring-gray-300"
+						class="list absolute flex h-[20rem] w-[10rem] flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
 					>
 						{#each { length: chapters } as _, c}
 							<button
-								class="cursor-pointer w-[5rem] select-none p-2 hover:bg-gray-200"
+								class="w-[5rem] cursor-pointer select-none p-2 hover:bg-gray-200"
 								on:click={() => {
 									updateData(c + 1, 'chapter');
 								}}
@@ -254,7 +254,7 @@
 			</div>
 		</div>
 
-		<div class="flex-1 flex items-center sm:self-end gap-4">
+		<div class="flex flex-1 items-center gap-4 sm:self-end">
 			<Button
 				on:click={() => {
 					if (chapter - 1 <= 0) {
@@ -291,7 +291,7 @@
 
 	{#if !loading && !hasError && info}
 		<div class="max-md">
-			<h3 class="text-3xl p-2">{formatName(book)}: {chapter}</h3>
+			<h3 class="p-2 text-3xl">{formatName(book)}: {chapter}</h3>
 			<Passage {info} />
 		</div>
 	{/if}

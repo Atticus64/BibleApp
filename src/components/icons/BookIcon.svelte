@@ -17,7 +17,12 @@
 		stroke-width="1.5"
 		stroke-linecap="round"
 		stroke-linejoin="round"
-	/><path d="M6 17h14M6 21h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /><path
+	/><path
+		d="M6 17h14M6 21h14"
+		stroke="currentColor"
+		stroke-width="1.5"
+		stroke-linecap="round"
+	/><path
 		d="M6 21a2 2 0 110-4"
 		stroke="currentColor"
 		stroke-width="1.5"

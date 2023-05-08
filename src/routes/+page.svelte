@@ -13,7 +13,7 @@
 	/>
 </svelte:head>
 
-<div class="flex flex-col sm:flex-row items-center h-[100%] p-0 sm:p-6">
+<div class="flex h-[100%] flex-col items-center p-0 sm:flex-row sm:p-6">
 	<div class="flex flex-col">
 		<h3 class="p-2 text-3xl">
 			La aplicacion para
@@ -23,7 +23,7 @@
 			la Biblia que esperabas
 		</h3>
 
-		<div class="flex items-center gap-10 text-xl font-bold py-6">
+		<div class="flex items-center gap-10 py-6 text-xl font-bold">
 			<Button
 				href="/chapter/rv1960/genesis/1"
 				color="blue"

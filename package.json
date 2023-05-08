@@ -9,8 +9,8 @@
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"lint": "eslint --fix src/**/*.{svelte,js} && pnpm check",
+		"fmt": "prettier --write src/**/*.{svelte,html,json}"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "4.5.10",
@@ -21,11 +21,13 @@
 		"@types/cookie": "0.5.1",
 		"autoprefixer": "10.4.14",
 		"eslint": "8.40.0",
-		"eslint-config-prettier": "8.8.0",
+		"eslint-plugin-prettier": "4.2.1",
 		"eslint-plugin-svelte": "2.27.4",
 		"postcss": "8.4.23",
 		"prettier": "2.8.8",
 		"prettier-plugin-svelte": "2.10.0",
+		"prettier-plugin-tailwindcss": "0.2.8",
+		"standard": "17.0.0",
 		"svelte": "3.59.1",
 		"svelte-check": "3.3.2",
 		"tailwindcss": "3.3.2",

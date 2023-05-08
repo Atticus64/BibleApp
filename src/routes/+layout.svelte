@@ -3,14 +3,14 @@
 	import './styles.css';
 </script>
 
-<div class="flex flex-col justify-between max-w-[100vw]">
+<div class="flex max-w-[100vw] flex-col justify-between">
 	<Navbar />
 
-	<main class="flex flex-col p-4 w-full max-w-screen-xl mx-auto">
+	<main class="mx-auto flex w-full max-w-screen-xl flex-col p-4">
 		<slot />
 	</main>
 
-	<footer class="flex flex-row justify-center hover:underline hover:cursor-pointer">
+	<footer class="flex flex-row justify-center hover:cursor-pointer hover:underline">
 		<p>
 			Developed with ♥ by
 			<a href="https://github.com/Atticus64" class="font-bold">Jonathan</a>
