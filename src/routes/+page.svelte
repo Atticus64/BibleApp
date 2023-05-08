@@ -1,4 +1,5 @@
 <script>
+	import headerImage from "./../assets/headerImage.png"
 </script>
 
 <svelte:head>
@@ -6,111 +7,44 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<main class="flex items-center land-menu">
+<div class="flex flex-col sm:flex-row items-center h-[100%] p-0 sm:p-6">
 	<div class="flex flex-col">
-		<h3 class="p-2 phrase">
-			La aplicacion para <b class="study">Estudiar</b> y <b class="read">Leer</b> la Biblia que esperabas
+		<h3 class="p-2 text-3xl">
+			La aplicacion para
+			<p class="study inline">Estudiar</p> y
+			<p class="read inline">Leer</p> la Biblia que esperabas
 		</h3>
-		<div class="flex">
-			<a class="link btn-study" href="/chapter/rv1960/genesis/1">Estudiar la Biblia</a>
-			<a class="link btn-faq" href="/about">Preguntas frecuentes</a>
+
+		<div class="flex items-center gap-10 text-xl font-bold py-6 px-2">
+			<a
+			href="/chapter/rv1960/genesis/1"
+			class="flex justify-center items-center rounded-[10px] w-[100%] h-[50px] bg-blue-500 hover:scale-110 hover:bg-blue-700 transition text-center">
+			Estudiar la Biblia</a>
+
+			<a
+			class="flex justify-center items-center rounded-[10px] w-[100%] h-[50px] bg-teal-200 hover:scale-110 hover:bg-teal-400 transition text-center"
+			href="/about">
+			Preguntas frecuentes</a>
 		</div>
 	</div>
+
 	<img
-		src="https://cdni.iconscout.com/illustration/premium/thumb/online-study-2710520-2261196.png"
+		src={headerImage}
+		class="w-[100%] sm:w-[50%]"
 		alt="study img"
 	/>
-</main>
+</div>
 
 <style>
-	:root {
-		--blue-bg: #7ecffb;
-		--green-bg: #c5ecdd;
-	}
-
-	.btn-study {
-		background-color: var(--blue-bg);
-	}
-
-	.btn-study:hover {
-		background-color: #36aff0;
-	}
-
-	.btn-faq {
-		background-color: var(--green-bg);
-	}
-
-	.phrase {
-		font-size: xx-large;
-	}
-
-	.study {
-		font-size: xx-large;
-	}
-
-	.read {
-		font-size: xx-large;
-	}
-
-	.btn-faq:hover {
-		background-color: #2ddb98;
-	}
-
 	.read {
 		background: linear-gradient(120deg, #1d9bf0, #8ecdf7);
-		-webkit-background-clip: text;
+		background-clip: text;
 		-webkit-text-fill-color: transparent;
 	}
 
 	.study {
-		background: linear-gradient(120deg, var(--green-bg), #2ddb98);
-		-webkit-background-clip: text;
+		background: linear-gradient(120deg, #c5ecdd, #2ddb98);
+		background-clip: text;
 		-webkit-text-fill-color: transparent;
-	}
-
-	.link {
-		width: 19rem;
-		text-align: center;
-		padding: 1rem;
-		border-radius: 1rem;
-		color: #000;
-		margin: 2rem;
-		font-size: 1.2rem;
-		transition: all 0.3s;
-		font-weight: bold;
-	}
-
-	.link:hover {
-		scale: 110%;
-	}
-
-	img {
-		width: 50%;
-	}
-
-	@media (max-width: 900px) {
-		.land-menu {
-			flex-direction: column;
-		}
-
-		.phrase {
-			font-size: x-large;
-		}
-
-		.study {
-			font-size: x-large;
-		}
-
-		.read {
-			font-size: x-large;
-		}
-
-		img {
-			width: 70%;
-		}
-
-		.link {
-			width: 70%;
-		}
 	}
 </style>
