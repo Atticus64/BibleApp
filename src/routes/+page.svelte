@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores';
-	import Button from '../components/Button.svelte';
-	import headerImage from './../assets/headerImage.png';
+	import Button from '@/components/Button.svelte';
+	import headerImage from '@/assets/headerImage.png';
 </script>
 
 <svelte:head>

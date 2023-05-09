@@ -1,12 +1,12 @@
 <script>
 	/** @type {import('./$types').PageData} */
 	import { onMount } from 'svelte';
-	import { ALERT_TYPES, toastAlert } from '../../../../alert';
-	import { clickOutside } from '../../../../../utils/clickOutside.js';
 	import { goto } from '$app/navigation';
-	import { books, versions } from '../../../../../constants';
-	import Passage from '../../../../../components/Passage.svelte';
-	import Button from '../../../../../components/Button.svelte';
+	import { books, versions } from '@/constants';
+	import { ALERT_TYPES, toastAlert } from '@/routes/alert';
+	import { clickOutside } from '@/utils/clickOutside.js';
+	import Button from '@/components/Button.svelte';
+	import Passage from '@/components/Passage.svelte';
 
 	export let data;
 
