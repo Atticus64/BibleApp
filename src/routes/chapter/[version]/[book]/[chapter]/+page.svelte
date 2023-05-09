@@ -177,6 +177,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>{formatName(book)}: {chapter} - Bibliapp</title>
+</svelte:head>
+
 <div>
 	<wc-toast />
 	<section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-12">
