@@ -1,6 +1,6 @@
 <script>
-	import Navbar from '../components/navbar/navbar.svelte';
-	import './styles.css';
+	import Navbar from '@/components/navbar/navbar.svelte';
+	import '@/app.css';
 </script>
 
 <div class="flex max-w-[100vw] flex-col justify-between">

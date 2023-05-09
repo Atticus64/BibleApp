@@ -1,17 +1,7 @@
 <script>
-	import { page } from '$app/stores';
-	import Button from '../components/Button.svelte';
-	import headerImage from './../assets/headerImage.png';
+	import Button from '@/components/Button.svelte';
+	import headerImage from '@/assets/headerImage.png';
 </script>
-
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Aplicacion de la Biblia para leer y estudiar" />
-	<meta
-		property="og:image"
-		content="https://images.unsplash.com/photo-1504052434569-70ad5836ab65?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-	/>
-</svelte:head>
 
 <div class="flex h-[100%] flex-col items-center p-0 sm:flex-row sm:p-6">
 	<div class="flex flex-col">

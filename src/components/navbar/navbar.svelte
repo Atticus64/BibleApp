@@ -21,15 +21,17 @@
 	<div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
 		<Logo />
 
-		<div class="flex items-center gap-4 sm:hidden">
+		<ul class="flex items-center gap-4 sm:hidden">
 			<Link href="/login" text="Login">
 				<LoginIcon />
 			</Link>
 
-			<button on:click={handleClick}>
-				<MenuIcon />
-			</button>
-		</div>
+			<li class="h-6">
+				<button aria-label="Menu desplegable" on:click={handleClick}>
+					<MenuIcon />
+				</button>
+			</li>
+		</ul>
 
 		<nav class="hidden sm:flex sm:items-center">
 			<ul class="flex items-center gap-4">
