@@ -1,13 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-	content: [
-		"./index.html",
-		"./src/**/*.{js,ts,jsx,tsx,svelte}",
-	],
-	darkMode: "class",
-	theme: {
-		extend: {},
-	},
-	plugins: [],
+  content: ['./src/**/*.{svelte,html,js}'],
+  darkMode: 'class',
+  theme: {
+    fontFamily: {
+      'dm-sans': ['Dm sans', 'sans-serif']
+    },
+    extend: {}
+  },
+  plugins: []
 }
-
