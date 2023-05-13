@@ -10,10 +10,5 @@
 		<slot />
 	</main>
 
-	<footer class="flex flex-row justify-center hover:cursor-pointer hover:underline">
-		<p>
-			Developed with ♥ by
-			<a href="https://github.com/Atticus64" class="font-bold">Jonathan</a>
-		</p>
-	</footer>
+	
 </div>
