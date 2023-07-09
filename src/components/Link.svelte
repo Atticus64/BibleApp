@@ -15,7 +15,7 @@
 <li aria-current={$page.url.pathname === href ? 'page' : null}>
 	<a
 		{href}
-		class="flex items-center space-x-3 text-lg font-semibold tracking-widest transition-colors hover:text-[#175d93]"
+		class="flex items-center text-lg font-semibold tracking-widest transition-colors hover:text-[#175d93]"
 	>
 		<span>{text}</span>
 		<slot />

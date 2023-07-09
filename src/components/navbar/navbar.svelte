@@ -58,7 +58,7 @@
 {#if mobileMenu}
 	<nav
 		transition:fade={{ duration: 400 }}
-		class="sticky top-14 flex flex-col items-center gap-4 bg-[#c5dbce] py-2 sm:hidden"
+		class="sticky top-14 flex flex-col items-center gap-2 bg-[#c5dbce] py-2 sm:hidden"
 	>
 		<Link href="/search" text="Search">
 			<SearchIcon />

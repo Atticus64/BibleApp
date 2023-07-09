@@ -38,7 +38,7 @@
 	}
 
 	.study {
-		background: linear-gradient(120deg, #c5ecdd, #2ddb98);
+		background: linear-gradient(120deg, #548874, #66ed6b);
 		background-clip: text;
 		-webkit-text-fill-color: transparent;
 	}
