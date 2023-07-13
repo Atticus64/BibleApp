@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { books, versions } from '@/constants';
-	import { ALERT_TYPES, toastAlert } from '@/routes/alert';
+	import { toastAlert } from '@/routes/alert';
 	import { clickOutside } from '@/utils/clickOutside.js';
 	import Button from '@/components/Button.svelte';
 	import Passage from '@/components/Passage.svelte';
@@ -68,7 +68,7 @@
 			error =
 				'No se encontro el capitulo, intentelo mas tarde o revise que sea correcta su busqueda';
 
-			toastAlert('No se pudo cargar el capitulo, coloque un capitulo correcto', ALERT_TYPES.ERROR);
+			toastAlert('No se pudo cargar el capitulo, coloque un capitulo correcto', 'error');
 			return;
 		}
 
@@ -262,7 +262,7 @@
 			<Button
 				on:click={() => {
 					if (chapter - 1 <= 0) {
-						toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
+						toastAlert('Error ese capitulo no esta disponible', 'error');
 						return;
 					}
 					updateData((chapter -= 1), 'chapter');
@@ -275,7 +275,7 @@
 			<Button
 				on:click={() => {
 					if (chapter + 1 > chapters) {
-						toastAlert('Error ese capitulo no esta disponible', ALERT_TYPES.ERROR);
+						toastAlert('Error ese capitulo no esta disponible', 'error');
 						return;
 					}
 					updateData((chapter += 1), 'chapter');

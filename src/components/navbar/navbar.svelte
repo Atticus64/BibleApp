@@ -37,7 +37,7 @@
 	}
 
 	async function checkUser() {
-		const data = await fetch('https://bible-api.deno.dev/user', {
+		await fetch('https://bible-api.deno.dev/user', {
 			method: 'GET',
 			credentials: 'include'
 		})
@@ -61,11 +61,7 @@
 	}
 
 	onMount(async () => {
-		console.log($user.loggedIn);
-		if (!$user.loggedIn) {
-			checkUser();
-			return;
-		}
+		checkUser();
 	});
 </script>
 

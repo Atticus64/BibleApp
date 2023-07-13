@@ -8,37 +8,26 @@
 		if ($user.loggedIn) {
 			loadingUser = false;
 		} else {
-			const data = await fetch('https://bible-api.deno.dev/user', {
-				method: 'GET',
-				credentials: 'include'
-			}).then((res) => {
-				if (!res.ok) {
-					hasError = true;
-					return null;
-				}
-				return res.json();
-			});
-
-			if (!hasError) {
-				loadingUser = false;
-				user.set(data);
-				return;
-			} else {
-				loadingUser = false;
-			}
+			loadingUser = false;
+			hasError = true;
 		}
 	});
 </script>
 
-<h1>Notes</h1>
-
 {#if loadingUser}
 	<p>loading...</p>
-{:else if !loadingUser && !hasError}
+{:else if !loadingUser && !hasError && $user.loggedIn}
 	<p>tag: {$user.tag}</p>
 	<p>email: {$user.email}</p>
 {/if}
 
 {#if hasError}
-	<p>Debes estar autenticado</p>
+	<section class="flex justify-center align-middle">
+		<div class="flex flex-col">
+			<h1 class="text-xl font-semibold">No puedes acceder a tus notas</h1>
+			<p>Debes estar autenticado</p>
+
+			<a href="/login" class="self-center my-4 bg-green-300 hover:bg-green-200 p-5">Go to Login</a>
+		</div>
+	</section>
 {/if}
