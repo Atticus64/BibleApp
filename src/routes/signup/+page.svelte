@@ -1,48 +1,27 @@
 <script>
-	import { redirect } from '@sveltejs/kit';
-	import { goto } from '$app/navigation';
-	import { user } from '@/state/user';
-
 	const onSubmit = async (e) => {
 		const formData = Object.fromEntries(new FormData(e.target));
 
-		const response = await fetch('https://bible-api.deno.dev/auth/login', {
+		const response = await fetch('https://bible-api.deno.dev/auth/signup', {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				credentials: 'same-origin'
 			},
-			credentials: 'include',
 			body: JSON.stringify(formData)
 		});
 
-		if (response.ok) {
-			await fetch('https://bible-api.deno.dev/user', {
-				method: 'GET',
-				credentials: 'include'
-			})
-				.then(async (res) => {
-					if (res.ok) {
-						const info = await res.json();
-						user.set({
-							email: info.email,
-							tag: info.tag,
-							loggedIn: true
-						});
-					}
-				})
-				.catch((err) => {
-					return null;
-				});
-			goto('/notes');
-		}
+		console.log(await response.json());
 	};
 </script>
 
 <section class="flex justify-center align-middle">
 	<div class="flex flex-col w-4/5 items-center">
-		<h1>Login</h1>
+		<h1>Signup</h1>
 
 		<form class="flex flex-col" on:submit|preventDefault={onSubmit}>
+			<label for="user">Username</label>
+			<input id="user" name="user" placeholder="Username" />
 			<label for="email">Email</label>
 			<input id="email" type="email" name="email" placeholder="Enter your email" />
 			<label for="password">Password</label>

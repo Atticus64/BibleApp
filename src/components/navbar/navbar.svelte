@@ -10,11 +10,63 @@
 	} from '../icons';
 	import Link from '../Link.svelte';
 	import Logo from '../Logo.svelte';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { user } from '@/state/user';
 
 	let mobileMenu = false;
 	function handleClick() {
 		mobileMenu = !mobileMenu;
 	}
+
+	async function Logout() {
+		await fetch('https://bible-api.deno.dev/auth/logout', {
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include'
+		});
+
+		user.set({
+			email: '',
+			tag: '',
+			loggedIn: false
+		});
+
+		goto('/login');
+	}
+
+	async function checkUser() {
+		const data = await fetch('https://bible-api.deno.dev/user', {
+			method: 'GET',
+			credentials: 'include'
+		})
+			.then(async (res) => {
+				if (res.ok) {
+					const info = await res.json();
+					user.set({
+						email: info.email,
+						tag: info.tag,
+						loggedIn: true
+					});
+				}
+			})
+			.catch((err) => {
+				return null;
+			});
+
+		return {
+			user
+		};
+	}
+
+	onMount(async () => {
+		console.log($user.loggedIn);
+		if (!$user.loggedIn) {
+			checkUser();
+			return;
+		}
+	});
 </script>
 
 <header class="sticky top-0 h-20 bg-white">
@@ -22,9 +74,14 @@
 		<Logo />
 
 		<ul class="flex items-center gap-4 sm:hidden">
-			<Link href="/login" text="Login">
-				<LoginIcon />
-			</Link>
+			{#if $user.loggedIn}
+				<b>{$user.tag}</b>
+				<button on:click={Logout}> Cerrar sesión </button>
+			{:else}
+				<Link href="/login" text="Login">
+					<LoginIcon />
+				</Link>
+			{/if}
 
 			<li class="h-6">
 				<button aria-label="Menu desplegable" on:click={handleClick}>
@@ -47,9 +104,14 @@
 				<Link href="/about" text="FAQ">
 					<QuestionMarkIcon />
 				</Link>
-				<Link href="/login" text="Login">
-					<LoginIcon />
-				</Link>
+				{#if $user.loggedIn}
+					<b>{$user.tag}</b>
+					<button on:click={Logout}> Cerrar sesión </button>
+				{:else}
+					<Link href="/login" text="Login">
+						<LoginIcon />
+					</Link>
+				{/if}
 			</ul>
 		</nav>
 	</div>
