@@ -1,6 +1,5 @@
 <script>
 	import Button from '@/components/Button.svelte';
-	import headerImage from '@/assets/headerImage.png';
 </script>
 
 <div class="flex h-[100%] flex-col items-center p-0 sm:flex-row sm:p-6">
@@ -27,7 +26,7 @@
 		</div>
 	</div>
 
-	<img src={headerImage} class="w-[100%] sm:w-[50%]" alt="study img" />
+	<img src="/hero-image.webp" class="w-full sm:w-1/2" width="600" height="450" alt="study img" />
 </div>
 
 <style>
