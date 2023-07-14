@@ -209,7 +209,7 @@
 					{#if showMenu}
 						<div
 							on:mouseleave={() => (showMenu = false)}
-							class="fixed top-[5rem] right-28 h-fit bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-fit dark:bg-gray-700 dark:divide-gray-600"
+							class="fixed top-[5rem] 2xl:right-[10%] min-xl:[5%] lg:right-8 sm:right-1 h-fit bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-fit dark:bg-gray-700 dark:divide-gray-600"
 						>
 							<div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
 								<p><b>tag: </b>{$user.tag}</p>
