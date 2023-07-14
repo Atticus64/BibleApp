@@ -2,6 +2,7 @@
 	/** @type {import('./$types').PageData} */
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { books, versions } from '@/constants';
 	import { toastAlert } from '@/routes/alert';
 	import { clickOutside } from '@/utils/clickOutside.js';
@@ -273,6 +274,22 @@
 				color="blue"
 			>
 				Siguiente capitulo
+			</Button>
+			<Button
+				on:click={() => {
+					const url = `${$page.url.origin}/chapter/${version}/${book}/${chapter}`;
+					navigator.clipboard
+						.writeText(url)
+						.then(() => {
+							toastAlert('Url copiada al portapapeles', 'success');
+						})
+						.catch((err) => {
+							toastAlert('Error al copiar url', 'error');
+						});
+				}}
+				color="green"
+			>
+				Compartir capitulo
 			</Button>
 		</div>
 	</section>
