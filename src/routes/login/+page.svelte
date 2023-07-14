@@ -34,7 +34,7 @@
 					toastAlert(err, 'error');
 					return;
 				});
-			goto('/notes');
+			goto('/');
 		} else {
 			const error = await response.json();
 			if (error.message) {
@@ -62,12 +62,12 @@
 				<h1
 					class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
 				>
-					Sign in to your account
+					Inicia Sesión con tu cuenta
 				</h1>
 				<form class="space-y-4 md:space-y-6" on:submit|preventDefault={onSubmit}>
 					<div>
 						<label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-							>Your email</label
+							>Email</label
 						>
 						<input
 							type="email"
@@ -81,7 +81,7 @@
 					<div>
 						<label
 							for="password"
-							class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label
+							class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label
 						>
 						<input
 							type="password"
@@ -96,12 +96,13 @@
 					<button
 						type="submit"
 						class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-						>Sign in</button
+						>Iniciar Sesión</button
 					>
 					<p class="text-sm font-light text-gray-500 dark:text-gray-400">
-						Don’t have an account yet? <a
+						No tienes cuenta aún? <a
 							href="/signup"
-							class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a
+							class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+							>Crear cuenta</a
 						>
 					</p>
 				</form>

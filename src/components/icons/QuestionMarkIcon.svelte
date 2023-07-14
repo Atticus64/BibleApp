@@ -1,8 +1,20 @@
+<script>
+	/**
+	 * @type {string} width
+	 */
+	export let width = '24';
+
+	/**
+	 * @type {string} width
+	 */
+	export let height = '24';
+</script>
+
 <svg
 	fill="none"
 	stroke="currentColor"
-	width="24"
-	height="24"
+	{width}
+	{height}
 	stroke-width="1.5"
 	viewBox="0 0 24 24"
 	xmlns="http://www.w3.org/2000/svg"

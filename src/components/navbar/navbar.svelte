@@ -1,5 +1,4 @@
 <script>
-	import { fade } from 'svelte/transition';
 	import {
 		MenuIcon,
 		LoginIcon,
@@ -15,6 +14,7 @@
 	import { user } from '@/state/user';
 
 	let mobileMenu = false;
+	let showMenu = false;
 	function handleClick() {
 		mobileMenu = !mobileMenu;
 	}
@@ -32,6 +32,8 @@
 			tag: '',
 			loggedIn: false
 		});
+
+		showMenu = false;
 
 		goto('/login');
 	}
@@ -60,6 +62,15 @@
 		};
 	}
 
+	/**
+	 *
+	 * @param {string} path
+	 */
+	function goToPage(path) {
+		mobileMenu = false;
+		goto(path);
+	}
+
 	onMount(async () => {
 		checkUser();
 	});
@@ -67,42 +78,151 @@
 
 <header class="sticky top-0 h-20 bg-white">
 	<div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
-		<Logo />
-
 		<ul class="flex items-center gap-4 sm:hidden">
+			<button
+				on:click={() => {
+					mobileMenu = !mobileMenu;
+					showMenu = false;
+				}}
+			>
+				<MenuIcon />
+			</button>
+
 			{#if $user.loggedIn}
-				<b>{$user.tag}</b>
-				<button on:click={Logout}> Cerrar sesión </button>
+				<button
+					on:click={() => {
+						showMenu = !showMenu;
+						mobileMenu = false;
+					}}
+				>
+					<img
+						id="avatarButton"
+						src={`https://api.dicebear.com/6.x/initials/svg?seed=${$user.tag}`}
+						alt={$user.tag}
+						data-dropdown-toggle="userDropdown"
+						data-dropdown-placement="bottom-start"
+						class="w-10 h-10 rounded-full cursor-pointer"
+					/>
+				</button>
+				<!-- Dropdown menu -->
+
+				{#if mobileMenu}
+					<ul
+						on:mouseleave={() => (mobileMenu = false)}
+						class="fixed top-16 h-fit sm:hidden bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600"
+					>
+						<button
+							on:click={() => goToPage('/search')}
+							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+						>
+							<span class="flex flex-row items-center align-middle gap-2">
+								Buscar <SearchIcon width="13" height="13" />
+							</span>
+						</button>
+						<button
+							on:click={() => goToPage('/chapter/rv1960/genesis/1')}
+							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+						>
+							<span class="flex flex-row items-center align-middle gap-2">
+								Leer <BookOpenIcon width="13" height="13" />
+							</span>
+						</button>
+						<button
+							on:click={() => goToPage('/notes')}
+							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+						>
+							<span class="flex flex-row items-center align-middle gap-2">
+								Notas <NoteIcon width="13" height="13" />
+							</span>
+						</button>
+						<button
+							on:click={() => goToPage('/about')}
+							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+						>
+							<span class="flex flex-row items-center align-middle gap-2">
+								FAQ <QuestionMarkIcon width="13" height="13" />
+							</span>
+						</button>
+					</ul>
+				{/if}
+
+				{#if showMenu}
+					<div
+						on:mouseleave={() => (showMenu = false)}
+						class="fixed top-16 h-fit sm:hidden bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600"
+					>
+						<div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+							<p><b>tag: </b>{$user.tag}</p>
+							<p><b>Email: </b>{$user.email}</p>
+						</div>
+
+						<div class="">
+							<button
+								on:click={Logout}
+								class="block px-4 py-2 text-sm text-start text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full"
+								>Cerrar Sesión</button
+							>
+						</div>
+					</div>
+				{/if}
 			{:else}
 				<Link href="/login" text="Login">
 					<LoginIcon />
 				</Link>
 			{/if}
-
-			<li class="h-6">
-				<button aria-label="Menu desplegable" on:click={handleClick}>
-					<MenuIcon />
-				</button>
-			</li>
 		</ul>
+		<Logo />
 
 		<nav class="hidden sm:flex sm:items-center">
 			<ul class="flex items-center gap-4">
-				<Link href="/search" text="Search">
+				<Link href="/search" text="Buscar">
 					<SearchIcon />
 				</Link>
-				<Link href="/chapter/rv1960/genesis/1" text="Read">
+				<Link href="/chapter/rv1960/genesis/1" text="Leer">
 					<BookOpenIcon />
 				</Link>
-				<Link href="/notes" text="Notes">
+				<Link href="/notes" text="Notas">
 					<NoteIcon />
 				</Link>
 				<Link href="/about" text="FAQ">
 					<QuestionMarkIcon />
 				</Link>
 				{#if $user.loggedIn}
-					<b>{$user.tag}</b>
-					<button on:click={Logout}> Cerrar sesión </button>
+					<button
+						on:click={() => {
+							showMenu = !showMenu;
+							mobileMenu = false;
+						}}
+					>
+						<img
+							id="avatarButton"
+							src={`https://api.dicebear.com/6.x/initials/svg?seed=${$user.tag}`}
+							alt={$user.tag}
+							data-dropdown-toggle="userDropdown"
+							data-dropdown-placement="bottom-start"
+							class="w-10 h-10 rounded-full cursor-pointer"
+						/>
+					</button>
+
+					{#if showMenu}
+						<div
+							on:mouseleave={() => (showMenu = false)}
+							class="fixed top-16 right-6 h-fit bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600"
+						>
+							<div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+								<p><b>tag: </b>{$user.tag}</p>
+								<p><b>Email: </b>{$user.email}</p>
+							</div>
+
+							<div class="">
+								<button
+									on:click={Logout}
+									class="block px-4 py-2 text-sm text-start text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white w-full"
+									>Cerrar Sesión</button
+								>
+							</div>
+						</div>
+					{/if}
 				{:else}
 					<Link href="/login" text="Login">
 						<LoginIcon />
@@ -112,23 +232,3 @@
 		</nav>
 	</div>
 </header>
-
-{#if mobileMenu}
-	<nav
-		transition:fade={{ duration: 400 }}
-		class="sticky top-14 flex flex-col items-center gap-2 bg-[#ddeae3] py-2 sm:hidden"
-	>
-		<Link href="/search" text="Search">
-			<SearchIcon />
-		</Link>
-		<Link href="/chapter/rv1960/genesis/1" text="Read">
-			<BookOpenIcon />
-		</Link>
-		<Link href="/notes" text="Notes">
-			<NoteIcon />
-		</Link>
-		<Link href="/about" text="FAQ">
-			<QuestionMarkIcon />
-		</Link>
-	</nav>
-{/if}

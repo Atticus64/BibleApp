@@ -1,24 +1,57 @@
 <script>
 	import { user } from '@/state/user';
 	import { onMount } from 'svelte';
-	let loadingUser = true;
+	import { toastAlert } from '../alert';
+	import { notes } from '@/state/notes';
+	let loadingNotes = true;
 	let hasError = false;
 
 	onMount(async () => {
-		if ($user.loggedIn) {
-			loadingUser = false;
-		} else {
-			loadingUser = false;
+		loadingNotes = false;
+
+		if (!$user.loggedIn) {
 			hasError = true;
+			return;
 		}
+
+		await fetch('https://bible-api.deno.dev/notes', {
+			headers: {
+				'Content-Type': 'application/json',
+				WithCredentials: 'include'
+			},
+			credentials: 'include'
+		})
+			.then(async (res) => {
+				if (res.ok) {
+					const info = await res.json();
+					notes.set(info);
+				} else {
+					hasError = true;
+				}
+			})
+			.catch((err) => {
+				hasError = true;
+				toastAlert(err, 'error');
+				return;
+			});
+
+		loadingNotes = false;
 	});
 </script>
 
-{#if loadingUser}
+{#if loadingNotes}
 	<p>loading...</p>
-{:else if !loadingUser && !hasError && $user.loggedIn}
-	<p>tag: {$user.tag}</p>
-	<p>email: {$user.email}</p>
+{:else if !loadingNotes && !hasError}
+	{#if $notes.length === 0}
+		<p>No hay notas</p>
+	{:else}
+		{#each $notes as note}
+			<h4>{note.title}</h4>
+			<p>{note.description}</p>
+			<p>{note.body}</p>
+			<p>{note.id}</p>
+		{/each}
+	{/if}
 {/if}
 
 {#if hasError}
