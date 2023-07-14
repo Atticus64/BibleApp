@@ -75,7 +75,7 @@
 	});
 </script>
 
-<header class="sticky top-0 h-20 bg-white dark:bg-[#293548]">
+<header class="sticky top-0 sm:h-28 h-20 xl:h-24 bg-white dark:bg-[#293548]">
 	<div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
 		<ul class="flex items-center gap-4 sm:hidden">
 			<button
@@ -171,7 +171,7 @@
 			{/if}
 		</ul>
 		<div class="flex align-middle justify-center">
-			<Switch className="xl:left-44 lg:left-20 md:left-16 sm:left-14 max-sm:right-14" />
+			<Switch className="xl:relative xl:left-7 lg:left-20 md:left-16 sm:left-14 max-sm:right-14" />
 			<Logo />
 		</div>
 
@@ -209,7 +209,7 @@
 					{#if showMenu}
 						<div
 							on:mouseleave={() => (showMenu = false)}
-							class="fixed top-16 right-6 h-fit bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600"
+							class="fixed top-[5rem] right-28 h-fit bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-fit dark:bg-gray-700 dark:divide-gray-600"
 						>
 							<div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
 								<p><b>tag: </b>{$user.tag}</p>

@@ -39,7 +39,7 @@
 	}
 
 	#theme-toggle + label {
-		@apply absolute top-5 h-10 w-10 cursor-pointer rounded-full duration-300 content-[''];
+		@apply absolute h-9 w-9 cursor-pointer rounded-full duration-300 content-[''];
 	}
 
 	#theme-toggle:not(:checked) + label {
