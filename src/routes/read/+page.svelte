@@ -1,5 +1,4 @@
 <script>
-	/** @type {import('./$types').PageData} */
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { books, versions } from '@/constants';
@@ -8,10 +7,8 @@
 	import Button from '@/components/Button.svelte';
 	import Passage from '@/components/Passage.svelte';
 
-	export let data;
-
-	let book = data.params.book;
-	let version = data.params.version;
+	let book = 'genesis';
+	let version = 'rv1960';
 
 	let loading = true;
 	let hasError = false;
@@ -35,7 +32,7 @@
 	};
 
 	let chapters = 55;
-	let chapter = Number(data.params.chapter);
+	let chapter = 1;
 
 	const getData = async () => {
 		if (book === '') return;
@@ -162,6 +159,16 @@
 	}
 
 	onMount(async () => {
+		const bkString = localStorage.getItem('bookmark');
+
+		if (bkString) {
+			const bkmark = JSON.parse(bkString);
+
+			book = bkmark.book;
+			version = bkmark.version;
+			chapter = bkmark.chapter;
+		}
+
 		info = await getData();
 		chapters = info.chapters;
 	});

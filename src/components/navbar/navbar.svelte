@@ -120,7 +120,7 @@
 							</span>
 						</button>
 						<button
-							on:click={() => goToPage('/chapter/rv1960/genesis/1')}
+							on:click={() => goToPage('/read')}
 							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 						>
 							<span class="flex flex-row items-center align-middle gap-2">
@@ -178,7 +178,7 @@
 				<Link href="/search" text="Buscar">
 					<SearchIcon />
 				</Link>
-				<Link href="/chapter/rv1960/genesis/1" text="Leer">
+				<Link href="/read" text="Leer">
 					<BookOpenIcon />
 				</Link>
 				<Link href="/notes" text="Notas">
