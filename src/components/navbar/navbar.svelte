@@ -171,7 +171,7 @@
 			{/if}
 		</ul>
 		<div class="flex align-middle justify-center">
-			<Switch className="xl:left-64 lg:left-20 md:left-16 sm:left-14 max-sm:right-14" />
+			<Switch className="xl:left-44 lg:left-20 md:left-16 sm:left-14 max-sm:right-14" />
 			<Logo />
 		</div>
 

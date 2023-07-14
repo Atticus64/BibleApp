@@ -1,4 +1,9 @@
+<script>
+	export let className = '';
+</script>
+
 <svg
+	class={className}
 	width="2rem"
 	stroke-width="1.5"
 	height="2rem"
