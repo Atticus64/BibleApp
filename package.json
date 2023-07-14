@@ -35,5 +35,8 @@
 		"typescript": "5.0.4",
 		"vite": "4.3.5",
 		"wc-toast": "1.2.9"
+	},
+	"dependencies": {
+		"@sveltejs/adapter-vercel": "^3.0.2"
 	}
 }
