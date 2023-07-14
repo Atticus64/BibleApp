@@ -60,7 +60,11 @@
 			<h1 class="text-xl font-semibold">No puedes acceder a tus notas</h1>
 			<p>Debes estar autenticado</p>
 
-			<a href="/login" class="self-center my-4 bg-green-300 hover:bg-green-200 p-5">Go to Login</a>
+			<a
+				href="/login"
+				class="self-center my-4 bg-green-300 font-semibold hover:bg-green-200 dark:bg-teal-200 dark:hover:bg-teal-400 text-black transition-colors', p-5"
+				>Go to Login</a
+			>
 		</div>
 	</section>
 {/if}
