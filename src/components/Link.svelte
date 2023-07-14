@@ -15,20 +15,16 @@
 <li aria-current={$page.url.pathname === href ? 'page' : null}>
 	<a
 		{href}
-		class="flex items-center text-lg font-semibold tracking-widest transition-colors hover:text-[#175d93]"
+		class="flex items-center text-lg font-semibold dark:font-normal tracking-widest transition-colors hover:text-[#175d93] dark:hover:text-[#2b8ad3]"
 	>
-		<span>{text}</span>
+		<span class={$page.url.pathname === href ? 'text-black dark:text-white' : ''}>{text}</span>
 		<slot />
 	</a>
 </li>
 
-<style>
+<style lang="postcss">
 	li[aria-current='page'] > a {
 		color: #36aff0;
-	}
-
-	li[aria-current='page'] > a span {
-		color: black;
 	}
 
 	li {

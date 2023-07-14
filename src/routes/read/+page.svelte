@@ -1,13 +1,14 @@
 <script>
+	/** @type {import('./$types').PageData} */
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { books, versions } from '@/constants';
 	import { page } from '$app/stores';
+	import { books, versions } from '@/constants';
 	import { toastAlert } from '@/routes/alert';
 	import { clickOutside } from '@/utils/clickOutside.js';
 	import Button from '@/components/Button.svelte';
 	import Passage from '@/components/Passage.svelte';
-	import { subscribe } from 'svelte/internal';
+	import { Stretch } from 'svelte-loading-spinners';
 
 	let book = 'genesis';
 	let version = 'rv1960';
@@ -186,17 +187,22 @@
 		<div class="flex flex-1 items-center gap-3">
 			<div use:clickOutside on:click_outside={() => (selectVersion = false)} class="flex-1">
 				<h4>Version</h4>
-				<Button color="green" id="selectBook" on:click={() => unSelect('version')}>
-					{version === '' ? 'Select your version' : version}
+				<Button
+					color="green"
+					id="selectBook"
+					className="dark:text-white dark:bg-green-500 dark:border-none dark:hover:bg-green-600"
+					on:click={() => unSelect('version')}
+				>
+					{version === '' ? 'Selecciona tu version' : version}
 				</Button>
 
 				{#if selectVersion}
 					<ul
-						class="list absolute flex h-[17.5rem] flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
+						class="list absolute flex h-[17.5rem] flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300 dark:ring-0"
 					>
 						{#each versions as v}
 							<button
-								class="cursor-pointer select-none p-2 hover:bg-gray-200"
+								class="cursor-pointer dark:bg-[#1e293b] dark:hover:bg-[#445268] select-none p-2 hover:bg-gray-200"
 								on:click={() => {
 									updateData(v.url, 'version');
 								}}
@@ -209,8 +215,13 @@
 			</div>
 
 			<div use:clickOutside on:click_outside={() => (selectBook = false)} class="flex-1">
-				<h4>Book</h4>
-				<Button id="selectBook" on:click={() => unSelect('book')} color="green">
+				<h4>Libro</h4>
+				<Button
+					id="selectBook"
+					on:click={() => unSelect('book')}
+					color="green"
+					className="dark:text-white dark:bg-green-500 dark:border-none dark:hover:bg-green-600"
+				>
 					{book === '' ? 'Choose Book' : formatName(book)}
 				</Button>
 
@@ -220,7 +231,7 @@
 					>
 						{#each books as b}
 							<button
-								class="select-none p-2 hover:bg-gray-200"
+								class="select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
 								on:click={() => {
 									updateData(b.toLowerCase(), 'book');
 								}}
@@ -233,8 +244,13 @@
 			</div>
 
 			<div use:clickOutside on:click_outside={() => (selectChapter = false)} class="flex-1">
-				<h4>Chapter</h4>
-				<Button id="selectBook" on:click={() => unSelect('chapter')} color="green">
+				<h4>Capítulo</h4>
+				<Button
+					id="selectBook"
+					on:click={() => unSelect('chapter')}
+					color="green"
+					className="dark:text-white dark:bg-green-500 dark:border-none dark:hover:bg-green-600"
+				>
 					{chapter === 0 ? 'Select your chapter' : chapter}
 				</Button>
 
@@ -244,7 +260,7 @@
 					>
 						{#each { length: chapters } as _, c}
 							<button
-								class="w-[5rem] cursor-pointer select-none p-2 hover:bg-gray-200"
+								class="w-[5rem] cursor-pointer select-none p-2 dark:bg-[#1e293b] dark:hover:bg-[#445268] dark:text-white hover:bg-gray-200"
 								on:click={() => {
 									updateData(c + 1, 'chapter');
 								}}
@@ -259,6 +275,7 @@
 
 		<div class="flex flex-1 items-center gap-4 sm:self-end">
 			<Button
+				className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
 				on:click={() => {
 					if (chapter - 1 <= 0) {
 						toastAlert('Error ese capitulo no esta disponible', 'error');
@@ -268,10 +285,11 @@
 				}}
 				color="blue"
 			>
-				Capitulo anterior
+				Capítulo anterior
 			</Button>
 
 			<Button
+				className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
 				on:click={() => {
 					if (chapter + 1 > chapters) {
 						toastAlert('Error ese capitulo no esta disponible', 'error');
@@ -281,10 +299,10 @@
 				}}
 				color="blue"
 			>
-				Siguiente capitulo
+				Siguiente capítulo
 			</Button>
-
 			<Button
+				className="dark:text-white dark:bg-green-500 dark:border-none dark:hover:bg-green-600"
 				on:click={() => {
 					const url = `${$page.url.origin}/chapter/${version}/${book}/${chapter}`;
 					navigator.clipboard
@@ -298,14 +316,17 @@
 				}}
 				color="green"
 			>
-				Compartir capitulo
+				Compartir capítulo
 			</Button>
 		</div>
 	</section>
 
 	{#if loading}
-		<div class="max-md">
-			<div class="loader" />
+		<div class="flex justify-center align-middle max-md text-center self-center">
+			<section class="flex flex-col align-middle mt-4 justify-center items-center">
+				<Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
+				<h4>Cargando Capítulo</h4>
+			</section>
 		</div>
 	{/if}
 
@@ -331,47 +352,4 @@
 {/if}
 
 <style>
-	:root {
-		--load-color: #e37b4f;
-	}
-
-	.loader {
-		width: 48px;
-		height: 48px;
-		display: inline-block;
-		position: relative;
-		border: 3px solid;
-		border-color: #0090de #0000 var(--load-color) #0000;
-		border-radius: 50%;
-		box-sizing: border-box;
-		animation: 1s rotate linear infinite;
-	}
-	.loader:before,
-	.loader:after {
-		content: '';
-		top: 0;
-		left: 0;
-		position: absolute;
-		border: 10px solid transparent;
-		border-bottom-color: var(--load-color);
-		transform: translate(-10px, 19px) rotate(-35deg);
-	}
-	.loader:after {
-		border-color: #0090de #0000 #0000;
-		transform: translate(32px, 3px) rotate(-35deg);
-	}
-	@keyframes rotate {
-		100% {
-			transform: rotate(360deg);
-		}
-	}
-
-	.list {
-		width: min-content;
-	}
-
-	:root {
-		--blue-bg: #7ecffb;
-		--green-bg: #c5ecdd;
-	}
 </style>

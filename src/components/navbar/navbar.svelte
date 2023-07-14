@@ -12,12 +12,11 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { user } from '@/state/user';
+	import Switch from '../Switch.svelte';
+	import '@/app.css';
 
 	let mobileMenu = false;
 	let showMenu = false;
-	function handleClick() {
-		mobileMenu = !mobileMenu;
-	}
 
 	async function Logout() {
 		await fetch('https://bible-api.deno.dev/auth/logout', {
@@ -76,7 +75,7 @@
 	});
 </script>
 
-<header class="sticky top-0 h-20 bg-white">
+<header class="sticky top-0 h-20 bg-white dark:bg-[#293548]">
 	<div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
 		<ul class="flex items-center gap-4 sm:hidden">
 			<button
@@ -87,6 +86,46 @@
 			>
 				<MenuIcon />
 			</button>
+
+			{#if mobileMenu}
+				<ul
+					on:mouseleave={() => (mobileMenu = false)}
+					class="fixed top-16 h-fit sm:hidden bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600"
+				>
+					<button
+						on:click={() => goToPage('/search')}
+						class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+					>
+						<span class="flex flex-row items-center align-middle gap-2">
+							Buscar <SearchIcon width="13" height="13" />
+						</span>
+					</button>
+					<button
+						on:click={() => goToPage('/read')}
+						class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+					>
+						<span class="flex flex-row items-center align-middle gap-2">
+							Leer <BookOpenIcon width="13" height="13" />
+						</span>
+					</button>
+					<button
+						on:click={() => goToPage('/notes')}
+						class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+					>
+						<span class="flex flex-row items-center align-middle gap-2">
+							Notas <NoteIcon width="13" height="13" />
+						</span>
+					</button>
+					<button
+						on:click={() => goToPage('/about')}
+						class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+					>
+						<span class="flex flex-row items-center align-middle gap-2">
+							FAQ <QuestionMarkIcon width="13" height="13" />
+						</span>
+					</button>
+				</ul>
+			{/if}
 
 			{#if $user.loggedIn}
 				<button
@@ -105,46 +144,6 @@
 					/>
 				</button>
 				<!-- Dropdown menu -->
-
-				{#if mobileMenu}
-					<ul
-						on:mouseleave={() => (mobileMenu = false)}
-						class="fixed top-16 h-fit sm:hidden bg-white divide-y divide-gray-100 items-centerrounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600"
-					>
-						<button
-							on:click={() => goToPage('/search')}
-							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-						>
-							<span class="flex flex-row items-center align-middle gap-2">
-								Buscar <SearchIcon width="13" height="13" />
-							</span>
-						</button>
-						<button
-							on:click={() => goToPage('/read')}
-							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-						>
-							<span class="flex flex-row items-center align-middle gap-2">
-								Leer <BookOpenIcon width="13" height="13" />
-							</span>
-						</button>
-						<button
-							on:click={() => goToPage('/notes')}
-							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-						>
-							<span class="flex flex-row items-center align-middle gap-2">
-								Notas <NoteIcon width="13" height="13" />
-							</span>
-						</button>
-						<button
-							on:click={() => goToPage('/about')}
-							class="block px-4 py-1 text-start w-full hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-						>
-							<span class="flex flex-row items-center align-middle gap-2">
-								FAQ <QuestionMarkIcon width="13" height="13" />
-							</span>
-						</button>
-					</ul>
-				{/if}
 
 				{#if showMenu}
 					<div
@@ -171,7 +170,10 @@
 				</Link>
 			{/if}
 		</ul>
-		<Logo />
+		<div class="flex align-middle justify-center">
+			<Switch className="xl:left-64 lg:left-20 md:left-16 sm:left-14 max-sm:right-14" />
+			<Logo />
+		</div>
 
 		<nav class="hidden sm:flex sm:items-center">
 			<ul class="flex items-center gap-4">

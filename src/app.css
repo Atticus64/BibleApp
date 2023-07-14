@@ -5,3 +5,7 @@
 p {
 	line-height: 1.5;
 }
+
+body {
+  @apply bg-white dark:bg-[#1e293b] text-black dark:text-white;
+}

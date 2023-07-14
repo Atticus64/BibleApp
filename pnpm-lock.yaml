@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 devDependencies:
   '@fontsource/fira-mono':
     specifier: 4.5.10
@@ -52,6 +56,9 @@ devDependencies:
   svelte-check:
     specifier: 3.3.2
     version: 3.3.2(postcss@8.4.23)(svelte@3.59.1)
+  svelte-loading-spinners:
+    specifier: ^0.3.4
+    version: 0.3.4
   tailwindcss:
     specifier: 3.3.2
     version: 3.3.2
@@ -2600,6 +2607,10 @@ packages:
       svelte: '>=3.19.0'
     dependencies:
       svelte: 3.59.1
+    dev: true
+
+  /svelte-loading-spinners@0.3.4:
+    resolution: {integrity: sha512-vKaW71QMCBcTNijAGc0mUl8k3DQ66iYmp6MB8BMGCXyWk82bTrcLy8FOnSm9fE+8q6TwzD6PLUoYFHt0II93Xw==}
     dev: true
 
   /svelte-preprocess@5.0.3(postcss@8.4.23)(svelte@3.59.1)(typescript@5.0.4):
