@@ -10,6 +10,7 @@
 	import SvelteMarkdown from 'svelte-markdown';
 	import { Stretch } from 'svelte-loading-spinners';
 	import { Draft, studyMode } from '@/state/study';
+	import { user } from '@/state/user';
 
 	/**
 	 * @type {boolean}
@@ -167,7 +168,11 @@
 	}
 
 	function isValidNote() {
-		console.log($Draft);
+		if (!$user.loggedIn) {
+			toastAlert('Necesitas estar autenticado para crear notas', 'error');
+			return false;
+		}
+
 		if ($Draft.body.length < 20) {
 			toastAlert('El texto debe ser mayor o igual a 20 caracteres', 'error');
 			return false;
@@ -552,7 +557,7 @@
 
 							<div class="flex flex-row justify-end gap-4">
 								<Button type="submit">Guardar nota</Button>
-								<Button type="submit" on:click={handleNewNote}>Crear Nueva Nota</Button>
+								<Button on:click={handleNewNote}>Crear Nueva Nota</Button>
 							</div>
 						</form>
 					</div>
