@@ -7,5 +7,36 @@ p {
 }
 
 body {
-  @apply bg-white dark:bg-[#1e293b] text-black dark:text-white;
+	@apply bg-white text-black dark:bg-[#1e293b] dark:text-white;
+}
+
+a:hover {
+	color: cornflowerblue;
+}
+
+textarea {
+	resize: none;
+}
+
+h1 {
+	font-weight: bold;
+	font-size: xx-large;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: x-large;
+}
+
+h3 {
+	font-weight: bold;
+	font-size: large;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ol > li {
+	list-style: decimal;
 }

@@ -1,4 +1,5 @@
 <script>
+	export let studyMode = false;
 	export let info = {
 		chapters: 50,
 		testament: 'Antiguo Testamento',
@@ -14,17 +15,23 @@
 	};
 </script>
 
-{#each info.vers as v}
-	{#if v.study}
-		<h3 class="p-2 text-2xl">{v.study}</h3>
-	{/if}
-	<p class="verse text-xl">
-		<b>
-			{v.number}
-		</b>
-		{v.verse}
-	</p>
-{/each}
+<section
+	class={studyMode
+		? 'h-[40rem] lg:overflow-auto xl:overflow-auto 2xl:overflow-auto m-4'
+		: 'm-4 w-full max-w-full'}
+>
+	{#each info.vers as v}
+		{#if v.study}
+			<h3 class="p-2 text-2xl">{v.study}</h3>
+		{/if}
+		<p class="verse text-xl">
+			<b>
+				{v.number}
+			</b>
+			{v.verse}
+		</p>
+	{/each}
+</section>
 
 <style>
 	.verse {

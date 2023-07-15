@@ -21,7 +21,7 @@
 
 <svelte:element
 	this={href ? 'a' : 'button'}
-	class="flex h-12 w-full items-center justify-center rounded-lg px-4 {COLOR[color]} {className}"
+	class="flex h-12 w-fit p-3 items-center justify-center rounded-lg {COLOR[color]} {className}"
 	type={href ? undefined : type}
 	{href}
 	on:click

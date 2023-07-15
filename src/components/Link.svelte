@@ -12,7 +12,7 @@
 	export let text;
 </script>
 
-<li aria-current={$page.url.pathname === href ? 'page' : null}>
+<li class="link" aria-current={$page.url.pathname === href ? 'page' : null}>
 	<a
 		{href}
 		class="flex items-center text-lg font-semibold dark:font-normal tracking-widest transition-colors hover:text-[#175d93] dark:hover:text-[#2b8ad3]"
@@ -23,11 +23,11 @@
 </li>
 
 <style lang="postcss">
-	li[aria-current='page'] > a {
+	.link[aria-current='page'] > a {
 		color: #36aff0;
 	}
 
-	li {
+	.link {
 		list-style-type: none;
 	}
 </style>
