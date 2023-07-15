@@ -31,7 +31,9 @@
 	 */
 	export let chapter = 1;
 
-	let md = `# titulo 1 
+	let md =
+		$Draft.body.length === 0
+			? `# titulo 1 
 ## titulo 2 
 ### titulo 3
 ---
@@ -44,10 +46,14 @@
 **imagen**
 
 *lista*
-![](https://i.postimg.cc/wBZFwwBN/boat.jpg)`;
+![](https://i.postimg.cc/wBZFwwBN/boat.jpg)`
+			: $Draft.body;
 
-	if ($Draft.body.length === 0) {
-		$Draft.body = md;
+	$: {
+		Draft.update((u) => {
+			u.body = md;
+			return u;
+		});
 	}
 
 	let loading = true;
@@ -158,6 +164,122 @@
 				break;
 		}
 		handleChange(book, chapter, version).then();
+	}
+
+	function isValidNote() {
+		console.log($Draft);
+		if ($Draft.body.length < 20) {
+			toastAlert('El texto debe ser mayor o igual a 20 caracteres', 'error');
+			return false;
+		}
+
+		if ($Draft.title.length < 8) {
+			toastAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error');
+			return false;
+		}
+
+		if ($Draft.title.length > 40) {
+			toastAlert('El titulo debe ser menor a 40 caracteres', 'error');
+			return false;
+		}
+
+		if ($Draft.description.length < 10) {
+			toastAlert('La descripcion debe ser mayor a 10 caracteres', 'error');
+			return false;
+		}
+
+		return true;
+	}
+
+	function getCurrentPage() {
+		return `${$page.url.origin}/chapter/${version}/${book}/${chapter}`;
+	}
+
+	async function submitNote(e) {
+		if (!isValidNote()) {
+			return;
+		}
+
+		const formData = Object.fromEntries(new FormData(e.target));
+
+		if ($Draft.id !== '') {
+			updateNote(formData);
+			return;
+		}
+
+		createNote(formData);
+	}
+
+	async function handleNewNote(e) {
+		if (!isValidNote()) {
+			return;
+		}
+
+		const formData = {
+			title: $Draft.title,
+			body: $Draft.body,
+			description: $Draft.description
+		};
+		createNote(formData);
+	}
+
+	/**
+	 *
+	 * @param {{ [k: string]: FormDataEntryValue }} formData
+	 */
+	async function updateNote(formData) {
+		console.log(formData);
+		if ($Draft.id !== '') {
+			const res = await fetch(`https://bible-api.deno.dev/notes/${$Draft.id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include',
+				body: JSON.stringify(formData)
+			});
+
+			if (!res.ok) {
+				toastAlert('No se pudo guardar la nota', 'error');
+				return;
+			}
+
+			toastAlert('Nota actualizada', 'success');
+
+			return;
+		}
+	}
+
+	/**
+	 *
+	 * @param {{ [k: string]: FormDataEntryValue }} formData
+	 */
+	async function createNote(formData) {
+		formData.page = getCurrentPage();
+		const response = await fetch('https://bible-api.deno.dev/notes/create', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			credentials: 'include',
+			body: JSON.stringify(formData)
+		});
+
+		if (!response.ok) {
+			toastAlert('No se pudo crear la nota', 'error');
+			return;
+		}
+
+		toastAlert('Nota creada', 'success');
+
+		const data = await response.json();
+
+		Draft.set({
+			id: data.id,
+			title: $Draft.title,
+			body: $Draft.body,
+			description: $Draft.description
+		});
 	}
 
 	/**
@@ -316,8 +438,8 @@
 				id="selectBook"
 				on:click={() => studyMode.set(!$studyMode)}
 				className={$studyMode
-					? 'bg-yellow-500 hover:bg-yellow-400  text-black'
-					: 'bg-green-600 hover:bg-classNamegreen-400 text-black'}
+					? 'bg-yellow-500 hover:bg-yellow-400  max-lg:hidden text-black'
+					: 'bg-green-600 hover:bg-classNamegreen-400 max-lg:hidden  text-black'}
 			>
 				{$studyMode ? 'Modo Estudio Activo' : 'Modo Lectura activo'}
 			</Button>
@@ -390,15 +512,16 @@
 						<SvelteMarkdown source={md} />
 					</div>
 					<div class="h-[26rem]">
-						<form on:submit|preventDefault={() => console.log('subir')}>
+						<form on:submit|preventDefault={submitNote}>
 							<div class="">
 								<label
-									for="email"
+									for="title"
 									class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Titulo</label
 								>
 								<input
 									type="text"
 									id="title"
+									name="title"
 									class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 									placeholder="titulo de mi nota"
 									bind:value={$Draft.title}
@@ -407,12 +530,13 @@
 							</div>
 							<div>
 								<label
-									for="text"
+									for="description"
 									class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
 									>Descripción</label
 								>
 								<input
 									type="text"
+									name="description"
 									id="description"
 									class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 									placeholder="descripción de mi nota"
@@ -421,13 +545,14 @@
 								/>
 							</div>
 							<textarea
+								name="body"
 								class="mt-2 w-full h-[15rem] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-								bind:value={$Draft.body}
+								bind:value={md}
 							/>
 
 							<div class="flex flex-row justify-end gap-4">
 								<Button type="submit">Guardar nota</Button>
-								<Button on:click={() => console.log('crear')}>Crear Nueva Nota</Button>
+								<Button type="submit" on:click={handleNewNote}>Crear Nueva Nota</Button>
 							</div>
 						</form>
 					</div>

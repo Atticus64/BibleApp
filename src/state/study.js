@@ -5,6 +5,7 @@ import { writable } from 'svelte/store'
  * @property {string} title
  * @property {string} description
  * @property {string} body
+ * @property {string} id
  */
 
 /**
@@ -13,7 +14,8 @@ import { writable } from 'svelte/store'
 export const Draft = writable({
   title: '',
   description: '',
-  body: ''
+  body: '',
+  id: ''
 })
 
 export const studyMode = writable(false)
