@@ -3,14 +3,13 @@
 	import { onMount } from 'svelte';
 	import { toastAlert } from '../alert';
 	import { notes } from '@/state/notes';
+	import Button from '@/components/Button.svelte';
 	let loadingNotes = true;
 	let hasError = false;
 
 	onMount(async () => {
-		loadingNotes = false;
-
-		if (!$user.loggedIn) {
-			hasError = true;
+		if ($user.loggedIn) {
+			loadingNotes = false;
 			return;
 		}
 
@@ -45,12 +44,24 @@
 	{#if $notes.length === 0}
 		<p>No hay notas</p>
 	{:else}
-		{#each $notes as note}
-			<h4>{note.title}</h4>
-			<p>{note.description}</p>
-			<p>{note.body}</p>
-			<p>{note.id}</p>
-		{/each}
+		<ul>
+			{#each $notes as note}
+				<li
+					class="base-card block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+				>
+					<h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+						{note.title}
+					</h5>
+					<p class="font-normal text-gray-700 dark:text-gray-400">
+						{note.description}
+					</p>
+					<div class="flex align-middle justify-end gap-4 m-4">
+						<Button>Eliminar nota</Button>
+						<Button>Ver nota</Button>
+					</div>
+				</li>
+			{/each}
+		</ul>
 	{/if}
 {/if}
 
@@ -68,3 +79,9 @@
 		</div>
 	</section>
 {/if}
+
+<style>
+	.base-card {
+		list-style: none;
+	}
+</style>
