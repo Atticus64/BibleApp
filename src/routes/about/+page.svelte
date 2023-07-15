@@ -8,9 +8,9 @@
 		<h2 class="question p-2 text-3xl font-bold">
 			¿Que versiones de la Biblia contiene la aplicación?
 		</h2>
-		<div class="text-2xl">
+		<div class="text-xl">
 			<p>La aplicación contiene las versiones:</p>
-			<ul>
+			<ul class="text-base">
 				<li>Reina Valera 1960</li>
 				<li>Reina Valera 1995</li>
 				<li>Nueva Version Internacional</li>
@@ -18,12 +18,12 @@
 			</ul>
 		</div>
 		<h2 class="question p-2 text-3xl font-bold">¿La informacion proviene de una API?</h2>
-		<div class="text-2xl">
+		<div class="text-xl">
 			<p>
 				Si utilizo una API que desarrolle, se llama BibleApi que es open-source y cualquiera la
 				puede utilizar
 			</p>
-			<ul>
+			<ul class="text-base">
 				<li>
 					<a href="https://bible-api.deno.dev/api" target="_blank" class="text-blue-400 underline"
 						>API</a
@@ -41,17 +41,20 @@
 	</div>
 	<div>
 		<h2 class="question p-2 text-3xl font-bold">¿Tienes algun problema con la aplicación?</h2>
-		<div class="text-2xl">
+		<div class="text-xl">
 			<p>
 				Comunicate al correo
-				<a href="mailto:hackelian64@gmail.com" class="hover:text-green-600 hover:underline">
+				<a
+					href="mailto:hackelian64@gmail.com"
+					class="hover:text-blue-500 text-green-500 hover:underline"
+				>
 					hackelian64@gmail.com
 				</a>
 
 				O tambien puedes abrir un issue en
 				<a
 					href="https://github.com/Atticus64/BibleApp/issues/new"
-					class="hover:text-blue-600 hover:underline"
+					class="hover:text-blue-600 text-green-500 hover:underline"
 				>
 					github
 				</a>

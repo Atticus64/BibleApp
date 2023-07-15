@@ -16,11 +16,11 @@
 			<Button
 				href="/chapter/rv1960/genesis/1"
 				color="blue"
-				className="hover:scale-105 transition-transform p-8"
+				className="hover:scale-105 hover:text-white transition-transform p-8"
 			>
 				Estudiar la Biblia
 			</Button>
-			<Button href="/about" className="hover:scale-105 transition-transform p-8">
+			<Button href="/about" className="hover:scale-105 hover:text-black transition-transform p-8">
 				Preguntas frecuentes
 			</Button>
 		</div>
