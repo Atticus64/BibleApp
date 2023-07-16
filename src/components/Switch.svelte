@@ -1,11 +1,13 @@
 <script>
-	let darkMode = true;
+	let darkMode = false;
 	import { browser } from '$app/environment';
+	import { darkTheme } from '@/state/dark';
 
 	export let className = '';
 
 	function handleSwitchDarkMode() {
 		darkMode = !darkMode;
+		darkTheme.set(darkMode);
 
 		localStorage.setItem('theme', darkMode ? 'dark' : 'light');
 
@@ -25,6 +27,8 @@
 			document.documentElement.classList.remove('dark');
 			darkMode = false;
 		}
+
+		darkTheme.set(darkMode);
 	}
 </script>
 
