@@ -11,7 +11,6 @@
 	import { Stretch } from 'svelte-loading-spinners';
 	import { Draft, studyMode } from '@/state/study';
 	import { user } from '@/state/user';
-	import { darkTheme } from '@/state/dark';
 	import { getLocalThemeIsDark } from '@/utils/localTheme';
 
 	/**
