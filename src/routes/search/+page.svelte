@@ -1,51 +1,8 @@
 <script>
 	import PageMenu from '@/components/PageMenu.svelte';
-	import { searchResults, pattern, page } from '@/state/search';
+	import { searchResults, pattern, page, searchBible, loadingResults } from '@/state/search';
 	import { Stretch } from 'svelte-loading-spinners';
-
-	let loadingResults = false;
-
-	/**
-	 *
-	 * @param {number} page
-	 */
-	function checkPage(page) {
-		if (page < 1) {
-			return;
-		}
-
-		handleSearch();
-	}
-
-	$: checkPage($page);
-
-	function searchBible() {
-		const controller = new AbortController();
-		/**
-		 *
-		 * @param {string} search
-		 */
-		const query = (search) => {
-			if (!search || search.trim() === '') {
-				return Promise.reject('No hay nada que buscar');
-			}
-
-			let url = new URL('https://bible-api.deno.dev/api/nvi/search');
-			url.searchParams.set('q', search);
-			if ($page > 1) {
-				url.searchParams.set('page', $page.toString());
-			}
-
-			return fetch(url, {
-				signal: controller.signal
-			}).then((res) => res.json());
-		};
-
-		return {
-			query,
-			controller
-		};
-	}
+	
 
 	/**
 	 * @type {number|undefined}
@@ -58,11 +15,13 @@
 	let ctr;
 
 	function handleSearch() {
+		page.set(1);
+
 		if (!$pattern) {
 			return;
 		}
 
-		loadingResults = true;
+		loadingResults.set(true);
 		if (timeout) {
 			clearTimeout(timeout);
 		}
@@ -77,14 +36,13 @@
 
 			query($pattern)
 				.then((d) => {
-					console.log(d);
 					searchResults.set(d);
-					loadingResults = false;
+					loadingResults.set(false);
 				})
 				.catch((e) => {
 					console.log('fetch cancelado');
 					console.error(e);
-					loadingResults = false;
+					loadingResults.set(false);
 				});
 		}, 500);
 	}
@@ -124,7 +82,7 @@
 	</div>
 </form>
 
-{#if loadingResults}
+{#if $loadingResults}
 	<div class="flex justify-center align-middle max-md text-center self-center">
 		<section class="flex flex-col align-middle mt-4 justify-center items-center">
 			<Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
