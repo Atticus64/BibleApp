@@ -1,10 +1,10 @@
 <script>
 	import { toastAlert } from '@/routes/alert';
 	import { getLocalThemeIsDark } from '@/utils/localTheme';
-	import { loadingResults, page, pattern, searchBible, searchResults } from '@/state/search';
+	import { loadingResults, page, pattern, searchBible, searchResults, testament, versionSearch } from '@/state/search';
 
 	function reSearch() {
-		const { queryWithPage } = searchBible();
+		const { queryWithPage } = searchBible({ version: $versionSearch.url, testament: $testament.url });
 
 		queryWithPage($pattern, $page)
 			.then((d) => {

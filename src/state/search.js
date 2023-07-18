@@ -10,6 +10,14 @@ import { writable } from 'svelte/store'
  */
 
 /**
+ * @typedef Book
+ * @property {string} name
+ * @property {string} abrev
+ * @property {number} chapters
+ * @property {string} testament
+ */
+
+/**
  * @typedef Data
  * @property {string[]} books
  * @property {Verse[]} vers
@@ -49,13 +57,27 @@ export const searchResults = writable({
   }
 })
 
-export let loadingResults = writable(false)
+export const loadingResults = writable(false)
 
-export let pattern = writable('')
+export const pattern = writable('')
 
-export let page = writable(1)
+export const page = writable(1)
 
-export function searchBible () {
+export const versionSearch = writable({
+  name: 'Reina Valera 1960',
+  url: 'rv1960'
+})
+
+export const testament = writable({
+  name: '',
+  url: ''
+})
+
+/**
+ *
+ * @param {{ version: string, testament: string }} data
+ */
+export function searchBible ({ version, testament }) {
   const controller = new AbortController()
   /**
    *
@@ -66,8 +88,18 @@ export function searchBible () {
       return Promise.reject('No hay nada que buscar')
     }
 
-    const url = new URL('https://bible-api.deno.dev/api/nvi/search')
-    url.searchParams.set('q', search)
+    /**
+     * @type {URL}
+     */
+    let url
+    if (!testament) {
+      url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
+      url.searchParams.set('q', search)
+    } else {
+      url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
+      url.searchParams.set('testament', testament)
+      url.searchParams.set('q', search)
+    }
 
     return fetch(url, {
       signal: controller.signal

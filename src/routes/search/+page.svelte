@@ -1,9 +1,13 @@
 <script>
+	import Button from '@/components/Button.svelte';
 	import PageMenu from '@/components/PageMenu.svelte';
-	import { searchResults, pattern, page, searchBible, loadingResults } from '@/state/search';
+	import { TESTAMENTS, versions } from '@/constants';
+	import { searchResults, pattern, page, searchBible, loadingResults, versionSearch, testament } from '@/state/search';
+	import { clickOutside } from '@/utils/clickOutside';
 	import { Stretch } from 'svelte-loading-spinners';
 	
-
+	let selectVersion = false
+	let selectTestament = false
 	/**
 	 * @type {number|undefined}
 	 */
@@ -13,6 +17,35 @@
 	 * @type {AbortController}
 	 */
 	let ctr;
+
+	/**
+	 * 
+	 * @param {string|{url: string, name: string}} value
+	 * @param {string} prop
+	 */
+	function updateData(value, prop) {
+		switch (prop) {
+			case 'testament':
+				if (typeof value === 'object') {
+					testament.set(value);
+					selectTestament = false;
+				}
+			break;
+		}
+	}
+
+$: {
+	const { query } = searchBible({ version: $versionSearch.url, testament: $testament.url });
+	query($pattern)
+				.then((d) => {
+					searchResults.set(d);
+					loadingResults.set(false);
+				})
+				.catch((e) => {
+					console.error(e);
+					loadingResults.set(false);
+				});
+}
 
 	function handleSearch() {
 		page.set(1);
@@ -31,7 +64,7 @@
 				ctr.abort();
 			}
 
-			const { query, controller } = searchBible();
+			const { query, controller } = searchBible({ version: $versionSearch.url, testament: $testament.url });
 			ctr = controller;
 
 			query($pattern)
@@ -46,6 +79,8 @@
 				});
 		}, 500);
 	}
+
+
 </script>
 
 <form class="m-2 pb-2">
@@ -82,6 +117,75 @@
 	</div>
 </form>
 
+<div class="flex items-center gap-3">
+	<div
+		use:clickOutside
+		on:click_outside={() => (selectTestament = false)}
+		on:mouseleave={() => (selectTestament = false)}
+	>
+		<h4>Testamento</h4>
+		<Button
+			color="green"
+			type="button"
+			id="selectBook"
+			className="w-12 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
+			on:click={() => (selectTestament = !selectTestament)}
+		>
+			{$testament.name === '' ? 'Antiguo y Nuevo Testamento' : $testament.name}
+		</Button>
+
+		{#if selectTestament}
+			<ul
+				class="list absolute flex h-fit flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
+			>
+				{#each TESTAMENTS as t}
+					<button
+						class="cursor-pointer dark:bg-[#1e293b] dark:hover:bg-[#445268] select-none p-2 hover:bg-gray-200"
+						on:click={() => {
+							updateData(t, 'testament');
+						}}
+					>
+						{t.name}
+					</button>
+				{/each}
+			</ul>
+		{/if}
+	</div>
+	<div
+		use:clickOutside
+		on:click_outside={() => (selectVersion = false)}
+		on:mouseleave={() => (selectVersion = false)}
+	>
+		<h4>Version</h4>
+		<Button
+			color="green"
+			id="selectBook"
+			className="w-12 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
+			on:click={() => (selectVersion = !selectVersion)}
+		>
+			{$versionSearch.name === '' ? 'Ingresa tu version' : $versionSearch.name}
+		</Button>
+
+		{#if selectVersion}
+			<ul
+				class="list absolute flex h-fit flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
+			>
+				{#each versions as v}
+					<button
+						on:click={() => {
+							versionSearch.set(v);
+							selectVersion = false;
+						}}
+						class="cursor-pointer dark:bg-[#1e293b] dark:hover:bg-[#445268] select-none p-2 hover:bg-gray-200"
+					>
+						{v.name}
+					</button>
+				{/each}
+			</ul>
+		{/if}
+	</div>
+</div>
+
 {#if $loadingResults}
 	<div class="flex justify-center align-middle max-md text-center self-center">
 		<section class="flex flex-col align-middle mt-4 justify-center items-center">
@@ -89,6 +193,8 @@
 			<h4>Cargando Resultados</h4>
 		</section>
 	</div>
+{:else if $searchResults.data.vers.length === 0}
+	<p>No hay resultados</p>
 {:else if $searchResults.data.vers.length > 0}
 	{#each $searchResults.data.vers as vers}
 		<div
@@ -110,5 +216,5 @@
 		<PageMenu pageCount={$searchResults.meta.pageCount} />
 	</div>
 {:else}
-	<p>No hay resultados</p>
+	<p>No se han podido obtener resultados</p>
 {/if}

@@ -67,7 +67,28 @@ export const books = [
 	'Apocalipsis'
 ];
 
+export const VERSIONS = {
+	'rv1960': 'Reina Valera 1960',
+	'rv1995': 'Reina Valera 1995',
+	'nvi': 'Nueva Version Internacional',
+	'dhh': 'Dios Habla Hoy'
+}
 
+export const TESTAMENTS = [
+	{
+		url: 'old',
+		name: 'Antiguo Testamento'
+	},
+	{
+		url: 'new',
+		name: 'Nuevo Testamento'
+	},
+	{
+		url: 'both',
+		name: 'Antiguo y Nuevo Testamento'
+	}
+
+]
 
 export const versions = [
 	{
