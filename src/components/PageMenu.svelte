@@ -1,10 +1,22 @@
 <script>
 	import { toastAlert } from '@/routes/alert';
 	import { getLocalThemeIsDark } from '@/utils/localTheme';
-	import { loadingResults, page, pattern, searchBible, searchResults, testament, versionSearch } from '@/state/search';
+	import {
+		loadingResults,
+		page,
+		pattern,
+		searchBible,
+		searchResults,
+		testament,
+		versionSearch
+	} from '@/state/search';
 
 	function reSearch() {
-		const { queryWithPage } = searchBible({ version: $versionSearch.url, testament: $testament.url });
+		const { queryWithPage } = searchBible({
+			version: $versionSearch.url,
+			testament: $testament.url
+		});
+		loadingResults.set(true);
 
 		queryWithPage($pattern, $page)
 			.then((d) => {
@@ -12,7 +24,6 @@
 				loadingResults.set(false);
 			})
 			.catch((e) => {
-				console.log('fetch cancelado');
 				console.error(e);
 				loadingResults.set(false);
 			});
@@ -51,7 +62,7 @@
 </script>
 
 <wc-toast />
-<nav >
+<nav>
 	<ul class="navigation inline-flex -space-x-px text-base h-10">
 		<li>
 			<button
@@ -71,7 +82,9 @@
 			{#each { length: pageCount } as _, pg}
 				<li>
 					<button
-						on:click={() => page.set(pg + 1)}
+						on:click={() => {
+							changePage(pg + 1);
+						}}
 						class={`${
 							pg === $page - 1
 								? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'
@@ -86,7 +99,6 @@
 				<li>
 					<button
 						on:click={() => {
-							console.log(pg)
 							changePage(pg + 1);
 						}}
 						class={`${
@@ -110,7 +122,7 @@
 						changePage(getMiddleValue());
 					}}
 					class={`${
-						isMiddle 
+						isMiddle
 							? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'
 							: ''
 					} flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
@@ -138,7 +150,9 @@
 			</li>
 			<li>
 				<button
-					on:click={() => changePage(pageCount)}
+					on:click={() => {
+						changePage(pageCount);
+					}}
 					class={`${
 						pageCount === $page
 							? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'

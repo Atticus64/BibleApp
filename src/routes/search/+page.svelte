@@ -2,14 +2,23 @@
 	import Button from '@/components/Button.svelte';
 	import PageMenu from '@/components/PageMenu.svelte';
 	import { TESTAMENTS, versions } from '@/constants';
-	import { searchResults, pattern, page, searchBible, loadingResults, versionSearch, testament } from '@/state/search';
+	import {
+		searchResults,
+		pattern,
+		page,
+		searchBible,
+		loadingResults,
+		versionSearch,
+		testament
+	} from '@/state/search';
 	import { clickOutside } from '@/utils/clickOutside';
 	import { Stretch } from 'svelte-loading-spinners';
-	
-	let selectVersion = false
-	let selectTestament = false
+
+	let selectVersion = false;
+	let selectTestament = false;
+
 	/**
-	 * @type {number|undefined}
+	 * @type {number}
 	 */
 	let timeout;
 
@@ -19,7 +28,7 @@
 	let ctr;
 
 	/**
-	 * 
+	 *
 	 * @param {string|{url: string, name: string}} value
 	 * @param {string} prop
 	 */
@@ -30,41 +39,31 @@
 					testament.set(value);
 					selectTestament = false;
 				}
-			break;
+				break;
 		}
 	}
 
-$: {
-	const { query } = searchBible({ version: $versionSearch.url, testament: $testament.url });
-	query($pattern)
-				.then((d) => {
-					searchResults.set(d);
-					loadingResults.set(false);
-				})
-				.catch((e) => {
-					console.error(e);
-					loadingResults.set(false);
-				});
-}
+	$: {
+		search($versionSearch.url, $testament.url, false);
+	}
 
 	function handleSearch() {
-		page.set(1);
+		search($versionSearch.url, $testament.url, true);
+	}
 
-		if (!$pattern) {
-			return;
-		}
-
-		loadingResults.set(true);
-		if (timeout) {
-			clearTimeout(timeout);
-		}
-
-		timeout = setTimeout(() => {
+	/**
+	 *
+	 * @param {string} version
+	 * @param {string} testament
+	 * @param {boolean|undefined} timer
+	 */
+	function search(version, testament, timer) {
+		const getResults = () => {
 			if (ctr) {
 				ctr.abort();
 			}
 
-			const { query, controller } = searchBible({ version: $versionSearch.url, testament: $testament.url });
+			const { query, controller } = searchBible({ version, testament });
 			ctr = controller;
 
 			query($pattern)
@@ -77,10 +76,28 @@ $: {
 					console.error(e);
 					loadingResults.set(false);
 				});
+		};
+
+		page.set(1);
+
+		if (!$pattern) {
+			return;
+		}
+
+		loadingResults.set(true);
+		if (!timer) {
+			getResults();
+			return;
+		}
+
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+
+		timeout = setTimeout(() => {
+			getResults();
 		}, 500);
 	}
-
-
 </script>
 
 <form class="m-2 pb-2">
