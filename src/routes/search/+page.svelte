@@ -53,6 +53,18 @@
 
 	/**
 	 *
+	 * @param {string} book
+	 * @param {number} chapter
+	 */
+	function urlVerse(book, chapter) {
+		const endpoint = `https://bible-study.vercel.app/chapter/${
+			$versionSearch.url
+		}/${book.toLowerCase()}/${chapter}`;
+		return endpoint;
+	}
+
+	/**
+	 *
 	 * @param {string} version
 	 * @param {string} testament
 	 * @param {boolean|undefined} timer
@@ -101,22 +113,22 @@
 </script>
 
 <form class="m-2 pb-2">
-	<label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+	<label for="default-search" class="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
 		>Search</label
 	>
 	<div class="relative">
 		<input
 			type="search"
 			id="default-search"
-			class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+			class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 			placeholder="Jesús, la verdad, pedro, etc..."
 			required
 			bind:value={$pattern}
 			on:input={handleSearch}
 		/>
-		<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+		<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 			<svg
-				class="w-4 h-4 text-gray-500 dark:text-gray-400"
+				class="h-4 w-4 text-gray-500 dark:text-gray-400"
 				aria-hidden="true"
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
@@ -157,7 +169,7 @@
 			>
 				{#each TESTAMENTS as t}
 					<button
-						class="cursor-pointer dark:bg-[#1e293b] dark:hover:bg-[#445268] select-none p-2 hover:bg-gray-200"
+						class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
 						on:click={() => {
 							updateData(t, 'testament');
 						}}
@@ -193,7 +205,7 @@
 							versionSearch.set(v);
 							selectVersion = false;
 						}}
-						class="cursor-pointer dark:bg-[#1e293b] dark:hover:bg-[#445268] select-none p-2 hover:bg-gray-200"
+						class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
 					>
 						{v.name}
 					</button>
@@ -204,27 +216,29 @@
 </div>
 
 {#if $loadingResults}
-	<div class="flex justify-center align-middle max-md text-center self-center">
-		<section class="flex flex-col align-middle mt-4 justify-center items-center">
+	<div class="max-md flex justify-center self-center text-center align-middle">
+		<section class="mt-4 flex flex-col items-center justify-center align-middle">
 			<Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
 			<h4>Cargando Resultados</h4>
 		</section>
 	</div>
-{:else if $searchResults.data.vers.length === 0}
+{:else if $searchResults.data.length === 0}
 	<p>No hay resultados</p>
-{:else if $searchResults.data.vers.length > 0}
-	{#each $searchResults.data.vers as vers}
+{:else if $searchResults.data.length > 0}
+	{#each $searchResults.data as vers}
 		<div
-			class="flex gap-2 m-2 flex-col p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+			class="m-2 flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-6 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
 		>
 			{#if vers.study}
 				<h4 class="text-2xl">{vers.study}</h4>
 			{/if}
-			<p>Pasaje: {vers.passage}</p>
+			<p>Pasaje: {vers.book} {vers.chapter}:{vers.number}</p>
 			<p>{vers.verse}</p>
 
-			<a href={vers.url} target="_blank" class="underline text-blue-500 w-fit p-2"
-				>Leer este pasaje</a
+			<a
+				href={urlVerse(vers.book, vers.chapter)}
+				target="_blank"
+				class="w-fit p-2 text-blue-500 underline">Leer este pasaje</a
 			>
 		</div>
 	{/each}

@@ -2,10 +2,12 @@ import { writable } from 'svelte/store'
 
 /**
  * @typedef Verse
- * @property {string} passage
  * @property {string|undefined} study
  * @property {string} id
  * @property {string} verse
+ * @property {string} book
+ * @property {number} chapter
+ * @property {number} number
  * @property {string} url
  */
 
@@ -18,12 +20,6 @@ import { writable } from 'svelte/store'
  */
 
 /**
- * @typedef Data
- * @property {string[]} books
- * @property {Verse[]} vers
- */
-
-/**
  * @typedef MetaData
  * @property {number} page
  * @property {number} pageCount
@@ -33,7 +29,7 @@ import { writable } from 'svelte/store'
 
 /**
  * @typedef Result
- * @property {Data} data
+ * @property {Verse[]} data
  * @property {MetaData} meta
  */
 
@@ -45,10 +41,7 @@ import { writable } from 'svelte/store'
  * @type {SearchResult}
  */
 export const searchResults = writable({
-  data: {
-    books: [],
-    vers: []
-  },
+  data: [],
   meta: {
     page: 0,
     pageCount: 0,
@@ -77,7 +70,7 @@ export const testament = writable({
  *
  * @param {{ version: string, testament: string }} data
  */
-export function searchBible ({ version, testament }) {
+export function searchBible({ version, testament }) {
   const controller = new AbortController()
   /**
    *
@@ -93,10 +86,10 @@ export function searchBible ({ version, testament }) {
      */
     let url
     if (!testament) {
-      url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
+      url = new URL(`https://bible-api.deno.dev/api/${version}/test/search`)
       url.searchParams.set('q', search)
     } else {
-      url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
+      url = new URL(`https://bible-api.deno.dev/api/${version}/test/search`)
       url.searchParams.set('testament', testament)
       url.searchParams.set('q', search)
     }
@@ -110,13 +103,14 @@ export function searchBible ({ version, testament }) {
    *
    * @param {string} search
    * @param {number} page
+   * @param {string} version
    */
-  const queryWithPage = (search, page) => {
+  const queryWithPage = (search, page, version) => {
     if (!search || search.trim() === '') {
       return Promise.reject('No hay nada que buscar')
     }
 
-    const url = new URL('https://bible-api.deno.dev/api/nvi/search')
+    const url = new URL(`https://bible-api.deno.dev/api/${version}/test/search`)
     url.searchParams.set('q', search)
     url.searchParams.set('page', page.toString())
 

@@ -66,7 +66,7 @@
 	let selectVersion = false;
 
 	let info = {
-		chapters: 50,
+		num_chapters: 50,
 		testament: 'Antiguo Testamento',
 		name: 'Genesis',
 		chapter: '',
@@ -96,6 +96,7 @@
 				goto(`/chapter/${version}/${book}/${chapter}`);
 			}
 		}
+		chapters = bookInfo.chapters;
 
 		loading = true;
 		const resp = await fetch(
@@ -238,7 +239,6 @@
 	 * @param {{ [k: string]: FormDataEntryValue }} formData
 	 */
 	async function updateNote(formData) {
-		console.log(formData);
 		if ($Draft.id !== '') {
 			const res = await fetch(`https://bible-api.deno.dev/notes/${$Draft.id}`, {
 				method: 'PUT',
@@ -343,7 +343,7 @@
 		}
 
 		info = await getData();
-		chapters = info.chapters;
+		chapters = info.num_chapters;
 	});
 </script>
 
@@ -372,7 +372,7 @@
 					>
 						{#each versions as v}
 							<button
-								class="cursor-pointer dark:bg-[#1e293b] dark:hover:bg-[#445268] select-none p-2 hover:bg-gray-200"
+								class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
 								on:click={() => {
 									updateData(v.url, 'version');
 								}}
@@ -430,7 +430,7 @@
 					>
 						{#each { length: chapters } as _, c}
 							<button
-								class="w-[5rem] cursor-pointer select-none p-2 dark:bg-[#1e293b] dark:hover:bg-[#445268] dark:text-white hover:bg-gray-200"
+								class="w-[5rem] cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:text-white dark:hover:bg-[#445268]"
 								on:click={() => {
 									updateData(c + 1, 'chapter');
 								}}
@@ -501,8 +501,8 @@
 	</section>
 
 	{#if loading}
-		<div class="flex justify-center align-middle max-md text-center self-center">
-			<section class="flex flex-col align-middle mt-4 justify-center items-center">
+		<div class="max-md flex justify-center self-center text-center align-middle">
+			<section class="mt-4 flex flex-col items-center justify-center align-middle">
 				<Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
 				<h4>Cargando Capítulo</h4>
 			</section>
@@ -510,15 +510,15 @@
 	{/if}
 
 	{#if !loading && !hasError && info}
-		<div class="max-w-full flex flex-row">
-			<section class={$studyMode ? '2xl:w-2/4 xl:w-1/2 max-w-full' : 'max-w-full w-full'}>
+		<div class="flex max-w-full flex-row">
+			<section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
 				<h3 class="p-2 text-3xl">{formatName(book)}: {chapter}</h3>
 				<Passage studyMode={$studyMode} {info} />
 			</section>
 
 			{#if $studyMode}
-				<section class="xl:w-1/2 xl:max-w-full 2xl:w-1/2 2xl:max-w-full max-lg:hidden">
-					<div class="p-4 h-[13rem] m-10 justify-center overflow-auto">
+				<section class="max-lg:hidden xl:w-1/2 xl:max-w-full 2xl:w-1/2 2xl:max-w-full">
+					<div class="m-10 h-[13rem] justify-center overflow-auto p-4">
 						<SvelteMarkdown source={md} />
 					</div>
 					<div class="h-[26rem]">
@@ -526,13 +526,13 @@
 							<div class="">
 								<label
 									for="title"
-									class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Titulo</label
+									class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Titulo</label
 								>
 								<input
 									type="text"
 									id="title"
 									name="title"
-									class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+									class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 									placeholder="titulo de mi nota"
 									bind:value={$Draft.title}
 									required
@@ -541,14 +541,14 @@
 							<div>
 								<label
 									for="description"
-									class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+									class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
 									>Descripción</label
 								>
 								<input
 									type="text"
 									name="description"
 									id="description"
-									class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+									class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 									placeholder="descripción de mi nota"
 									required
 									bind:value={$Draft.description}
@@ -556,7 +556,7 @@
 							</div>
 							<textarea
 								name="body"
-								class="mt-2 w-full h-[15rem] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+								class="mt-2 block h-[15rem] w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
 								bind:value={md}
 							/>
 

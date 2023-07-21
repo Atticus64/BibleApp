@@ -1,7 +1,7 @@
 <script>
 	export let studyMode = false;
 	export let info = {
-		chapters: 50,
+		num_chapters: 50,
 		testament: 'Antiguo Testamento',
 		name: 'Genesis',
 		chapter: '',
@@ -17,7 +17,7 @@
 
 <section
 	class={studyMode
-		? 'h-[40rem] lg:overflow-auto xl:overflow-auto 2xl:overflow-auto m-4'
+		? 'm-4 h-[40rem] lg:overflow-auto xl:overflow-auto 2xl:overflow-auto'
 		: 'm-4 w-full max-w-full'}
 >
 	{#each info.vers as v}

@@ -18,7 +18,7 @@
 		});
 		loadingResults.set(true);
 
-		queryWithPage($pattern, $page)
+		queryWithPage($pattern, $page, $versionSearch.url)
 			.then((d) => {
 				searchResults.set(d);
 				loadingResults.set(false);
@@ -63,7 +63,7 @@
 
 <wc-toast />
 <nav>
-	<ul class="navigation inline-flex -space-x-px text-base h-10">
+	<ul class="navigation inline-flex h-10 -space-x-px text-base">
 		<li>
 			<button
 				on:click={() => {
@@ -74,7 +74,7 @@
 					changePage($page - 1);
 				}}
 				aria-label="Anterior pagina"
-				class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+				class="ml-0 flex h-10 items-center justify-center rounded-l-lg border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 				>Prev</button
 			>
 		</li>
@@ -87,9 +87,9 @@
 						}}
 						class={`${
 							pg === $page - 1
-								? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'
+								? 'border-gray-300:bg-gray-100:text-gray-700 border bg-blue-200 font-bold dark:border-gray-700 dark:bg-blue-800 dark:font-normal dark:text-white'
 								: ''
-						} flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+						} flex h-10 items-center justify-center border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
 						>{pg + 1}</button
 					>
 				</li>
@@ -103,16 +103,16 @@
 						}}
 						class={`${
 							pg === $page - 1
-								? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'
+								? 'border-gray-300:bg-gray-100:text-gray-700 border bg-blue-200 font-bold dark:border-gray-700 dark:bg-blue-800 dark:font-normal dark:text-white'
 								: ''
-						} flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+						} flex h-10 items-center justify-center border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
 						>{pg + 1}</button
 					>
 				</li>
 			{/each}
 			<li class="max-sm:hidden">
 				<button
-					class={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+					class={`flex h-10 items-center justify-center border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
 					>....</button
 				>
 			</li>
@@ -123,15 +123,15 @@
 					}}
 					class={`${
 						isMiddle
-							? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'
+							? 'border-gray-300:bg-gray-100:text-gray-700 border bg-blue-200 font-bold dark:border-gray-700 dark:bg-blue-800 dark:font-normal dark:text-white'
 							: ''
-					} flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+					} flex h-10 items-center justify-center border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
 					>{isMiddle ? $page : Math.ceil(pageCount / 2)}</button
 				>
 			</li>
 			<li class="max-sm:hidden">
 				<button
-					class={`flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+					class={`flex h-10 items-center justify-center border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
 					>....</button
 				>
 			</li>
@@ -142,9 +142,9 @@
 					}}
 					class={`${
 						pageCount - 1 === $page
-							? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'
+							? 'border-gray-300:bg-gray-100:text-gray-700 border bg-blue-200 font-bold dark:border-gray-700 dark:bg-blue-800 dark:font-normal dark:text-white'
 							: ''
-					} flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+					} flex h-10 items-center justify-center border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
 					>{pageCount - 1}</button
 				>
 			</li>
@@ -155,9 +155,9 @@
 					}}
 					class={`${
 						pageCount === $page
-							? 'font-bold bg-blue-200 dark:font-normal dark:bg-blue-800 border border-gray-300:bg-gray-100:text-gray-700 dark:border-gray-700 dark:text-white'
+							? 'border-gray-300:bg-gray-100:text-gray-700 border bg-blue-200 font-bold dark:border-gray-700 dark:bg-blue-800 dark:font-normal dark:text-white'
 							: ''
-					} flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+					} flex h-10 items-center justify-center border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
 					>{pageCount}</button
 				>
 			</li>
@@ -173,7 +173,7 @@
 					changePage($page + 1);
 				}}
 				aria-label="Siguiente pagina"
-				class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+				class="flex h-10 items-center justify-center rounded-r-lg border border-gray-300 bg-white px-4 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
 				>Sig</button
 			>
 		</li>
