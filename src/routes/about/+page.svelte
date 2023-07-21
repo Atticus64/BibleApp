@@ -46,15 +46,15 @@
 				Comunicate al correo
 				<a
 					href="mailto:hackelian64@gmail.com"
-					class="hover:text-blue-500 text-green-500 hover:underline"
+					class="text-green-500 hover:text-blue-500 hover:underline"
 				>
-					hackelian64@gmail.com
+					jonalca.ce@gmail.com
 				</a>
 
 				O tambien puedes abrir un issue en
 				<a
 					href="https://github.com/Atticus64/BibleApp/issues/new"
-					class="hover:text-blue-600 text-green-500 hover:underline"
+					class="text-green-500 hover:text-blue-600 hover:underline"
 				>
 					github
 				</a>
