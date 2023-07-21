@@ -45,7 +45,7 @@
 			<p>
 				Comunicate al correo
 				<a
-					href="mailto:hackelian64@gmail.com"
+					href="mailto:jonalca.ce@gmail.com"
 					class="text-green-500 hover:text-blue-500 hover:underline"
 				>
 					jonalca.ce@gmail.com
