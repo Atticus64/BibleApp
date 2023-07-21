@@ -3,40 +3,40 @@
 @import 'tailwindcss/utilities';
 
 p {
-	line-height: 1.5;
+  line-height: 1.5;
 }
 
 body {
-	@apply bg-white text-black dark:bg-[#1e293b] dark:text-white;
+  @apply bg-white text-black dark:bg-[#1e293b] dark:text-white;
 }
 
 a:hover {
-	color: cornflowerblue;
+  color: cornflowerblue;
 }
 
 textarea {
-	resize: none;
+  resize: none;
 }
 
 h1 {
-	font-weight: bold;
-	font-size: xx-large;
+  font-weight: bold;
+  font-size: xx-large;
 }
 
 h2 {
-	font-weight: bold;
-	font-size: x-large;
+  font-weight: bold;
+  font-size: x-large;
 }
 
 h3 {
-	font-weight: bold;
-	font-size: large;
+  font-weight: bold;
+  font-size: large;
 }
 
 ul > li {
-	list-style: disc;
+  list-style: disc;
 }
 
 ol > li {
-	list-style: decimal;
+  list-style: decimal;
 }

@@ -1,5 +1,5 @@
 <script>
-	import StudyChapter from '@/components/StudyChapter.svelte';
+  import StudyChapter from '@/components/StudyChapter.svelte'
 </script>
 
 <StudyChapter wantBookMark={true} />
