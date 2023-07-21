@@ -40,7 +40,9 @@
 		</div>
 	</div>
 	<div>
-		<h2 class="question p-2 text-3xl font-bold">¿Tienes algun problema con la aplicación?</h2>
+		<h2 class="question p-2 text-3xl font-bold">
+			¿Tienes algun problema con la aplicacióno sugerencia?
+		</h2>
 		<div class="text-xl">
 			<p>
 				Comunicate al correo
