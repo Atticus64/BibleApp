@@ -15,7 +15,8 @@ module.exports = {
       files: ['*.js'],
       extends: ['standard'],
       rules: {
-        'prefer-promise-reject-errors': 'off'
+        'prefer-promise-reject-errors': 'off',
+        'space-before-function-paren': 'off'
       }
     },
     {
