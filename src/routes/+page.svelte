@@ -14,7 +14,7 @@
 
     <div class="flex items-center gap-10 py-6 text-xl font-bold">
       <Button
-        href="/chapter/rv1960/genesis/1"
+        href="/read"
         color="blue"
         className="hover:scale-105 hover:text-white transition-transform p-8"
       >
