@@ -112,6 +112,10 @@ export function searchBible({ version, testament }) {
 
     const url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
     url.searchParams.set('q', search)
+    if (testament) {
+      url.searchParams.set('testament', testament)
+    }
+
     url.searchParams.set('page', page.toString())
 
     return fetch(url, {
