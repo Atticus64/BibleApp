@@ -30,6 +30,9 @@
     )
 
     goto(`/chapter/${version}/${book}/${chapter}`)
+    selectVersion = false
+    selectChapter = false
+    selectBook = false
   }
 </script>
 
