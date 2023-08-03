@@ -81,28 +81,67 @@
 
   let chapters = 55
 
+  /**
+   *
+   * @param {string} name
+   */
+  function formatName(name) {
+    if (name.includes('-')) {
+      const words = name.split('-')
+      const acc = []
+      for (const w of words) {
+        const [firstLetter, ...rest] = w
+        const newName = firstLetter.toUpperCase() + rest.join('')
+        acc.push(newName)
+      }
+      return acc.join(' ')
+    }
+
+    const [firstLetter, ...rest] = name
+    return firstLetter.toUpperCase() + rest.join('')
+  }
+
+  /**
+   * @param {string} name
+   */
+  function searchName(name) {
+    if (name.includes('-')) {
+      const words = name.split('-')
+      const acc = []
+      for (const w of words) {
+        const [firstLetter, ...rest] = w
+        const newName = firstLetter.toUpperCase() + rest.join('')
+        acc.push(newName)
+      }
+      return acc.join('-')
+    }
+
+    const [firstLetter, ...rest] = name
+    return firstLetter.toUpperCase() + rest.join('')
+  }
+
   const getData = async () => {
     if (book === '') return
     hasError = false
     error = ''
 
-    const r = await fetch(`https://bible-api.deno.dev/api/book/${book}`)
+    const r = await fetch(`https://bible-api.deno.dev/api/book/${searchName(book)}`)
     const bookInfo = await r.json()
 
     if (chapters > bookInfo.chapters) {
       chapters = bookInfo.chapters
       if (chapter > chapters) {
         chapter = 1
-        goto(`/chapter/${version}/${book}/${chapter}`)
+        goto(`/chapter/${version}/${searchName(book)}/${chapter}`)
       }
     }
     chapters = bookInfo.chapters
 
     loading = true
     const resp = await fetch(
-      `https://bible-api.deno.dev/api/${
-        version === '' ? 'rv1960' : version
-      }/book/${book}/${chapter}`
+      `https://bible-api.deno.dev/api/${version === '' ? 'rv1960' : version}/book/${searchName(
+        book
+      )}/${chapter}`
     )
 
     if (!resp.ok) {
@@ -141,7 +180,7 @@
         book
       })
     )
-    goto(`/chapter/${version}/${book}/${chapter}`)
+    goto(`/chapter/${version}/${searchName(book)}/${chapter}`)
     info = await getData()
   }
 
@@ -203,7 +242,7 @@
   }
 
   function getCurrentPage() {
-    return `${$page.url.origin}/chapter/${version}/${book}/${chapter}`
+    return `${$page.url.origin}/chapter/${version}/${searchName(book)}/${chapter}`
   }
 
   async function submitNote(e) {
@@ -308,25 +347,6 @@
         selectVersion = !selectVersion
         break
     }
-  }
-  /**
-   *
-   * @param {string} name
-   */
-  function formatName(name) {
-    if (name.includes('-')) {
-      const words = name.split('-')
-      const acc = []
-      for (const w of words) {
-        const [firstLetter, ...rest] = w
-        const newName = firstLetter.toUpperCase() + rest.join('')
-        acc.push(newName)
-      }
-      return acc.join(' ')
-    }
-
-    const [firstLetter, ...rest] = name
-    return firstLetter.toUpperCase() + rest.join('')
   }
 
   onMount(async () => {
