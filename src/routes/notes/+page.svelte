@@ -49,6 +49,13 @@
   }
 
   onMount(async () => {
+
+		if (!$user.loggedIn) {
+	  	hasError = true
+			loadingNotes = false
+			return
+		}
+
     await fetch('https://bible-api.deno.dev/notes', {
       headers: {
         'Content-Type': 'application/json',

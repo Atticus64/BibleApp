@@ -90,38 +90,38 @@
       {#if mobileMenu}
         <ul
           on:mouseleave={() => (mobileMenu = false)}
-          class="items-centerrounded-lg fixed top-16 h-fit w-52 divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
+          class="flex flex-col justify-center align-middle content-center rounded-lg fixed top-16 h-80 w-8/12 divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
         >
           <button
             on:click={() => goToPage('/search')}
-            class="block w-full px-4 py-1 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="flex w-full h-1/4 text-xl px-4 py-1 items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
-            <span class="flex flex-row items-center gap-2 align-middle">
-              Buscar <SearchIcon width="13" height="13" />
+            <span class="flex flex-row items-center bordertext-xl gap-2 align-middle">
+              Buscar <SearchIcon width="23" height="23" />
             </span>
           </button>
           <button
             on:click={() => goToPage('/read')}
-            class="block w-full px-4 py-1 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block w-full h-1/4  text-xl px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
-              Leer <BookOpenIcon width="13" height="13" />
+              Leer <BookOpenIcon width="23" height="23" />
             </span>
           </button>
           <button
             on:click={() => goToPage('/notes')}
-            class="block w-full px-4 py-1 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block w-full h-1/4 px-4 py-1  text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
-              Notas <NoteIcon width="13" height="13" />
+              Notas <NoteIcon width="23" height="23" />
             </span>
           </button>
           <button
             on:click={() => goToPage('/about')}
-            class="block w-full px-4 py-1 text-start hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block w-full px-4 h-1/4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
-            <span class="flex flex-row items-center gap-2 align-middle">
-              FAQ <QuestionMarkIcon width="13" height="13" />
+            <span class="flex flex-row items-center text-xl gap-2 align-middle">
+              FAQ <QuestionMarkIcon width="23" height="23" />
             </span>
           </button>
         </ul>

@@ -31,9 +31,16 @@
         </li>
         <li>
           <a
-            href="https://github.com/Atticus64/Bible-Api"
+            href="https://github.com/Atticus64/BibleApi"
             target="_blank"
             class="text-blue-400 underline">Codigo fuente del API</a
+          >
+        </li>
+				<li>
+          <a
+            href="https://docs-bible-api.vercel.app/"
+            target="_blank"
+            class="text-blue-400 underline">Documentacion del API</a
           >
         </li>
       </ul>
