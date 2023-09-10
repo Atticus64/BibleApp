@@ -90,7 +90,7 @@
       {#if mobileMenu}
         <ul
           on:mouseleave={() => (mobileMenu = false)}
-          class="flex flex-col justify-center align-middle content-center rounded-lg fixed top-16 h-80 w-8/12 divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
+          class="flex flex-col justify-center align-middle content-center rounded-lg fixed top-16 h-80 w-5/12 divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
         >
           <button
             on:click={() => goToPage('/search')}
