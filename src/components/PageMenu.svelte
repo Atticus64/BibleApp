@@ -11,6 +11,11 @@
     versionSearch
   } from '@/state/search'
 
+  /** @type {number} */
+  export let pageCount
+
+  let isMiddle = $page > 2 && $page < pageCount - 1
+
   function reSearch() {
     const { queryWithPage } = searchBible({
       version: $versionSearch.url,
@@ -28,8 +33,8 @@
         loadingResults.set(false)
       })
   }
+
   /**
-   *
    * @param {number} pageValue
    */
   function changePage(pageValue) {
@@ -37,16 +42,6 @@
 
     reSearch()
   }
-
-  /**
-   * @type {number}
-   */
-  /**
-   * @type {number}
-   */
-  export let pageCount
-
-  let isMiddle = $page > 2 && $page < pageCount - 1
 
   function getMiddleValue() {
     return isMiddle ? $page : Math.ceil(pageCount / 2)
@@ -62,6 +57,7 @@
 </script>
 
 <wc-toast />
+
 <nav>
   <ul class="navigation inline-flex h-10 -space-x-px text-base">
     <li>

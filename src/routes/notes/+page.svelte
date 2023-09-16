@@ -10,42 +10,9 @@
 
   let loadingNotes = true
   let hasError = false
+
   if ($darkTheme) {
     import('@sweetalert2/theme-dark/dark.css')
-  }
-
-  /**
-   *
-   * @param {string} id
-   */
-  async function deleteNote(id) {
-    const result = await Swal.fire({
-      title: 'Quieres eliminar esta nota?',
-      text: 'Si la eliminas no la podras recuperar',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si borrar nota'
-    })
-
-    if (result.isConfirmed) {
-      notes.set($notes.filter((note) => note.id !== id))
-
-      const res = await fetch(`https://bible-api.deno.dev/notes/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      })
-
-      if (!res.ok) {
-        toastAlert('No se pudo borrar la nota', 'error', getLocalThemeIsDark())
-        return
-      }
-
-      toastAlert('Nota eliminada', 'success', getLocalThemeIsDark())
-    } else {
-      return
-    }
   }
 
   onMount(async () => {
@@ -78,6 +45,39 @@
 
     loadingNotes = false
   })
+
+  /**
+   * @param {string} id
+   */
+  async function deleteNote(id) {
+    const result = await Swal.fire({
+      title: 'Quieres eliminar esta nota?',
+      text: 'Si la eliminas no la podras recuperar',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si borrar nota'
+    })
+
+    if (result.isConfirmed) {
+      notes.set($notes.filter((note) => note.id !== id))
+
+      const res = await fetch(`https://bible-api.deno.dev/notes/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+
+      if (!res.ok) {
+        toastAlert('No se pudo borrar la nota', 'error', getLocalThemeIsDark())
+        return
+      }
+
+      toastAlert('Nota eliminada', 'success', getLocalThemeIsDark())
+    } else {
+      return
+    }
+  }
 </script>
 
 <wc-toast />

@@ -1,6 +1,7 @@
 // src/routes/blog/[slug]/+page.js
 
 export const ssr = false
+
 /** @type {import('./$types').PageLoad} */
 export function load({ params }) {
   return {

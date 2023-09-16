@@ -17,18 +17,13 @@
   let selectVersion = false
   let selectTestament = false
 
-  /**
-   * @type {number}
-   */
+  /** @type {number} */
   let timeout
 
-  /***
-   * @type {AbortController}
-   */
+  /** @type {AbortController} */
   let ctr
 
   /**
-   *
    * @param {string|{url: string, name: string}} value
    * @param {string} prop
    */
@@ -43,16 +38,11 @@
     }
   }
 
-  $: {
-    search($versionSearch.url, $testament.url, false)
-  }
-
   function handleSearch() {
     search($versionSearch.url, $testament.url, true)
   }
 
   /**
-   *
    * @param {string} book
    * @param {number} chapter
    */
@@ -64,7 +54,6 @@
   }
 
   /**
-   *
    * @param {string} version
    * @param {string} testament
    * @param {boolean|undefined} timer
@@ -109,6 +98,10 @@
     timeout = setTimeout(() => {
       getResults()
     }, 500)
+  }
+
+  $: {
+    search($versionSearch.url, $testament.url, false)
   }
 </script>
 

@@ -1,8 +1,16 @@
+<script>
+  /** @type {number=} */
+  export let width = 24
+
+  /** @type {number=} */
+  export let height = 24
+</script>
+
 <svg
   xmlns="http://www.w3.org/2000/svg"
   class="icon icon-tabler icon-tabler-login"
-  width="24"
-  height="24"
+  {width}
+  {height}
   viewBox="0 0 24 24"
   stroke-width="2"
   stroke="currentColor"

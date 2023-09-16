@@ -13,24 +13,16 @@
   import { user } from '@/state/user'
   import { getLocalThemeIsDark } from '@/utils/localTheme'
 
-  /**
-   * @type {boolean}
-   */
+  /** @type {boolean} */
   export let wantBookMark = false
 
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let version = 'rv1960'
 
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let book = 'genesis'
 
-  /**
-   * @type {number}
-   */
+  /** @type {number} */
   export let chapter = 1
 
   let md =
@@ -51,20 +43,15 @@
 ![](https://i.postimg.cc/wBZFwwBN/boat.jpg)`
       : $Draft.body
 
-  $: {
-    Draft.update((u) => {
-      u.body = md
-      return u
-    })
-  }
-
+  let error = ''
+  let chapters = 55
   let loading = true
   let hasError = false
-  let error = ''
   let selectBook = false
   let selectChapter = false
   let selectVersion = false
 
+  /** @type {import('./Passage.svelte').PassageInfo} */
   let info = {
     num_chapters: 50,
     testament: 'Antiguo Testamento',
@@ -79,10 +66,24 @@
     ]
   }
 
-  let chapters = 55
+  onMount(async () => {
+    if (wantBookMark) {
+      const bkString = localStorage.getItem('bookmark')
+
+      if (bkString) {
+        const bkmark = JSON.parse(bkString)
+
+        book = bkmark.book
+        version = bkmark.version
+        chapter = bkmark.chapter
+      }
+    }
+
+    info = await getData()
+    chapters = info.num_chapters
+  })
 
   /**
-   *
    * @param {string} name
    */
   function formatName(name) {
@@ -120,7 +121,7 @@
     return firstLetter.toUpperCase() + rest.join('')
   }
 
-  const getData = async () => {
+  async function getData() {
     if (book === '') return
     hasError = false
     error = ''
@@ -166,7 +167,6 @@
   }
 
   /**
-   *
    * @param {string} book
    * @param {number} chapter
    * @param {string} version
@@ -186,7 +186,7 @@
 
   /**
    * @param {string|number} value
-   * @param {"version"|"book"|"chapter"} prop
+   * @param {'version'|'book'|'chapter'} prop
    */
   function updateData(value, prop) {
     switch (prop) {
@@ -245,12 +245,15 @@
     return `${$page.url.origin}/chapter/${version}/${searchName(book)}/${chapter}`
   }
 
-  async function submitNote(e) {
+  /**
+   * @param {Event & { readonly submitter: HTMLElement | null }} event
+  */
+  async function submitNote(event) {
     if (!isValidNote()) {
       return
     }
 
-    const formData = Object.fromEntries(new FormData(e.target))
+    const formData = Object.fromEntries(new FormData(undefined, event.submitter))
 
     if ($Draft.id !== '') {
       updateNote(formData)
@@ -260,7 +263,7 @@
     createNote(formData)
   }
 
-  async function handleNewNote(e) {
+  async function handleNewNote() {
     if (!isValidNote()) {
       return
     }
@@ -274,7 +277,6 @@
   }
 
   /**
-   *
    * @param {{ [k: string]: FormDataEntryValue }} formData
    */
   async function updateNote(formData) {
@@ -300,7 +302,6 @@
   }
 
   /**
-   *
    * @param {{ [k: string]: FormDataEntryValue }} formData
    */
   async function createNote(formData) {
@@ -332,8 +333,7 @@
   }
 
   /**
-   *
-   * @param {"book"|"chapter"|"version"} selector
+   * @param {'book'|'chapter'|'version'} selector
    */
   function unSelect(selector) {
     switch (selector) {
@@ -349,22 +349,12 @@
     }
   }
 
-  onMount(async () => {
-    if (wantBookMark) {
-      const bkString = localStorage.getItem('bookmark')
-
-      if (bkString) {
-        const bkmark = JSON.parse(bkString)
-
-        book = bkmark.book
-        version = bkmark.version
-        chapter = bkmark.chapter
-      }
-    }
-
-    info = await getData()
-    chapters = info.num_chapters
-  })
+  $: {
+    Draft.update((u) => {
+      u.body = md
+      return u
+    })
+  }
 </script>
 
 <svelte:head>

@@ -18,6 +18,10 @@
   let mobileMenu = false
   let showMenu = false
 
+  onMount(async () => {
+    checkUser()
+  })
+
   async function Logout() {
     await fetch('https://bible-api.deno.dev/auth/logout', {
       headers: {
@@ -62,17 +66,12 @@
   }
 
   /**
-   *
    * @param {string} path
    */
   function goToPage(path) {
     mobileMenu = false
     goto(path)
   }
-
-  onMount(async () => {
-    checkUser()
-  })
 </script>
 
 <header class="sticky top-0 z-30 h-20 bg-white dark:bg-[#293548] sm:h-28 xl:h-24">
@@ -97,7 +96,7 @@
             class="flex h-1/4 w-full items-center px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="bordertext-xl flex flex-row items-center gap-2 align-middle">
-              Buscar <SearchIcon width="23" height="23" />
+              Buscar <SearchIcon />
             </span>
           </button>
           <button
@@ -105,7 +104,7 @@
             class="block h-1/4 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
-              Leer <BookOpenIcon width="23" height="23" />
+              Leer <BookOpenIcon />
             </span>
           </button>
           <button
@@ -113,7 +112,7 @@
             class="block h-1/4 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
-              Notas <NoteIcon width="23" height="23" />
+              Notas <NoteIcon />
             </span>
           </button>
           <button
@@ -121,7 +120,7 @@
             class="block h-1/4 w-full px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle text-xl">
-              FAQ <QuestionMarkIcon width="23" height="23" />
+              FAQ <QuestionMarkIcon />
             </span>
           </button>
         </ul>

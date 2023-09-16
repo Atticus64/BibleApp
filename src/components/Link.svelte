@@ -1,14 +1,10 @@
 <script>
   import { page } from '$app/stores'
 
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let href
 
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let text
 </script>
 

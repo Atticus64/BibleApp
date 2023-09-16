@@ -8,9 +8,7 @@ import { writable } from 'svelte/store'
  * @property {string} id
  */
 
-/**
- * @type {import("svelte/store").Writable<NoteDraft>}
- */
+/** @type {import("svelte/store").Writable<NoteDraft>} */
 export const Draft = writable({
   title: '',
   description: '',

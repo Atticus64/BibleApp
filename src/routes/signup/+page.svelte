@@ -3,8 +3,11 @@
   import { user } from '@/state/user'
   import { toastAlert } from '../alert'
 
-  const onSubmit = async (e) => {
-    const formData = Object.fromEntries(new FormData(e.target))
+  /**
+   * @param {Event & { readonly submitter: HTMLElement | null }} event
+  */
+  async function onSubmit (event) {
+    const formData = Object.fromEntries(new FormData(undefined, event.submitter))
 
     const response = await fetch('https://bible-api.deno.dev/auth/signup', {
       method: 'POST',
