@@ -6,14 +6,13 @@
     BookOpenIcon,
     NoteIcon,
     QuestionMarkIcon
-  } from '../icons'
-  import Link from '../Link.svelte'
-  import Logo from '../Logo.svelte'
+  } from './icons'
+  import Link from './Link.svelte'
+  import Logo from './Logo.svelte'
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
   import { user } from '@/state/user'
-  import Switch from '../Switch.svelte'
-  import '@/app.css'
+  import Switch from './Switch.svelte'
 
   let mobileMenu = false
   let showMenu = false
