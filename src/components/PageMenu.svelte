@@ -1,6 +1,5 @@
 <script>
-  import { toastAlert } from '@/routes/alert'
-  import { getLocalThemeIsDark } from '@/utils/localTheme'
+  import { createAlert } from '@/services/alert'
   import {
     loadingResults,
     page,
@@ -64,7 +63,7 @@
       <button
         on:click={() => {
           if ($page === 1) {
-            toastAlert('No hay paginas anteriores', 'error', getLocalThemeIsDark())
+            createAlert('No hay paginas anteriores', 'error')
             return
           }
           changePage($page - 1)
@@ -163,7 +162,7 @@
       <button
         on:click={() => {
           if ($page === pageCount) {
-            toastAlert('No hay paginas siguientes', 'error', getLocalThemeIsDark())
+            createAlert('No hay paginas siguientes', 'error')
             return
           }
           changePage($page + 1)

@@ -1,11 +1,11 @@
 <script>
   import { goto } from '$app/navigation'
   import { user } from '@/state/user'
-  import { toastAlert } from '../alert'
+  import { createAlert } from '@/services/alert'
 
   /**
    * @param {Event & { readonly submitter: HTMLElement | null }} event
-  */
+   */
   async function onSubmit(event) {
     const formData = Object.fromEntries(new FormData(undefined, event.submitter))
 
@@ -18,40 +18,46 @@
       body: JSON.stringify(formData)
     })
 
-    if (response.ok) {
-      await fetch('https://bible-api.deno.dev/user', {
-        method: 'GET',
-        credentials: 'include'
-      })
-        .then(async (res) => {
-          if (res.ok) {
-            const info = await res.json()
-            user.set({
-              email: info.email,
-              tag: info.tag,
-              loggedIn: true
-            })
-          }
-        })
-        .catch((err) => {
-          toastAlert(err, 'error')
-          return
-        })
-      goto('/')
-    } else {
+    if (!response.ok) {
       const error = await response.json()
+
       if (error.message) {
         if (error.message.includes('User')) {
-          toastAlert('El usuario no existe', 'error')
+          createAlert('El usuario no existe', 'error')
           return
         }
-        toastAlert(error.message, 'error')
+
+        createAlert(error.message, 'error')
       }
+
       const message = error.issues
         ? `Error en el campo ${error.issues[0].path[0]}`
         : 'Error al autenticarse'
-      toastAlert(message, 'error')
+      createAlert(message, 'error')
+
+      return
     }
+
+    await fetch('https://bible-api.deno.dev/user', {
+      method: 'GET',
+      credentials: 'include'
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const info = await res.json()
+          user.set({
+            email: info.email,
+            tag: info.tag,
+            loggedIn: true
+          })
+        }
+      })
+      .catch((err) => {
+        createAlert(err, 'error')
+        return
+      })
+
+    goto('/')
   }
 </script>
 

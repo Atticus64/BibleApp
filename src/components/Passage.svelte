@@ -6,14 +6,14 @@
    * @prop {string} name
    * @prop {string} chapter
    * @prop {Array<Verse>} vers
-  */
+   */
 
   /**
-    * @typedef {object} Verse
-    * @prop {string} study
-    * @prop {number} number
-    * @prop {string} verse
-  */
+   * @typedef {object} Verse
+   * @prop {string} study
+   * @prop {number} number
+   * @prop {string} verse
+   */
 </script>
 
 <script>

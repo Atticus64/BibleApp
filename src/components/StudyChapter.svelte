@@ -1,17 +1,17 @@
 <script>
   import { onMount } from 'svelte'
-  import { goto } from '$app/navigation'
   import { page } from '$app/stores'
-  import { books, versions } from '@/constants'
-  import { toastAlert } from '@/routes/alert'
-  import { clickOutside } from '@/utils/clickOutside.js'
-  import Button from '@/components/Button.svelte'
-  import Passage from '@/components/Passage.svelte'
+  import { goto } from '$app/navigation'
   import SvelteMarkdown from 'svelte-markdown'
-  import { Stretch } from 'svelte-loading-spinners'
-  import { Draft, studyMode } from '@/state/study'
+
   import { user } from '@/state/user'
-  import { getLocalThemeIsDark } from '@/utils/localTheme'
+  import { books, versions } from '@/constants'
+  import { createAlert } from '@/services/alert'
+  import Button from '@/components/Button.svelte'
+  import { Draft, studyMode } from '@/state/study'
+  import Passage from '@/components/Passage.svelte'
+  import { Stretch } from 'svelte-loading-spinners'
+  import { clickOutside } from '@/utils/clickOutside.js'
 
   /** @type {boolean} */
   export let wantBookMark = false
@@ -153,11 +153,7 @@
       error =
         'No se encontro el capitulo, intentelo mas tarde o revise que sea correcta su busqueda'
 
-      toastAlert(
-        'No se pudo cargar el capitulo, coloque un capitulo correcto',
-        'error',
-        getLocalThemeIsDark()
-      )
+      createAlert('No se pudo cargar el capitulo, coloque un capitulo correcto', 'error')
       return
     }
 
@@ -214,27 +210,27 @@
 
   function isValidNote() {
     if (!$user.loggedIn) {
-      toastAlert('Necesitas estar autenticado para crear notas', 'error', getLocalThemeIsDark())
+      createAlert('Necesitas estar autenticado para crear notas', 'error')
       return false
     }
 
     if ($Draft.body.length < 20) {
-      toastAlert('El texto debe ser mayor o igual a 20 caracteres', 'error', getLocalThemeIsDark())
+      createAlert('El texto debe ser mayor o igual a 20 caracteres', 'error')
       return false
     }
 
     if ($Draft.title.length < 8) {
-      toastAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error', getLocalThemeIsDark())
+      createAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error')
       return false
     }
 
     if ($Draft.title.length > 40) {
-      toastAlert('El titulo debe ser menor a 40 caracteres', 'error', getLocalThemeIsDark())
+      createAlert('El titulo debe ser menor a 40 caracteres', 'error')
       return false
     }
 
     if ($Draft.description.length < 10) {
-      toastAlert('La descripcion debe ser mayor a 10 caracteres', 'error', getLocalThemeIsDark())
+      createAlert('La descripcion debe ser mayor a 10 caracteres', 'error')
       return false
     }
 
@@ -247,7 +243,7 @@
 
   /**
    * @param {Event & { readonly submitter: HTMLElement | null }} event
-  */
+   */
   async function submitNote(event) {
     if (!isValidNote()) {
       return
@@ -291,11 +287,11 @@
       })
 
       if (!res.ok) {
-        toastAlert('No se pudo guardar la nota', 'error', getLocalThemeIsDark())
+        createAlert('No se pudo guardar la nota', 'error')
         return
       }
 
-      toastAlert('Nota actualizada', 'success', getLocalThemeIsDark())
+      createAlert('Nota actualizada', 'success')
 
       return
     }
@@ -316,11 +312,11 @@
     })
 
     if (!response.ok) {
-      toastAlert('No se pudo crear la nota', 'error', getLocalThemeIsDark())
+      createAlert('No se pudo crear la nota', 'error')
       return
     }
 
-    toastAlert('Nota creada', 'success', getLocalThemeIsDark())
+    createAlert('Nota creada', 'success')
 
     const data = await response.json()
 
@@ -467,7 +463,7 @@
         className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
         on:click={async () => {
           if (chapter - 1 <= 0) {
-            toastAlert('Error ese capitulo no esta disponible', 'error', getLocalThemeIsDark())
+            createAlert('Error ese capitulo no esta disponible', 'error')
             return
           }
           updateData((chapter -= 1), 'chapter')
@@ -481,7 +477,7 @@
         className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
         on:click={() => {
           if (chapter + 1 > chapters) {
-            toastAlert('Error ese capitulo no esta disponible', 'error', getLocalThemeIsDark())
+            createAlert('Error ese capitulo no esta disponible', 'error')
             return
           }
           updateData((chapter += 1), 'chapter')
@@ -497,10 +493,10 @@
           navigator.clipboard
             .writeText(url)
             .then(() => {
-              toastAlert('Url copiada al portapapeles', 'success', getLocalThemeIsDark())
+              createAlert('Url copiada al portapapeles', 'success')
             })
             .catch((err) => {
-              toastAlert('Error al copiar url', 'error', getLocalThemeIsDark())
+              createAlert('Error al copiar url', 'error')
             })
         }}
         color="green"
