@@ -36,7 +36,7 @@
             class="text-blue-400 underline">Codigo fuente del API</a
           >
         </li>
-				<li>
+        <li>
           <a
             href="https://docs-bible-api.vercel.app/"
             target="_blank"

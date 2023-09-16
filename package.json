@@ -7,11 +7,10 @@
     "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-    "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write .",
-    "format:check": "prettier --plugin-search-dir . --check ."
+    "lint": "eslint --fix src/**/*.{js,svelte}",
+    "validate": "pnpm format && pnpm check && pnpm lint",
+    "format": "prettier --write src/**/*.{svelte,html,json}",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json"
   },
   "devDependencies": {
     "@fontsource/fira-mono": "4.5.10",

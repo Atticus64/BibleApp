@@ -90,19 +90,19 @@
       {#if mobileMenu}
         <ul
           on:mouseleave={() => (mobileMenu = false)}
-          class="flex flex-col justify-center align-middle content-center rounded-lg fixed top-16 h-80 w-5/12 divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
+          class="fixed top-16 flex h-80 w-5/12 flex-col content-center justify-center divide-y divide-gray-100 rounded-lg bg-white align-middle shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
         >
           <button
             on:click={() => goToPage('/search')}
-            class="flex w-full h-1/4 text-xl px-4 py-1 items-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="flex h-1/4 w-full items-center px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
-            <span class="flex flex-row items-center bordertext-xl gap-2 align-middle">
+            <span class="bordertext-xl flex flex-row items-center gap-2 align-middle">
               Buscar <SearchIcon width="23" height="23" />
             </span>
           </button>
           <button
             on:click={() => goToPage('/read')}
-            class="block w-full h-1/4  text-xl px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block h-1/4 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
               Leer <BookOpenIcon width="23" height="23" />
@@ -110,7 +110,7 @@
           </button>
           <button
             on:click={() => goToPage('/notes')}
-            class="block w-full h-1/4 px-4 py-1  text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block h-1/4 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
               Notas <NoteIcon width="23" height="23" />
@@ -118,9 +118,9 @@
           </button>
           <button
             on:click={() => goToPage('/about')}
-            class="block w-full px-4 h-1/4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block h-1/4 w-full px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
-            <span class="flex flex-row items-center text-xl gap-2 align-middle">
+            <span class="flex flex-row items-center gap-2 align-middle text-xl">
               FAQ <QuestionMarkIcon width="23" height="23" />
             </span>
           </button>
