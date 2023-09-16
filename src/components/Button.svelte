@@ -1,14 +1,14 @@
 <script>
-  /** @type {string | undefined }*/
+  /** @type {string|undefined }*/
   export let href = undefined
 
-  /** @type {'button' | 'submit' | 'reset'}*/
+  /** @type {'button'|'submit'|'reset'}*/
   export let type = 'button'
 
-  /** @type {'blue' | 'teal' | 'green'} */
+  /** @type {'blue'|'teal'|'green'} */
   export let color = 'teal'
 
-  /** @type {string | undefined} */
+  /** @type {string|undefined} */
   export let className = undefined
 
   const COLOR = {

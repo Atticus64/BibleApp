@@ -37,9 +37,7 @@ import { writable } from 'svelte/store'
  * @typedef {import("svelte/store").Writable<Result>} SearchResult
  */
 
-/**
- * @type {SearchResult}
- */
+/** @type {SearchResult} */
 export const searchResults = writable({
   data: [],
   meta: {
@@ -67,24 +65,20 @@ export const testament = writable({
 })
 
 /**
- *
  * @param {{ version: string, testament: string }} data
  */
 export function searchBible({ version, testament }) {
   const controller = new AbortController()
-  /**
-   *
-   * @param {string} search
-   */
+
+  /** @param {string} search */
   const query = (search) => {
     if (!search || search.trim() === '') {
       return Promise.reject('No hay nada que buscar')
     }
 
-    /**
-     * @type {URL}
-     */
+    /** @type {URL} */
     let url
+
     if (!testament) {
       url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
       url.searchParams.set('q', search)
@@ -100,7 +94,6 @@ export function searchBible({ version, testament }) {
   }
 
   /**
-   *
    * @param {string} search
    * @param {number} page
    * @param {string} version

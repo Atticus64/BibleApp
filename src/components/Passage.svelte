@@ -1,5 +1,26 @@
+<script context="module">
+  /**
+   * @typedef {object} PassageInfo
+   * @prop {number} num_chapters
+   * @prop {string} testament
+   * @prop {string} name
+   * @prop {string} chapter
+   * @prop {Array<Verse>} vers
+   */
+
+  /**
+   * @typedef {object} Verse
+   * @prop {string} study
+   * @prop {number} number
+   * @prop {string} verse
+   */
+</script>
+
 <script>
+  /** @type {boolean} */
   export let studyMode = false
+
+  /** @type {PassageInfo} */
   export let info = {
     num_chapters: 50,
     testament: 'Antiguo Testamento',

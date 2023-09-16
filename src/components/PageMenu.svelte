@@ -1,6 +1,5 @@
 <script>
-  import { toastAlert } from '@/routes/alert'
-  import { getLocalThemeIsDark } from '@/utils/localTheme'
+  import { createAlert } from '@/services/alert'
   import {
     loadingResults,
     page,
@@ -10,6 +9,11 @@
     testament,
     versionSearch
   } from '@/state/search'
+
+  /** @type {number} */
+  export let pageCount
+
+  let isMiddle = $page > 2 && $page < pageCount - 1
 
   function reSearch() {
     const { queryWithPage } = searchBible({
@@ -28,8 +32,8 @@
         loadingResults.set(false)
       })
   }
+
   /**
-   *
    * @param {number} pageValue
    */
   function changePage(pageValue) {
@@ -37,16 +41,6 @@
 
     reSearch()
   }
-
-  /**
-   * @type {number}
-   */
-  /**
-   * @type {number}
-   */
-  export let pageCount
-
-  let isMiddle = $page > 2 && $page < pageCount - 1
 
   function getMiddleValue() {
     return isMiddle ? $page : Math.ceil(pageCount / 2)
@@ -62,13 +56,14 @@
 </script>
 
 <wc-toast />
+
 <nav>
   <ul class="navigation inline-flex h-10 -space-x-px text-base">
     <li>
       <button
         on:click={() => {
           if ($page === 1) {
-            toastAlert('No hay paginas anteriores', 'error', getLocalThemeIsDark())
+            createAlert('No hay paginas anteriores', 'error')
             return
           }
           changePage($page - 1)
@@ -167,7 +162,7 @@
       <button
         on:click={() => {
           if ($page === pageCount) {
-            toastAlert('No hay paginas siguientes', 'error', getLocalThemeIsDark())
+            createAlert('No hay paginas siguientes', 'error')
             return
           }
           changePage($page + 1)

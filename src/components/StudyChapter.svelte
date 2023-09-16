@@ -1,40 +1,32 @@
 <script>
   import { onMount } from 'svelte'
-  import { goto } from '$app/navigation'
   import { page } from '$app/stores'
-  import { books, versions } from '@/constants'
-  import { toastAlert } from '@/routes/alert'
-  import { clickOutside } from '@/utils/clickOutside.js'
-  import Button from '@/components/Button.svelte'
-  import Passage from '@/components/Passage.svelte'
+  import { goto } from '$app/navigation'
   import SvelteMarkdown from 'svelte-markdown'
-  import { Stretch } from 'svelte-loading-spinners'
-  import { Draft, studyMode } from '@/state/study'
-  import { user } from '@/state/user'
-  import { getLocalThemeIsDark } from '@/utils/localTheme'
 
-  /**
-   * @type {boolean}
-   */
+  import { user } from '@/state/user'
+  import { books, versions } from '@/constants'
+  import { createAlert } from '@/services/alert'
+  import Button from '@/components/Button.svelte'
+  import { draft, studyMode } from '@/state/study'
+  import Passage from '@/components/Passage.svelte'
+  import { Stretch } from 'svelte-loading-spinners'
+  import { clickOutside } from '@/utils/clickOutside.js'
+
+  /** @type {boolean} */
   export let wantBookMark = false
 
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let version = 'rv1960'
 
-  /**
-   * @type {string}
-   */
+  /** @type {string} */
   export let book = 'genesis'
 
-  /**
-   * @type {number}
-   */
+  /** @type {number} */
   export let chapter = 1
 
   let md =
-    $Draft.body.length === 0
+    $draft.body.length === 0
       ? `# titulo 1 
 ## titulo 2 
 ### titulo 3
@@ -49,22 +41,17 @@
 
 *lista*
 ![](https://i.postimg.cc/wBZFwwBN/boat.jpg)`
-      : $Draft.body
+      : $draft.body
 
-  $: {
-    Draft.update((u) => {
-      u.body = md
-      return u
-    })
-  }
-
+  let error = ''
+  let chapters = 55
   let loading = true
   let hasError = false
-  let error = ''
   let selectBook = false
   let selectChapter = false
   let selectVersion = false
 
+  /** @type {import('./Passage.svelte').PassageInfo} */
   let info = {
     num_chapters: 50,
     testament: 'Antiguo Testamento',
@@ -79,10 +66,24 @@
     ]
   }
 
-  let chapters = 55
+  onMount(async () => {
+    if (wantBookMark) {
+      const bkString = localStorage.getItem('bookmark')
+
+      if (bkString) {
+        const bkmark = JSON.parse(bkString)
+
+        book = bkmark.book
+        version = bkmark.version
+        chapter = bkmark.chapter
+      }
+    }
+
+    info = await getData()
+    chapters = info.num_chapters
+  })
 
   /**
-   *
    * @param {string} name
    */
   function formatName(name) {
@@ -120,7 +121,7 @@
     return firstLetter.toUpperCase() + rest.join('')
   }
 
-  const getData = async () => {
+  async function getData() {
     if (book === '') return
     hasError = false
     error = ''
@@ -152,11 +153,7 @@
       error =
         'No se encontro el capitulo, intentelo mas tarde o revise que sea correcta su busqueda'
 
-      toastAlert(
-        'No se pudo cargar el capitulo, coloque un capitulo correcto',
-        'error',
-        getLocalThemeIsDark()
-      )
+      createAlert('No se pudo cargar el capitulo, coloque un capitulo correcto', 'error')
       return
     }
 
@@ -166,7 +163,6 @@
   }
 
   /**
-   *
    * @param {string} book
    * @param {number} chapter
    * @param {string} version
@@ -186,7 +182,7 @@
 
   /**
    * @param {string|number} value
-   * @param {"version"|"book"|"chapter"} prop
+   * @param {'version'|'book'|'chapter'} prop
    */
   function updateData(value, prop) {
     switch (prop) {
@@ -214,27 +210,27 @@
 
   function isValidNote() {
     if (!$user.loggedIn) {
-      toastAlert('Necesitas estar autenticado para crear notas', 'error', getLocalThemeIsDark())
+      createAlert('Necesitas estar autenticado para crear notas', 'error')
       return false
     }
 
-    if ($Draft.body.length < 20) {
-      toastAlert('El texto debe ser mayor o igual a 20 caracteres', 'error', getLocalThemeIsDark())
+    if ($draft.body.length < 20) {
+      createAlert('El texto debe ser mayor o igual a 20 caracteres', 'error')
       return false
     }
 
-    if ($Draft.title.length < 8) {
-      toastAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error', getLocalThemeIsDark())
+    if ($draft.title.length < 8) {
+      createAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error')
       return false
     }
 
-    if ($Draft.title.length > 40) {
-      toastAlert('El titulo debe ser menor a 40 caracteres', 'error', getLocalThemeIsDark())
+    if ($draft.title.length > 40) {
+      createAlert('El titulo debe ser menor a 40 caracteres', 'error')
       return false
     }
 
-    if ($Draft.description.length < 10) {
-      toastAlert('La descripcion debe ser mayor a 10 caracteres', 'error', getLocalThemeIsDark())
+    if ($draft.description.length < 10) {
+      createAlert('La descripcion debe ser mayor a 10 caracteres', 'error')
       return false
     }
 
@@ -245,14 +241,17 @@
     return `${$page.url.origin}/chapter/${version}/${searchName(book)}/${chapter}`
   }
 
-  async function submitNote(e) {
+  /**
+   * @param {Event & { readonly submitter: HTMLElement | null }} event
+   */
+  async function submitNote(event) {
     if (!isValidNote()) {
       return
     }
 
-    const formData = Object.fromEntries(new FormData(e.target))
+    const formData = Object.fromEntries(new FormData(undefined, event.submitter))
 
-    if ($Draft.id !== '') {
+    if ($draft.id !== '') {
       updateNote(formData)
       return
     }
@@ -260,26 +259,25 @@
     createNote(formData)
   }
 
-  async function handleNewNote(e) {
+  async function handleNewNote() {
     if (!isValidNote()) {
       return
     }
 
     const formData = {
-      title: $Draft.title,
-      body: $Draft.body,
-      description: $Draft.description
+      title: $draft.title,
+      body: $draft.body,
+      description: $draft.description
     }
     createNote(formData)
   }
 
   /**
-   *
    * @param {{ [k: string]: FormDataEntryValue }} formData
    */
   async function updateNote(formData) {
-    if ($Draft.id !== '') {
-      const res = await fetch(`https://bible-api.deno.dev/notes/${$Draft.id}`, {
+    if ($draft.id !== '') {
+      const res = await fetch(`https://bible-api.deno.dev/notes/${$draft.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -289,18 +287,17 @@
       })
 
       if (!res.ok) {
-        toastAlert('No se pudo guardar la nota', 'error', getLocalThemeIsDark())
+        createAlert('No se pudo guardar la nota', 'error')
         return
       }
 
-      toastAlert('Nota actualizada', 'success', getLocalThemeIsDark())
+      createAlert('Nota actualizada', 'success')
 
       return
     }
   }
 
   /**
-   *
    * @param {{ [k: string]: FormDataEntryValue }} formData
    */
   async function createNote(formData) {
@@ -315,25 +312,24 @@
     })
 
     if (!response.ok) {
-      toastAlert('No se pudo crear la nota', 'error', getLocalThemeIsDark())
+      createAlert('No se pudo crear la nota', 'error')
       return
     }
 
-    toastAlert('Nota creada', 'success', getLocalThemeIsDark())
+    createAlert('Nota creada', 'success')
 
     const data = await response.json()
 
-    Draft.set({
+    draft.set({
       id: data.id,
-      title: $Draft.title,
-      body: $Draft.body,
-      description: $Draft.description
+      title: $draft.title,
+      body: $draft.body,
+      description: $draft.description
     })
   }
 
   /**
-   *
-   * @param {"book"|"chapter"|"version"} selector
+   * @param {'book'|'chapter'|'version'} selector
    */
   function unSelect(selector) {
     switch (selector) {
@@ -349,22 +345,12 @@
     }
   }
 
-  onMount(async () => {
-    if (wantBookMark) {
-      const bkString = localStorage.getItem('bookmark')
-
-      if (bkString) {
-        const bkmark = JSON.parse(bkString)
-
-        book = bkmark.book
-        version = bkmark.version
-        chapter = bkmark.chapter
-      }
-    }
-
-    info = await getData()
-    chapters = info.num_chapters
-  })
+  $: {
+    draft.update((u) => {
+      u.body = md
+      return u
+    })
+  }
 </script>
 
 <svelte:head>
@@ -477,7 +463,7 @@
         className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
         on:click={async () => {
           if (chapter - 1 <= 0) {
-            toastAlert('Error ese capitulo no esta disponible', 'error', getLocalThemeIsDark())
+            createAlert('Error ese capitulo no esta disponible', 'error')
             return
           }
           updateData((chapter -= 1), 'chapter')
@@ -491,7 +477,7 @@
         className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
         on:click={() => {
           if (chapter + 1 > chapters) {
-            toastAlert('Error ese capitulo no esta disponible', 'error', getLocalThemeIsDark())
+            createAlert('Error ese capitulo no esta disponible', 'error')
             return
           }
           updateData((chapter += 1), 'chapter')
@@ -507,10 +493,10 @@
           navigator.clipboard
             .writeText(url)
             .then(() => {
-              toastAlert('Url copiada al portapapeles', 'success', getLocalThemeIsDark())
+              createAlert('Url copiada al portapapeles', 'success')
             })
             .catch((err) => {
-              toastAlert('Error al copiar url', 'error', getLocalThemeIsDark())
+              createAlert('Error al copiar url', 'error')
             })
         }}
         color="green"
@@ -554,7 +540,7 @@
                   name="title"
                   class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                   placeholder="titulo de mi nota"
-                  bind:value={$Draft.title}
+                  bind:value={$draft.title}
                   required
                 />
               </div>
@@ -571,7 +557,7 @@
                   class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                   placeholder="descripción de mi nota"
                   required
-                  bind:value={$Draft.description}
+                  bind:value={$draft.description}
                 />
               </div>
               <textarea

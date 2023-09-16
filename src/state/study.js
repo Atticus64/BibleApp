@@ -1,17 +1,7 @@
 import { writable } from 'svelte/store'
 
-/**
- * @typedef NoteDraft
- * @property {string} title
- * @property {string} description
- * @property {string} body
- * @property {string} id
- */
-
-/**
- * @type {import("svelte/store").Writable<NoteDraft>}
- */
-export const Draft = writable({
+/** @type {import("svelte/store").Writable<NoteDraft>} */
+export const draft = writable({
   title: '',
   description: '',
   body: '',
@@ -19,3 +9,11 @@ export const Draft = writable({
 })
 
 export const studyMode = writable(false)
+
+/**
+ * @typedef NoteDraft
+ * @property {string} title
+ * @property {string} description
+ * @property {string} body
+ * @property {string} id
+ */

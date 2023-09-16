@@ -1,21 +1,52 @@
 <script>
-  import { user } from '@/state/user'
   import { onMount } from 'svelte'
-  import { toastAlert } from '../alert'
-  import { notes } from '@/state/notes'
-  import Button from '@/components/Button.svelte'
   import Swal from 'sweetalert2'
+
+  import { user } from '@/state/user'
+  import { notes } from '@/state/notes'
   import { darkTheme } from '@/state/dark'
-  import { getLocalThemeIsDark } from '@/utils/localTheme'
+  import { createAlert } from '@/services/alert'
+  import Button from '@/components/Button.svelte'
 
   let loadingNotes = true
   let hasError = false
+
   if ($darkTheme) {
     import('@sweetalert2/theme-dark/dark.css')
   }
 
+  onMount(async () => {
+    if (!$user.loggedIn) {
+      hasError = true
+      loadingNotes = false
+      return
+    }
+
+    await fetch('https://bible-api.deno.dev/notes', {
+      headers: {
+        'Content-Type': 'application/json',
+        WithCredentials: 'include'
+      },
+      credentials: 'include'
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const info = await res.json()
+          notes.set(info)
+        } else {
+          hasError = true
+        }
+      })
+      .catch((err) => {
+        hasError = true
+        createAlert(err, 'error')
+        return
+      })
+
+    loadingNotes = false
+  })
+
   /**
-   *
    * @param {string} id
    */
   async function deleteNote(id) {
@@ -38,47 +69,15 @@
       })
 
       if (!res.ok) {
-        toastAlert('No se pudo borrar la nota', 'error', getLocalThemeIsDark())
+        createAlert('No se pudo borrar la nota', 'error')
         return
       }
 
-      toastAlert('Nota eliminada', 'success', getLocalThemeIsDark())
+      createAlert('Nota eliminada', 'success')
     } else {
       return
     }
   }
-
-  onMount(async () => {
-
-		if (!$user.loggedIn) {
-	  	hasError = true
-			loadingNotes = false
-			return
-		}
-
-    await fetch('https://bible-api.deno.dev/notes', {
-      headers: {
-        'Content-Type': 'application/json',
-        WithCredentials: 'include'
-      },
-      credentials: 'include'
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          const info = await res.json()
-          notes.set(info)
-        } else {
-          hasError = true
-        }
-      })
-      .catch((err) => {
-        hasError = true
-        toastAlert(err, 'error', getLocalThemeIsDark())
-        return
-      })
-
-    loadingNotes = false
-  })
 </script>
 
 <wc-toast />
