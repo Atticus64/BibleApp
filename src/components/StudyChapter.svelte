@@ -8,7 +8,7 @@
   import { books, versions } from '@/constants'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
-  import { Draft, studyMode } from '@/state/study'
+  import { draft, studyMode } from '@/state/study'
   import Passage from '@/components/Passage.svelte'
   import { Stretch } from 'svelte-loading-spinners'
   import { clickOutside } from '@/utils/clickOutside.js'
@@ -26,7 +26,7 @@
   export let chapter = 1
 
   let md =
-    $Draft.body.length === 0
+    $draft.body.length === 0
       ? `# titulo 1 
 ## titulo 2 
 ### titulo 3
@@ -41,7 +41,7 @@
 
 *lista*
 ![](https://i.postimg.cc/wBZFwwBN/boat.jpg)`
-      : $Draft.body
+      : $draft.body
 
   let error = ''
   let chapters = 55
@@ -214,22 +214,22 @@
       return false
     }
 
-    if ($Draft.body.length < 20) {
+    if ($draft.body.length < 20) {
       createAlert('El texto debe ser mayor o igual a 20 caracteres', 'error')
       return false
     }
 
-    if ($Draft.title.length < 8) {
+    if ($draft.title.length < 8) {
       createAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error')
       return false
     }
 
-    if ($Draft.title.length > 40) {
+    if ($draft.title.length > 40) {
       createAlert('El titulo debe ser menor a 40 caracteres', 'error')
       return false
     }
 
-    if ($Draft.description.length < 10) {
+    if ($draft.description.length < 10) {
       createAlert('La descripcion debe ser mayor a 10 caracteres', 'error')
       return false
     }
@@ -251,7 +251,7 @@
 
     const formData = Object.fromEntries(new FormData(undefined, event.submitter))
 
-    if ($Draft.id !== '') {
+    if ($draft.id !== '') {
       updateNote(formData)
       return
     }
@@ -265,9 +265,9 @@
     }
 
     const formData = {
-      title: $Draft.title,
-      body: $Draft.body,
-      description: $Draft.description
+      title: $draft.title,
+      body: $draft.body,
+      description: $draft.description
     }
     createNote(formData)
   }
@@ -276,8 +276,8 @@
    * @param {{ [k: string]: FormDataEntryValue }} formData
    */
   async function updateNote(formData) {
-    if ($Draft.id !== '') {
-      const res = await fetch(`https://bible-api.deno.dev/notes/${$Draft.id}`, {
+    if ($draft.id !== '') {
+      const res = await fetch(`https://bible-api.deno.dev/notes/${$draft.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -320,11 +320,11 @@
 
     const data = await response.json()
 
-    Draft.set({
+    draft.set({
       id: data.id,
-      title: $Draft.title,
-      body: $Draft.body,
-      description: $Draft.description
+      title: $draft.title,
+      body: $draft.body,
+      description: $draft.description
     })
   }
 
@@ -346,7 +346,7 @@
   }
 
   $: {
-    Draft.update((u) => {
+    draft.update((u) => {
       u.body = md
       return u
     })
@@ -540,7 +540,7 @@
                   name="title"
                   class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                   placeholder="titulo de mi nota"
-                  bind:value={$Draft.title}
+                  bind:value={$draft.title}
                   required
                 />
               </div>
@@ -557,7 +557,7 @@
                   class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                   placeholder="descripción de mi nota"
                   required
-                  bind:value={$Draft.description}
+                  bind:value={$draft.description}
                 />
               </div>
               <textarea
