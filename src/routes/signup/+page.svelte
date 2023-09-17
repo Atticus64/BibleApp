@@ -7,36 +7,43 @@
    * @param {Event & { readonly submitter: HTMLElement | null }} event
    */
   async function onSubmit(event) {
-    const formData = Object.fromEntries(new FormData(undefined, event.submitter))
 
-    const response = await fetch('https://bible-api.deno.dev/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(formData)
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-
-      if (error.message) {
-        if (error.message.includes('User')) {
-          createAlert('El usuario ya existe, cambie el email or username', 'error')
-          return
-        }
-
-        createAlert(error.message, 'error')
-      }
-
-      const message = error.issues
-        ? `Error en el campo ${error.issues[0].path[0]}`
-        : 'Error al autenticarse'
-      createAlert(message, 'error')
-
-      return
-    }
+		const form = event.target
+		if (!form) {
+			return
+		}
+		if (form instanceof HTMLFormElement) {
+			const formData = Object.fromEntries(new FormData(form))
+			console.log(formData)
+			const response = await fetch('https://bible-api.deno.dev/auth/signup', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include',
+				body: JSON.stringify(formData)
+			})
+	
+			if (!response.ok) {
+				const error = await response.json()
+	
+				if (error.message) {
+					if (error.message.includes('User')) {
+						createAlert('El usuario ya existe, cambie el email or username', 'error')
+						return
+					}
+	
+					createAlert(error.message, 'error')
+				}
+	
+				const message = error.issues
+					? `Error en el campo ${error.issues[0].path[0]}`
+					: 'Error al autenticarse'
+				createAlert(message, 'error')
+	
+				return
+			}
+		}
 
     await fetch('https://bible-api.deno.dev/user', {
       method: 'GET',
