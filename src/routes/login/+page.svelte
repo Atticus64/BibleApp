@@ -7,57 +7,60 @@
    * @param {Event & { readonly submitter: HTMLElement | null }} event
    */
   async function onSubmit(event) {
-    const formData = Object.fromEntries(new FormData(undefined, event.submitter))
-
-    const response = await fetch('https://bible-api.deno.dev/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(formData)
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-
-      if (error.message) {
-        if (error.message.includes('User')) {
-          createAlert('El usuario no existe', 'error')
-          return
-        }
-
-        createAlert(error.message, 'error')
-      }
-
-      const message = error.issues
-        ? `Error en el campo ${error.issues[0].path[0]}`
-        : 'Error al autenticarse'
-      createAlert(message, 'error')
-
-      return
-    }
-
-    await fetch('https://bible-api.deno.dev/user', {
-      method: 'GET',
-      credentials: 'include'
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          const info = await res.json()
-          user.set({
-            email: info.email,
-            tag: info.tag,
-            loggedIn: true
-          })
-        }
-      })
-      .catch((err) => {
-        createAlert(err, 'error')
-        return
-      })
-
-    goto('/')
+		if (event.target instanceof HTMLFormElement) {
+			
+			const formData = Object.fromEntries(new FormData(event.target))
+	
+			const response = await fetch('https://bible-api.deno.dev/auth/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				credentials: 'include',
+				body: JSON.stringify(formData)
+			})
+	
+			if (!response.ok) {
+				const error = await response.json()
+	
+				if (error.message) {
+					if (error.message.includes('User')) {
+						createAlert('El usuario no existe', 'error')
+						return
+					}
+	
+					createAlert(error.message, 'error')
+				}
+	
+				const message = error.issues
+					? `Error en el campo ${error.issues[0].path[0]}`
+					: 'Error al autenticarse'
+				createAlert(message, 'error')
+	
+				return
+			}
+	
+			await fetch('https://bible-api.deno.dev/user', {
+				method: 'GET',
+				credentials: 'include'
+			})
+				.then(async (res) => {
+					if (res.ok) {
+						const info = await res.json()
+						user.set({
+							email: info.email,
+							tag: info.tag,
+							loggedIn: true
+						})
+					}
+				})
+				.catch((err) => {
+					createAlert(err, 'error')
+					return
+				})
+	
+			goto('/')
+		}
   }
 </script>
 
