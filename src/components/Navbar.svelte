@@ -13,6 +13,7 @@
   import { goto } from '$app/navigation'
   import { user } from '@/state/user'
   import Switch from './Switch.svelte'
+  import { goToChapter } from '@/utils/chapter'
 
   let mobileMenu = false
   let showMenu = false
@@ -76,6 +77,7 @@
 <header class="sticky top-0 z-30 h-20 bg-white dark:bg-[#293548] sm:h-28 xl:h-24">
   <div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
     <ul class="flex items-center gap-4 sm:hidden">
+			
       <button
         on:click={() => {
           mobileMenu = !mobileMenu
@@ -99,7 +101,10 @@
             </span>
           </button>
           <button
-            on:click={() => goToPage('/read')}
+            on:click={() => {
+							mobileMenu = false
+							goToChapter()
+						}}
             class="block h-1/4 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
@@ -168,19 +173,27 @@
         </Link>
       {/if}
     </ul>
-    <div class="flex justify-center align-middle">
-      <Switch className="xl:relative xl:left-7 lg:left-20 md:left-16 sm:left-14 max-sm:right-14" />
-      <Logo />
+		
+		
+		
+    <div class="flex justify-center align-middle gap-0">
+			<Switch className="xl:relative xl:left-10 lg:left-20 md:left-16 sm:left-14 max-sm:right-14" />
+			<Logo />
     </div>
-
     <nav class="hidden sm:flex sm:items-center">
+
       <ul class="flex items-center gap-4">
         <Link href="/search" text="Buscar">
           <SearchIcon />
         </Link>
-        <Link href="/read" text="Leer">
-          <BookOpenIcon />
-        </Link>
+        <button
+          on:click={() => goToChapter()}
+          class="block h-1/4 w-full px-4 py-1 text-xlhover:text-[#175d93] text-lg font-semibold tracking-widest transition-colors hover:text-[#2b8ad3]"
+        >
+          <span class="flex flex-row items-center gap-2 align-middle">
+            Leer <BookOpenIcon />
+          </span>
+        </button>
         <Link href="/notes" text="Notas">
           <NoteIcon />
         </Link>

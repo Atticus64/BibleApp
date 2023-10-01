@@ -13,9 +13,6 @@
   import { Stretch } from 'svelte-loading-spinners'
   import { clickOutside } from '@/utils/clickOutside.js'
 
-  /** @type {boolean} */
-  export let wantBookMark = false
-
   /** @type {string} */
   export let version = 'rv1960'
 
@@ -67,18 +64,6 @@
   }
 
   onMount(async () => {
-    if (wantBookMark) {
-      const bkString = localStorage.getItem('bookmark')
-
-      if (bkString) {
-        const bkmark = JSON.parse(bkString)
-
-        book = bkmark.book
-        version = bkmark.version
-        chapter = bkmark.chapter
-      }
-    }
-
     info = await getData()
     chapters = info.num_chapters
   })

@@ -1,5 +1,6 @@
 <script>
   import Button from '@/components/Button.svelte'
+	import { goToChapter } from '@/utils/chapter'
 </script>
 
 <div class="flex h-[100%] flex-col items-center p-0 sm:flex-row sm:p-6">
@@ -14,7 +15,7 @@
 
     <div class="flex items-center gap-10 py-6 text-xl font-bold">
       <Button
-        href="/read"
+        on:click={() => goToChapter()}
         color="blue"
         className="hover:scale-105 hover:text-white transition-transform p-8"
       >
