@@ -32,14 +32,16 @@
 
 <style>
   .read {
-    background: linear-gradient(120deg, #1d9bf0, #8ecdf7);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #1d9bf0;
   }
 
+	.read::selection {
+		color: white;
+		background-clip: none;
+		background-clip: none;
+	}
+
   .study {
-    background: linear-gradient(120deg, #548874, #66ed6b);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #548874;
   }
 </style>
