@@ -339,7 +339,7 @@
 </script>
 
 <svelte:head>
-  <title>{formatName(book)}: {chapter} - Bibliapp</title>
+  <title >{formatName(book)}: {chapter} - Lectura</title>
 </svelte:head>
 
 <div class="w-full">
@@ -365,6 +365,10 @@
               <button
                 class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
                 on:click={() => {
+									if (v.url === version) {
+										selectVersion = false
+										return
+									}
                   updateData(v.url, 'version')
                 }}
               >
@@ -394,6 +398,10 @@
               <button
                 class="select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
                 on:click={() => {
+									if (b.toLowerCase() === book.toLowerCase()) {
+										selectBook = false
+										return
+									}
                   updateData(b.toLowerCase(), 'book')
                 }}
               >
@@ -410,20 +418,27 @@
           id="selectBook"
           on:click={() => unSelect('chapter')}
           color="green"
-          className="w-5/12 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
+          className="w-16 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
         >
           {chapter === 0 ? 'Select your chapter' : chapter}
         </Button>
 
         {#if selectChapter}
           <ul
-            class="list absolute flex h-[20rem] w-fit flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
+            class={`list absolute flex w-fit flex-col overflow-auto rounded
+							${chapters > 10 ? 'h-[20rem]' : 'h-fit'}
+						 bg-gray-50 ring-1 ring-gray-300 `}
           >
             {#each { length: chapters } as _, c}
               <button
                 class="w-[5rem] cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:text-white dark:hover:bg-[#445268]"
                 on:click={() => {
-                  updateData(c + 1, 'chapter')
+									let newChapter = c + 1 // index start at 0
+									if (newChapter === chapter) {
+										selectChapter = false
+										return
+									}
+                  updateData(newChapter, 'chapter')
                 }}
               >
                 {c + 1}
@@ -503,7 +518,7 @@
   {#if !loading && !hasError && info}
     <div class="flex max-w-full flex-row">
       <section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
-        <h3 class="p-2 text-3xl">{formatName(book)}: {chapter}</h3>
+        <h3 class="mt-4 text-3xl">{formatName(book)}: {chapter}</h3>
         <Passage studyMode={$studyMode} {info} />
       </section>
 

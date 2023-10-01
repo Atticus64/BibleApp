@@ -43,9 +43,9 @@
 >
   {#each info.vers as v}
     {#if v.study}
-      <h3 class="p-2 text-2xl">{v.study}</h3>
+      <h3 class="p-2 text-3xl">{v.study}</h3>
     {/if}
-    <p class="verse text-xl">
+    <p class="verse text-2xl">
       <b>
         {v.number}
       </b>
@@ -60,12 +60,12 @@
   }
 
   .verse {
-    font-size: large;
+    font-size: larger;
   }
 
   @media (max-width: 800px) {
     .verse {
-      font-size: medium;
+      font-size: larger;
     }
   }
 </style>
