@@ -17,6 +17,10 @@
 </script>
 
 <script>
+  import { formatName } from "@/utils/chapter"
+
+  import { scale } from "svelte/transition"
+
   /** @type {boolean} */
   export let studyMode = false
 
@@ -36,11 +40,12 @@
   }
 </script>
 
-<section
+<section transition:scale={{ duration: 300 }}
   class={studyMode
     ? 'm-4 h-[40rem] lg:overflow-auto xl:overflow-auto 2xl:overflow-auto'
     : 'm-4 w-full max-w-full'}
 >
+<h3 class="mt-4 text-3xl">{formatName(info.name)}: {info.chapter}</h3>
 <ul class="flex gap-2 flex-col">
   {#each info.vers as v}
 

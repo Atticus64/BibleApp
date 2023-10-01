@@ -12,6 +12,7 @@
   import Passage from '@/components/Passage.svelte'
   import { Stretch } from 'svelte-loading-spinners'
   import { clickOutside } from '@/utils/clickOutside.js'
+  import { formatName } from '@/utils/chapter'
 
   /** @type {string} */
   export let version = 'rv1960'
@@ -68,24 +69,7 @@
     chapters = info.num_chapters
   })
 
-  /**
-   * @param {string} name
-   */
-  function formatName(name) {
-    if (name.includes('-')) {
-      const words = name.split('-')
-      const acc = []
-      for (const w of words) {
-        const [firstLetter, ...rest] = w
-        const newName = firstLetter.toUpperCase() + rest.join('')
-        acc.push(newName)
-      }
-      return acc.join(' ')
-    }
-
-    const [firstLetter, ...rest] = name
-    return firstLetter.toUpperCase() + rest.join('')
-  }
+  
 
   /**
    * @param {string} name
@@ -170,6 +154,7 @@
    * @param {'version'|'book'|'chapter'} prop
    */
   function updateData(value, prop) {
+		loading = true
     switch (prop) {
       case 'version':
         if (typeof value === 'string') {
@@ -349,6 +334,7 @@
       <div use:clickOutside on:click_outside={() => (selectVersion = false)}>
         <h4>Version</h4>
         <Button
+					disabled={loading}
           color="green"
           id="selectBook"
           className="w-12 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
@@ -364,6 +350,7 @@
             {#each versions as v}
               <button
                 class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
+								disabled={loading}
                 on:click={() => {
 									if (v.url === version) {
 										selectVersion = false
@@ -382,6 +369,7 @@
       <div use:clickOutside on:click_outside={() => (selectBook = false)} class="">
         <h4>Libro</h4>
         <Button
+					disabled={loading}
           id="selectBook"
           on:click={() => unSelect('book')}
           color="green"
@@ -397,6 +385,7 @@
             {#each books as b}
               <button
                 class="select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
+								disabled={loading}
                 on:click={() => {
 									if (b.toLowerCase() === book.toLowerCase()) {
 										selectBook = false
@@ -415,6 +404,7 @@
       <div use:clickOutside on:click_outside={() => (selectChapter = false)} class="">
         <h4>Capítulo</h4>
         <Button
+					disabled={loading}
           id="selectBook"
           on:click={() => unSelect('chapter')}
           color="green"
@@ -460,7 +450,8 @@
         {$studyMode ? 'Modo Estudio Activo' : 'Modo Lectura activo'}
       </Button>
       <Button
-        className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+				className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+				disabled={loading}
         on:click={async () => {
           if (chapter - 1 <= 0) {
             createAlert('Error ese capitulo no esta disponible', 'error')
@@ -474,12 +465,14 @@
       </Button>
 
       <Button
+				disabled={loading}
         className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
         on:click={() => {
           if (chapter + 1 > chapters) {
             createAlert('Error ese capitulo no esta disponible', 'error')
             return
           }
+
           updateData((chapter += 1), 'chapter')
         }}
         color="blue"
@@ -487,6 +480,7 @@
         Siguiente capítulo
       </Button>
       <Button
+				disabled={loading}
         className="dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
         on:click={() => {
           const url = `${$page.url.origin}/chapter/${version}/${book}/${chapter}`
@@ -518,7 +512,7 @@
   {#if !loading && !hasError && info}
     <div class="flex max-w-full flex-row">
       <section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
-        <h3 class="mt-4 text-3xl">{formatName(book)}: {chapter}</h3>
+       
         <Passage studyMode={$studyMode} {info} />
       </section>
 
