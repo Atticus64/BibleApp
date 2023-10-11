@@ -17,9 +17,9 @@
 </script>
 
 <script>
-  import { formatName } from "@/utils/chapter"
+  import { formatName } from '@/utils/chapter'
 
-  import { scale } from "svelte/transition"
+  import { scale } from 'svelte/transition'
 
   /** @type {boolean} */
   export let studyMode = false
@@ -40,32 +40,32 @@
   }
 </script>
 
-<section transition:scale={{ duration: 300 }}
+<section
+  transition:scale={{ duration: 300 }}
   class={studyMode
     ? 'm-4 h-[40rem] lg:overflow-auto xl:overflow-auto 2xl:overflow-auto'
     : 'm-4 w-full max-w-full'}
 >
-<h3 class="mt-4 text-3xl">{formatName(info.name)}: {info.chapter}</h3>
-<ul class="flex gap-2 flex-col">
-  {#each info.vers as v}
-
-			{#if v.study}
-      <h3 class="p-2 text-3xl">{v.study}</h3>
-			{/if}
-			<p class="verse text-2xl">
-				<b>
-					{v.number}
-				</b>
-				{v.verse}
-			</p>
-			{/each}
-		</ul>
+  <h3 class="mt-4 text-3xl">{formatName(info.name)}: {info.chapter}</h3>
+  <ul class="flex flex-col gap-2">
+    {#each info.vers as v}
+      {#if v.study}
+        <h3 class="p-2 text-3xl">{v.study}</h3>
+      {/if}
+      <p class="verse text-2xl">
+        <b>
+          {v.number}
+        </b>
+        {v.verse}
+      </p>
+    {/each}
+  </ul>
 </section>
 
 <style>
   .verse {
     max-width: 75ch;
-		text-wrap: balance;
+    text-wrap: balance;
   }
 
   .verse {
