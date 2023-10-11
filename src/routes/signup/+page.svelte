@@ -1,67 +1,17 @@
 <script>
   import { goto } from '$app/navigation'
-  import { user } from '@/state/user'
-  import { createAlert } from '@/services/alert'
+  import { singUp, updateUserInfo } from '@/services/api/auth'
 
   /**
    * @param {Event & { readonly submitter: HTMLElement | null }} event
    */
   async function onSubmit(event) {
+    const form = event.target
+    if (!(form instanceof HTMLFormElement)) return
 
-		const form = event.target
-		if (!form) {
-			return
-		}
-		if (form instanceof HTMLFormElement) {
-			const formData = Object.fromEntries(new FormData(form))
-			console.log(formData)
-			const response = await fetch('https://bible-api.deno.dev/auth/signup', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				credentials: 'include',
-				body: JSON.stringify(formData)
-			})
-	
-			if (!response.ok) {
-				const error = await response.json()
-	
-				if (error.message) {
-					if (error.message.includes('User')) {
-						createAlert('El usuario ya existe, cambie el email or username', 'error')
-						return
-					}
-	
-					createAlert(error.message, 'error')
-				}
-	
-				const message = error.issues
-					? `Error en el campo ${error.issues[0].path[0]}`
-					: 'Error al autenticarse'
-				createAlert(message, 'error')
-	
-				return
-			}
-		}
-
-    await fetch('https://bible-api.deno.dev/user', {
-      method: 'GET',
-      credentials: 'include'
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          const info = await res.json()
-          user.set({
-            email: info.email,
-            tag: info.tag,
-            loggedIn: true
-          })
-        }
-      })
-      .catch((err) => {
-        return null
-      })
+    const formData = Object.fromEntries(new FormData(form))
+    await singUp(formData)
+    await updateUserInfo()
 
     goto('/')
   }

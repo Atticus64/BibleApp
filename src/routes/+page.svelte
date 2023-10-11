@@ -1,6 +1,6 @@
 <script>
   import Button from '@/components/Button.svelte'
-	import { goToChapter } from '@/utils/chapter'
+  import { goToChapter } from '@/utils/chapter'
 </script>
 
 <div class="flex h-[100%] flex-col items-center p-0 sm:flex-row sm:p-6">
@@ -35,11 +35,10 @@
     color: #1d9bf0;
   }
 
-	.read::selection {
-		color: white;
-		background-clip: none;
-		background-clip: none;
-	}
+  .read::selection {
+    color: white;
+    background-clip: none;
+  }
 
   .study {
     color: #548874;
