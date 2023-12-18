@@ -303,11 +303,11 @@
 
         {#if selectVersion}
           <ul
-            class="list absolute flex h-fit flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
+            class="list absolute flex h-fit flex-col  rounded bg-gray-50 ring-1 ring-gray-300"
           >
             {#each versions as v}
               <button
-                class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
+                class="cursor-pointer select-none p-6 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
                 disabled={loading}
                 on:click={() => {
                   if (v.url === version) {
@@ -336,13 +336,11 @@
           {book === '' ? 'Choose Book' : formatName(book)}
         </Button>
 
-        {#if selectBook}
-          <ul
-            class="list absolute flex h-[20rem] flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
-          >
-            {#each books as b}
-              <button
-                class="select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
+		{#if selectBook}
+		<dialog class="max-lg:max-w-[50rem]  max-lg:top-[80%] max-h-[30rem]  flex flex-wrap books-dialog p-4 overflow-auto rounded-lg bg-gray-100 dark:text-white gap-3 dark:bg-[#283248]" >
+			{#each books as b}
+			    <button
+                class="select-none p-2 transition-shadow bg-[#a8cae8] hover:bg-[#7faddb]  hover:shadow- rounded-sm dark:bg-[#4366b2] dark:hover:bg-blue-600"
                 disabled={loading}
                 on:click={() => {
                   if (b.toLowerCase() === book.toLowerCase()) {
@@ -352,11 +350,12 @@
                   updateData(b.toLowerCase(), 'book')
                 }}
               >
-                {b}
+                 {b}
               </button>
             {/each}
-          </ul>
-        {/if}
+   
+		</dialog>
+		{/if}
       </div>
 
       <div use:clickOutside on:click_outside={() => (selectChapter = false)} class="">
@@ -370,16 +369,21 @@
         >
           {chapter === 0 ? 'Select your chapter' : chapter}
         </Button>
-
+		
         {#if selectChapter}
-          <ul
-            class={`list absolute flex w-fit flex-col overflow-auto rounded
-							${chapters > 10 ? 'h-[20rem]' : 'h-fit'}
-						 bg-gray-50 ring-1 ring-gray-300 `}
-          >
-            {#each { length: chapters } as _, c}
+		<dialog class={`max-lg:max-w-[50rem] max-lg:left-0 max-h-[30rem]  flex flex-wrap chapters-dialog p-4 overflow-auto rounded-lg bg-gray-100 dark:text-white gap-3 dark:bg-[#283248]
+		max-lg:w-[20rem] left-min
+		${chapters <= 7 ? 'top-[29%] left-minus' : ''}
+		${chapters <= 12 ? 'top-[29%] left-min' : ''}
+		${chapters <= 20 && chapters > 10 ? 'top-[34%] left-med' : ''}
+		${chapters < 50 && chapters > 20 ? 'top-[35%] left-med' : 'top-[40%]'}
+		${chapters > 50 ? 'top-[51%] left-med' : 'top-[40%]'}
+		${chapters >= 20 ? 'max-lg:top-[51%]' : 'max-lg:top-[40%]'}
+		`
+		} >
+			{#each { length: chapters } as _, c}
               <button
-                class="w-[5rem] cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:text-white dark:hover:bg-[#445268]"
+                class="select-none w-[3rem] p-4 transition-shadow bg-[#a8cae8] hover:bg-[#7faddb]  hover:shadow-sm rounded-sm dark:bg-[#4366b2] dark:hover:bg-blue-600"
                 on:click={() => {
                   let newChapter = c + 1 // index start at 0
                   if (newChapter === chapter) {
@@ -392,7 +396,9 @@
                 {c + 1}
               </button>
             {/each}
-          </ul>
+
+		</dialog>
+
         {/if}
       </div>
     </div>
@@ -545,4 +551,72 @@
 {/if}
 
 <style>
+  .books-dialog {
+	position: fixed;
+	width: fit-content;
+	overflow: auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	  
+  }
+  
+  .chapters-dialog {
+	position: fixed;
+	overflow: auto;
+	/*top: 50%;*/
+	/*left: 50%;*/
+	transform: translate(-50%, -50%);
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	  
+  }
+
+  .left-mobile {
+
+	left: 30%;
+  }
+
+  .left-min {
+	left: 10%;
+  }
+.left-minus {
+	left: 0%;
+  }
+
+
+  .left-mid {
+	left: 20%;
+  }
+
+  .left-zero {
+	left: 0%;
+  }
+
+  .left-med {
+	left: 50%;
+  }
+
+  @media (max-width: 600px) {
+	.chapters-dialog {
+		left: 50%;
+	}
+  }
+
+  @media (min-width: 1024px) {
+	.left-minus {
+		left: -20%;
+	}
+  }
+
+
+  
+
+  .books-dialog::backdrop {
+	background: #000;
+	opacity: 0.5;
+	backdrop-filter: blur(4px);
+  }
 </style>

@@ -60,7 +60,7 @@
 
 </script>
 
-<header class="sticky top-0 z-30 h-20 bg-white dark:bg-[#293548] sm:h-28 xl:h-24">
+<header class="sticky top-0 z-30 h-20 dark:bg-[#293548] bg-gray-100 sm:h-28 xl:h-24">
   <div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
     <ul class="flex items-center gap-4 sm:hidden">
       <button
