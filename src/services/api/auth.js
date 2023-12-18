@@ -1,5 +1,5 @@
 import { user } from '@/state/user'
-import { API_BASE_URL } from '@/utils/consts'
+import { API_BASE_URL } from '@/constants'
 import { createAlert } from '@/services/alert'
 
 /**

@@ -75,11 +75,11 @@
       {#if mobileMenu}
         <ul
           on:mouseleave={() => (mobileMenu = false)}
-          class="fixed top-16 flex h-80 w-5/12 flex-col content-center justify-center divide-y divide-gray-100 rounded-lg bg-white align-middle shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
+          class="fixed top-16 flex h-60 p-4 w-5/12 flex-col content-center justify-center divide-y divide-gray-100 rounded-lg bg-white align-middle shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
         >
           <button
             on:click={() => goToPage('/search')}
-            class="flex h-1/4 w-full items-center px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="flex h-1/3 w-full items-center px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="bordertext-xl flex flex-row items-center gap-2 align-middle">
               Buscar <SearchIcon />
@@ -90,7 +90,7 @@
               mobileMenu = false
               goToChapter()
             }}
-            class="block h-1/4 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block h-1/3 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
               Leer <BookOpenIcon />
@@ -98,20 +98,13 @@
           </button>
           <button
             on:click={() => goToPage('/notes')}
-            class="block h-1/4 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+            class="block h-1/3 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
               Notas <NoteIcon />
             </span>
           </button>
-          <button
-            on:click={() => goToPage('/about')}
-            class="block h-1/4 w-full px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-          >
-            <span class="flex flex-row items-center gap-2 align-middle text-xl">
-              FAQ <QuestionMarkIcon />
-            </span>
-          </button>
+         
         </ul>
       {/if}
 
@@ -183,9 +176,6 @@
         </button>
         <Link href="/notes" text="Notas">
           <NoteIcon />
-        </Link>
-        <Link href="/about" text="FAQ">
-          <QuestionMarkIcon />
         </Link>
         {#if $user.loggedIn}
           <button

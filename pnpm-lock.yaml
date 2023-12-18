@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@milkdown/core':
     specifier: 7.1.1
@@ -25,6 +29,9 @@ dependencies:
   '@sweetalert2/theme-dark':
     specifier: ^5.0.15
     version: 5.0.15
+  atropos:
+    specifier: ^2.0.2
+    version: 2.0.2
   prosemirror-svelte:
     specifier: ^0.2.4
     version: 0.2.4
@@ -1067,6 +1074,11 @@ packages:
 
   /async-sema@3.1.1:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
+    dev: false
+
+  /atropos@2.0.2:
+    resolution: {integrity: sha512-8f0u0hEOlBTWTSvzY17TcHuQjxUIpkTBq70/I4+UF5B43ORtOoRjm8TPBYEgLM8Ba9AWf6PDtkagbYoybdjaKg==}
+    engines: {node: '>= 12.0.0'}
     dev: false
 
   /autoprefixer@10.4.14(postcss@8.4.23):
@@ -4501,7 +4513,3 @@ packages:
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

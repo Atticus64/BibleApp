@@ -46,6 +46,7 @@
     "@milkdown/transformer": "7.1.1",
     "@sveltejs/adapter-vercel": "^3.0.2",
     "@sweetalert2/theme-dark": "^5.0.15",
+    "atropos": "^2.0.2",
     "prosemirror-svelte": "^0.2.4",
     "svelte-exmarkdown": "^2.1.0",
     "svelte-markdown": "^0.2.3",

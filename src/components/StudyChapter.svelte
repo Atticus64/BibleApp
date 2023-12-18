@@ -13,9 +13,8 @@
   import { Stretch } from 'svelte-loading-spinners'
   import { clickOutside } from '@/utils/clickOutside.js'
   import { formatName } from '@/utils/chapter'
-  import { DEFAULT_NOTE, searchName } from '@/utils/consts'
+  import { DEFAULT_NOTE, searchName } from '@/constants'
   import { sendCreateNote, sendNoteToUpdate } from '@/state/notes'
-  import { blur } from 'svelte/transition'
   
 
   /** @type {string} */

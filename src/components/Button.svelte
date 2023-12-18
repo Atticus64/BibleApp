@@ -13,7 +13,7 @@
   export let className = undefined
 
   const COLOR = {
-    blue: 'bg-blue-500 hover:bg-blue-700 text-white transition-colors',
+    blue: 'dark:bg-[#4267b3] dark:hover:bg-[#6092d1] bg-[#a8cae8] hover:bg-[#7faddb] dark:text-white text-black transition-colors',
     teal: 'bg-teal-200 hover:bg-teal-400 text-black transition-colors',
     green:
       'bg-[#c5ecdd] transition-shadow border border-gray-300 hover:shadow-md hover:border-transparent'
