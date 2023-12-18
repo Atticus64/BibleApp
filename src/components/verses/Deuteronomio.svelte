@@ -3,6 +3,7 @@ import { onMount } from 'svelte'
   import Atropos from 'atropos'
 
   export let clase = ''
+  export let verseClass = ''
 
   onMount(() => {
 	const myAtropos = Atropos({
@@ -24,11 +25,11 @@ import { onMount } from 'svelte'
     <div class="atropos-rotate">
       <!-- inner container (required) -->
       <div class="atropos-inner verse rounded-lg">
-				<p class={`lg:text-2xl w-[30ch] self-center m-4 text-black  flex-wrap`}>
+				<p class={`lg:text-2xl w-[30ch] self-center ${verseClass} m-4 text-black  flex-wrap`}>
 					"Te humilló y te hizo pasar hambre, pero luego te alimentó con maná, comida que ni tú ni tus antepasados habían conocido, con lo que te enseñó que no sólo de pan vive el hombre, sino de todo lo que sale de la boca del Señor." 
 
 				</p>
-				<p class="lg:text-5xl text-black">
+				<p class="lg:text-5xl max-lg:text-xl text-black">
 					Deuteronomio 8:3
 				</p>
       </div>

@@ -3,6 +3,7 @@ import { onMount } from 'svelte'
   import Atropos from 'atropos'
 
   export let clase = ''
+  export let verseClass = ''
 
   onMount(() => {
 	const myAtropos = Atropos({
@@ -24,11 +25,11 @@ import { onMount } from 'svelte'
     <div class="atropos-rotate">
       <!-- inner container (required) -->
       <div class="atropos-inner verse rounded-lg">
-				<p class={`lg:text-2xl w-[30ch] self-center m-4 text-black `}>
+				<p class={`lg:text-2xl w-[30ch] ${verseClass} self-center m-4 text-black `}>
 					"No se contenten solo con escuchar la palabra, pues así se engañan ustedes mismos. Llévenla a la práctica." 
 
 				</p>
-				<p class="lg:text-5xl text-black">
+				<p class="lg:text-5xl max-lg:text-xl text-black">
 					Santiago 1:22
 				</p>
       </div>

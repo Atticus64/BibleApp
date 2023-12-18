@@ -5,6 +5,7 @@ import { onMount } from 'svelte'
 
 
   export let clase = ''
+  export let verseClass = ''
 
   onMount(() => {
 	const myAtropos = Atropos({
@@ -25,11 +26,11 @@ import { onMount } from 'svelte'
     <div class="atropos-rotate">
       <!-- inner container (required) -->
       <div class="atropos-inner verse rounded-lg">
-				<p class={`lg:text-2xl w-[30ch] self-center m-4 text-black flex-wrap`}>
+				<p class={`lg:text-2xl lg:w-[30ch] ${verseClass} self-center m-4 text-black flex-wrap`}>
 					"Medita día y noche el libro de esta ley teniéndolo siempre en tus labios; si obras en todo conforme a lo que se prescribe en él, prosperarás y tendrás éxito en todo cuanto emprendas." 
 
 				</p>
-				<p class="lg:text-5xl text-black">
+				<p class="lg:text-5xl max-lg:text-xl text-black">
 					Josué 1:8
 				</p>
       </div>
