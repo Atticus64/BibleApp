@@ -13,6 +13,10 @@
   import { Stretch } from 'svelte-loading-spinners'
   import { clickOutside } from '@/utils/clickOutside.js'
   import { formatName } from '@/utils/chapter'
+  import { DEFAULT_NOTE, searchName } from '@/utils/consts'
+  import { sendCreateNote, sendNoteToUpdate } from '@/state/notes'
+  import { blur } from 'svelte/transition'
+  
 
   /** @type {string} */
   export let version = 'rv1960'
@@ -25,20 +29,7 @@
 
   let md =
     $draft.body.length === 0
-      ? `# titulo 1 
-## titulo 2 
-### titulo 3
----
-* lista
-* desordenada 
----
-1. lista
-2. ordenada
----
-**imagen**
-
-*lista*
-![](https://i.postimg.cc/wBZFwwBN/boat.jpg)`
+      ? DEFAULT_NOTE
       : $draft.body
 
   let error = ''
@@ -69,24 +60,7 @@
     chapters = info.num_chapters
   })
 
-  /**
-   * @param {string} name
-   */
-  function searchName(name) {
-    if (name.includes('-')) {
-      const words = name.split('-')
-      const acc = []
-      for (const w of words) {
-        const [firstLetter, ...rest] = w
-        const newName = firstLetter.toUpperCase() + rest.join('')
-        acc.push(newName)
-      }
-      return acc.join('-')
-    }
-
-    const [firstLetter, ...rest] = name
-    return firstLetter.toUpperCase() + rest.join('')
-  }
+ 
 
   async function getData() {
     if (book === '') return
@@ -176,28 +150,35 @@
     handleChange(book, chapter, version).then()
   }
 
-  function isValidNote() {
-    if (!$user.loggedIn) {
+  /**
+   * 
+   * @param {boolean} loggedIn
+   * @param {string} body
+   * @param {string} title
+   * @param {string} description
+   */
+  function isValidNote(loggedIn, body, title, description) {
+    if (!loggedIn) {
       createAlert('Necesitas estar autenticado para crear notas', 'error')
       return false
     }
 
-    if ($draft.body.length < 20) {
+    if (body.length < 20) {
       createAlert('El texto debe ser mayor o igual a 20 caracteres', 'error')
       return false
     }
 
-    if ($draft.title.length < 8) {
+    if (title.length < 8) {
       createAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error')
       return false
     }
 
-    if ($draft.title.length > 40) {
+    if (title.length > 40) {
       createAlert('El titulo debe ser menor a 40 caracteres', 'error')
       return false
     }
 
-    if ($draft.description.length < 10) {
+    if (description.length < 10) {
       createAlert('La descripcion debe ser mayor a 10 caracteres', 'error')
       return false
     }
@@ -209,15 +190,40 @@
     return `${$page.url.origin}/chapter/${version}/${searchName(book)}/${chapter}`
   }
 
+	/**
+   * @param {{ [k: string]: FormDataEntryValue }} formData
+   */
+  async function createNote(formData) {
+    formData.page = getCurrentPage()
+    
+	const response = await sendCreateNote(formData)
+
+	if (!response.ok) {
+		return
+	}
+
+    const data = await response.json()
+
+    draft.set({
+      id: data.id,
+      title: $draft.title,
+      body: $draft.body,
+      description: $draft.description
+    })
+  }
+//  * @param {Event & { readonly submitter: HTMLElement | undefined }} event
   /**
-   * @param {Event & { readonly submitter: HTMLElement | null }} event
+	   * @param {Event & { readonly submitter: HTMLElement | null }} event
+   //  * @returns {Promise<void>} 
    */
   async function submitNote(event) {
-    if (!isValidNote()) {
+	if (!(event.target instanceof HTMLFormElement)) return
+
+    if (!isValidNote($user.loggedIn, $draft.body, $draft.title, $draft.description)) {
       return
     }
-
-    const formData = Object.fromEntries(new FormData(undefined, event.submitter))
+	
+    const formData = Object.fromEntries(new FormData(event.target))
 
     if ($draft.id !== '') {
       updateNote(formData)
@@ -228,7 +234,7 @@
   }
 
   async function handleNewNote() {
-    if (!isValidNote()) {
+    if (!isValidNote($user.loggedIn, $draft.body, $draft.title, $draft.description)) {
       return
     }
 
@@ -245,56 +251,11 @@
    */
   async function updateNote(formData) {
     if ($draft.id !== '') {
-      const res = await fetch(`https://bible-api.deno.dev/notes/${$draft.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(formData)
-      })
-
-      if (!res.ok) {
-        createAlert('No se pudo guardar la nota', 'error')
-        return
-      }
-
-      createAlert('Nota actualizada', 'success')
-
-      return
-    }
+	  sendNoteToUpdate($draft.id, formData)
+	}
   }
 
-  /**
-   * @param {{ [k: string]: FormDataEntryValue }} formData
-   */
-  async function createNote(formData) {
-    formData.page = getCurrentPage()
-    const response = await fetch('https://bible-api.deno.dev/notes/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(formData)
-    })
-
-    if (!response.ok) {
-      createAlert('No se pudo crear la nota', 'error')
-      return
-    }
-
-    createAlert('Nota creada', 'success')
-
-    const data = await response.json()
-
-    draft.set({
-      id: data.id,
-      title: $draft.title,
-      body: $draft.body,
-      description: $draft.description
-    })
-  }
+  
 
   /**
    * @param {'book'|'chapter'|'version'} selector
@@ -498,7 +459,7 @@
     </div>
   </section>
 
-  {#if loading}
+  {#if loading }
     <div class="max-md flex justify-center self-center text-center align-middle">
       <section class="mt-4 flex flex-col items-center justify-center align-middle">
         <Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
@@ -507,13 +468,15 @@
     </div>
   {/if}
 
-  {#if !loading && !hasError && info}
+  {#if !hasError && info}
     <div class="flex max-w-full flex-row">
+	{#if !loading} 
       <section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
         <Passage studyMode={$studyMode} {info} />
       </section>
+	{/if}
 
-      {#if $studyMode}
+      {#if $studyMode && !loading}
         <section class="max-lg:hidden xl:w-1/2 xl:max-w-full 2xl:w-1/2 2xl:max-w-full">
           <div class="m-10 h-[13rem] justify-center overflow-auto p-4">
             <SvelteMarkdown source={md} />

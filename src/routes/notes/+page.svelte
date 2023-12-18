@@ -7,6 +7,7 @@
   import { darkTheme } from '@/state/dark'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
+  import { Stretch } from 'svelte-loading-spinners'
 
   let loadingNotes = true
   let hasError = false
@@ -16,11 +17,6 @@
   }
 
   onMount(async () => {
-    if (!$user.loggedIn) {
-      hasError = true
-      loadingNotes = false
-      return
-    }
 
     await fetch('https://bible-api.deno.dev/notes', {
       headers: {
@@ -82,7 +78,12 @@
 
 <wc-toast />
 {#if loadingNotes}
-  <p>loading...</p>
+    <div class="max-md flex justify-center flex-col self-center text-start align-middle">
+		<span class="self-center">
+			<Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
+		</span>
+	    <h4>Cargando Notas</h4>
+	</div>
 {:else if !loadingNotes && !hasError}
   {#if $notes.length === 0}
     <p>No hay notas</p>

@@ -1,12 +1,14 @@
 <script>
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
+  import { page } from '$app/stores'
 
   import { user } from '@/state/user'
   import { goToChapter } from '@/utils/chapter'
   import { signOut, updateUserInfo } from '@/services/api/auth'
 
   import Link from './Link.svelte'
+  import { darkTheme } from '@/state/dark'
   import Logo from './Logo.svelte'
   import Switch from './Switch.svelte'
   import {
@@ -17,16 +19,35 @@
     NoteIcon,
     QuestionMarkIcon
   } from './icons'
+  import Swal from 'sweetalert2'
 
   let showMenu = false
   let mobileMenu = false
+
+
+  if ($darkTheme) {
+    import('@sweetalert2/theme-dark/dark.css')
+  }
 
   onMount(async () => updateUserInfo())
 
   async function logOut() {
     await signOut()
     showMenu = false
-    goto('/login')
+
+	const result = await Swal.fire({
+      title: 'Quieres ir a la pagina de Login?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si ir a Login'
+    })
+
+	if (result.isConfirmed) {
+		goto('/login') 
+	}
+
   }
 
   /**
@@ -36,6 +57,7 @@
     mobileMenu = false
     goto(path)
   }
+
 </script>
 
 <header class="sticky top-0 z-30 h-20 bg-white dark:bg-[#293548] sm:h-28 xl:h-24">
@@ -148,10 +170,15 @@
         </Link>
         <button
           on:click={() => goToChapter()}
-          class="text-xlhover:text-[#175d93] block h-1/4 w-full px-4 py-1 text-lg font-semibold tracking-widest transition-colors hover:text-[#2b8ad3]"
+          class={`link block h-1/4 px-4 py-1 text-lg font-semibold tracking-widest transition-colors hover:text-[#7faddb] ${$page.url.pathname.startsWith('/chapter') ? 'text-black dark:text-white' : ''}`}
+		  aria-current={$page.url.pathname.startsWith('/chapter') ? 'page' : null}
         >
-          <span class="flex flex-row items-center gap-2 align-middle">
-            Leer <BookOpenIcon />
+          <span class="flex flex-row items-center gap-2 align-middle" 
+		  >
+            Leer <span>
+				<BookOpenIcon />
+
+			</span> 
           </span>
         </button>
         <Link href="/notes" text="Notas">
@@ -173,7 +200,7 @@
               alt={$user.tag}
               data-dropdown-toggle="userDropdown"
               data-dropdown-placement="bottom-start"
-              class="h-10 w-10 cursor-pointer rounded-full"
+              class="w-10 h-10 cursor-pointer rounded-full"
             />
           </button>
 
@@ -182,7 +209,7 @@
               on:mouseleave={() => (showMenu = false)}
               class="min-xl:[5%] items-centerrounded-lg fixed top-[5rem] h-fit w-fit divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:right-1 lg:right-8 2xl:right-[10%]"
             >
-              <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+              <div class="px-4 py-3 text-lg text-gray-900 dark:text-white">
                 <p><b>tag: </b>{$user.tag}</p>
                 <p><b>Email: </b>{$user.email}</p>
               </div>
@@ -190,7 +217,7 @@
               <div class="">
                 <button
                   on:click={logOut}
-                  class="block w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="block w-full px-4 py-2 text-start text-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
                   >Cerrar Sesión</button
                 >
               </div>
@@ -205,3 +232,14 @@
     </nav>
   </div>
 </header>
+
+
+<style lang="postcss">
+  .link[aria-current='page'] > span > span {
+    color: #6f8fc1;
+  }
+
+  .link {
+    list-style-type: none;
+  }
+</style>

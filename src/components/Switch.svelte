@@ -1,12 +1,11 @@
 <script>
-  let darkMode = false
-  import { browser } from '$app/environment'
   import { darkTheme } from '@/state/dark'
 
   export let className = ''
+  let darkMode = false
 
   function handleSwitchDarkMode() {
-    darkMode = !darkMode
+    darkMode = !$darkTheme
     darkTheme.set(darkMode)
 
     localStorage.setItem('theme', darkMode ? 'dark' : 'light')
@@ -16,24 +15,12 @@
       : document.documentElement.classList.remove('dark')
   }
 
-  if (browser) {
-    if (
-      localStorage.theme === 'dark' ||
-      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      document.documentElement.classList.add('dark')
-      darkMode = true
-    } else {
-      document.documentElement.classList.remove('dark')
-      darkMode = false
-    }
-
-    darkTheme.set(darkMode)
-  }
+  
+  
 </script>
 
 <div class={className}>
-  <input checked={darkMode} on:click={handleSwitchDarkMode} type="checkbox" id="theme-toggle" />
+  <input checked={$darkTheme} on:click={handleSwitchDarkMode} type="checkbox" id="theme-toggle" />
   <label for="theme-toggle" class={className} />
 </div>
 

@@ -4,6 +4,42 @@ import { createAlert } from '@/services/alert'
 
 /**
  * @param {any} data
+ * @returns {Promise<Response>}
+*/
+export async function singIn(data) {
+  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+
+    if (error.message) {
+      if (error.message.includes('User')) {
+        createAlert('El usuario ya existe, cambie el email or username', 'error')
+        return response
+      }
+
+      createAlert(error.message, 'error')
+    }
+
+    const message = error.issues
+      ? `Error en el campo ${error.issues[0].path[0]}`
+      : 'Error al autenticarse'
+    createAlert(message, 'error')
+  }
+
+  return response
+}
+
+/**
+ * @param {any} data
+ * @returns {Promise<Response>}
 */
 export async function singUp(data) {
   const response = await fetch(`${API_BASE_URL}/auth/signup`, {
@@ -21,7 +57,7 @@ export async function singUp(data) {
     if (error.message) {
       if (error.message.includes('User')) {
         createAlert('El usuario ya existe, cambie el email or username', 'error')
-        return
+        return response
       }
 
       createAlert(error.message, 'error')
@@ -32,6 +68,8 @@ export async function singUp(data) {
       : 'Error al autenticarse'
     createAlert(message, 'error')
   }
+
+  return response
 }
 
 export async function signOut () {

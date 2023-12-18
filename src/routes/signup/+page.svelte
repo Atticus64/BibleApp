@@ -10,7 +10,12 @@
     if (!(form instanceof HTMLFormElement)) return
 
     const formData = Object.fromEntries(new FormData(form))
-    await singUp(formData)
+    const response = await singUp(formData)
+
+	if (!response.ok) {
+		return
+	}
+	
     await updateUserInfo()
 
     goto('/')

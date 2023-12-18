@@ -1,6 +1,6 @@
 <script>
   import { goto } from '$app/navigation'
-  import { singUp, updateUserInfo } from '@/services/api/auth'
+  import { singIn, updateUserInfo } from '@/services/api/auth'
 
   /**
    * @param {Event & { readonly submitter: HTMLElement | null }} event
@@ -9,7 +9,10 @@
     if (!(event.target instanceof HTMLFormElement)) return
 
     const formData = Object.fromEntries(new FormData(event.target))
-    await singUp(formData)
+    const response = await singIn(formData)
+	if (!response.ok) {
+		return
+	}
     await updateUserInfo()
 
     goto('/')

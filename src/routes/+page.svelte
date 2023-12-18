@@ -6,11 +6,11 @@
 <div class="flex h-[100%] flex-col items-center p-0 sm:flex-row sm:p-6">
   <div class="flex flex-col">
     <h3 class="p-2 text-3xl">
-      La aplicacion para
+      Aplicación para
       <p class="study inline">Estudiar</p>
       y
       <p class="read inline">Leer</p>
-      la Biblia que esperabas
+      la Biblia 
     </h3>
 
     <div class="flex items-center gap-10 py-6 text-xl font-bold">
