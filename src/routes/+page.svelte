@@ -132,7 +132,7 @@
         <li>
           <a href="https://bible-api.deno.dev/api" target="_blank" 
 
-			  class="text-blue-700 hover:text-blue-300 dark:text-blue-200 dark:hover:text-blue-500 underline"
+			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
             >API de la Biblia</a
           >
         </li>
@@ -140,7 +140,7 @@
           <a
             href="https://github.com/Atticus64/BibleApi"
             target="_blank"
-			  class="text-blue-700 hover:text-blue-300 dark:text-blue-200 dark:hover:text-blue-500 underline"
+			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
             >Codigo fuente del API</a
           >
         </li>
@@ -148,7 +148,7 @@
           <a
             href="https://docs-bible-api.vercel.app/"
             target="_blank"
-			  class="text-blue-700 hover:text-blue-300 dark:text-blue-200 dark:hover:text-blue-500 underline"
+			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
            >Documentacion del API</a
           >
         </li>
@@ -166,7 +166,7 @@
 		<li>
 			<a href="https://github.com/Atticus64/BibleApp"
 
-			  class="text-blue-700 hover:text-blue-300 dark:text-blue-200 dark:hover:text-blue-500 underline"
+			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
 			target="_blank"
 			>
 				Código de la aplicación 
@@ -176,7 +176,7 @@
 		<li>
 
 			<a href="https://github.com/Atticus64/BibleApi"
-			  class="text-blue-700 hover:text-blue-300 dark:text-blue-200 dark:hover:text-blue-500 underline"
+			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
 			  target="_blank"
 			>
 	
