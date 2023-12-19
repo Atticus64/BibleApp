@@ -5,7 +5,7 @@
   import SvelteMarkdown from 'svelte-markdown'
 
   import { user } from '@/state/user'
-  import { books, versions } from '@/constants'
+  import { books } from '@/constants'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
   import { draft, studyMode } from '@/state/study'
@@ -15,10 +15,11 @@
   import { formatName } from '@/utils/chapter'
   import { DEFAULT_NOTE, searchName } from '@/constants'
   import { sendCreateNote, sendNoteToUpdate } from '@/state/notes'
+  import { version } from '@/state/bible'
   
 
   /** @type {string} */
-  export let version = 'rv1960'
+  export let versionRead = 'rv1960'
 
   /** @type {string} */
   export let book = 'genesis'
@@ -37,7 +38,7 @@
   let hasError = false
   let selectBook = false
   let selectChapter = false
-  let selectVersion = false
+  let selectversionRead = false
 
   /** @type {import('./Passage.svelte').PassageInfo} */
   let info = {
@@ -73,14 +74,14 @@
       chapters = bookInfo.chapters
       if (chapter > chapters) {
         chapter = 1
-        goto(`/chapter/${version}/${searchName(book)}/${chapter}`)
+        goto(`/read/${versionRead}/${searchName(book)}/${chapter}`)
       }
     }
     chapters = bookInfo.chapters
 
     loading = true
     const resp = await fetch(
-      `https://bible-api.deno.dev/api/${version === '' ? 'rv1960' : version}/book/${searchName(
+      `https://bible-api.deno.dev/api/${versionRead === '' ? 'rv1960' : versionRead}/book/${searchName(
         book
       )}/${chapter}`
     )
@@ -105,32 +106,32 @@
   /**
    * @param {string} book
    * @param {number} chapter
-   * @param {string} version
+   * @param {string} versionRead
    */
-  async function handleChange(book, chapter, version) {
+  async function handleChange(book, chapter, versionRead) {
     localStorage.setItem(
       'bookmark',
       JSON.stringify({
-        version,
+        versionRead,
         chapter,
         book
       })
     )
-    goto(`/chapter/${version}/${searchName(book)}/${chapter}`)
+    goto(`/read/${versionRead}/${searchName(book)}/${chapter}`)
     info = await getData()
   }
 
   /**
    * @param {string|number} value
-   * @param {'version'|'book'|'chapter'} prop
+   * @param {'versionRead'|'book'|'chapter'} prop
    */
   function updateData(value, prop) {
     loading = true
     switch (prop) {
-      case 'version':
+      case 'versionRead':
         if (typeof value === 'string') {
-          version = value
-          selectVersion = false
+          versionRead = value
+          selectversionRead = false
         }
         break
       case 'book':
@@ -146,7 +147,7 @@
         }
         break
     }
-    handleChange(book, chapter, version).then()
+    handleChange(book, chapter, versionRead).then()
   }
 
   /**
@@ -186,7 +187,7 @@
   }
 
   function getCurrentPage() {
-    return `${$page.url.origin}/chapter/${version}/${searchName(book)}/${chapter}`
+    return `${$page.url.origin}/read/${versionRead}/${searchName(book)}/${chapter}`
   }
 
 	/**
@@ -257,7 +258,7 @@
   
 
   /**
-   * @param {'book'|'chapter'|'version'} selector
+   * @param {'book'|'chapter'|'versionRead'} selector
    */
   function unSelect(selector) {
     switch (selector) {
@@ -267,8 +268,8 @@
       case 'chapter':
         selectChapter = !selectChapter
         break
-      case 'version':
-        selectVersion = !selectVersion
+      case 'versionRead':
+        selectversionRead = !selectversionRead
         break
     }
   }
@@ -289,32 +290,32 @@
   <wc-toast />
   <section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-12">
     <div class="flex items-center gap-3">
-      <div use:clickOutside on:click_outside={() => (selectVersion = false)}>
-        <h4>Version</h4>
+      <div use:clickOutside on:click_outside={() => (selectversionRead = false)}>
+        <h4>versionRead</h4>
         <Button
           disabled={loading}
           color="green"
           id="selectBook"
           className="w-12 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
-          on:click={() => unSelect('version')}
+          on:click={() => unSelect('versionRead')}
         >
-          {version === '' ? 'Selecciona tu version' : version}
+          {versionRead === '' ? 'Selecciona tu versionRead' : versionRead}
         </Button>
 
-        {#if selectVersion}
+        {#if selectversionRead}
           <ul
             class="list absolute flex h-fit flex-col  rounded bg-gray-50 ring-1 ring-gray-300"
           >
-            {#each versions as v}
+            {#each versionReads as v}
               <button
                 class="cursor-pointer select-none p-6 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
                 disabled={loading}
                 on:click={() => {
-                  if (v.url === version) {
-                    selectVersion = false
+                  if (v.url === versionRead) {
+                    selectversionRead = false
                     return
                   }
-                  updateData(v.url, 'version')
+                  updateData(v.url, 'versionRead')
                 }}
               >
                 {v.name}
@@ -428,9 +429,10 @@
         Capítulo anterior
       </Button>
 
+	  
       <Button
-        disabled={loading}
-        className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+	  disabled={loading}
+	  className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
         on:click={() => {
           if (chapter + 1 > chapters) {
             createAlert('Error ese capitulo no esta disponible', 'error')
@@ -444,24 +446,52 @@
         Siguiente capítulo
       </Button>
       <Button
-        disabled={loading}
-        className="dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
-        on:click={() => {
-          const url = `${$page.url.origin}/chapter/${version}/${book}/${chapter}`
+	  disabled={loading}
+	  className="dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
+	  on:click={() => {
+		  const url = `${$page.url.origin}/read/${versionRead}/${book}/${chapter}`
           navigator.clipboard
-            .writeText(url)
-            .then(() => {
-              createAlert('Url copiada al portapapeles', 'success')
+		  .writeText(url)
+		  .then(() => {
+			  createAlert('Url copiada al portapapeles', 'success')
             })
             .catch((err) => {
-              createAlert('Error al copiar url', 'error')
+				createAlert('Error al copiar url', 'error')
             })
         }}
         color="green"
-      >
+		>
         Compartir capítulo
-      </Button>
-    </div>
+	</Button>
+</div>
+
+<div class="flex items-center gap-4">
+	<Button
+	  className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+	  disabled={loading}
+	  on:click={() => {
+		version.set(versionRead)
+		goto('/books?testament=old')
+		  
+	  }}
+	  color="blue"
+	>
+	  Antiguo Testamento
+	</Button>
+	
+	<Button
+	  className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+	  disabled={loading}
+	  on:click={() => {
+		version.set(versionRead)
+		goto('/books?testament=new')
+	  }}
+	  color="blue"
+	>
+	  Nuevo Testamento
+	</Button>
+</div>
+
   </section>
 
   {#if loading }

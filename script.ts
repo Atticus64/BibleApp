@@ -41,4 +41,3 @@ const searchResult = await search(movieDB, {
   term: 'Chr',
 })
 
-console.log(searchResult)

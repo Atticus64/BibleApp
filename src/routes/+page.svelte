@@ -9,6 +9,7 @@
   import OpenSource from '@/components/icons/OpenSource.svelte'
   import Lightning from '@/components/icons/Lightning.svelte'
   import ZeroAdds from '@/components/icons/ZeroAdds.svelte'
+  import { goto } from '$app/navigation'
 </script>
 
 <div class="flex flex-col items-start p-0 sm:flex-row sm:p-6">
@@ -36,7 +37,7 @@
       class="min-lg:place-items-start m-4 flex font-bold max-lg:justify-around max-lg:text-xl max-md:justify-center max-md:gap-4 max-sm:flex-col max-sm:place-content-center max-sm:align-middle lg:gap-3 lg:text-2xl"
     >
       <Button
-        on:click={() => goToChapter()}
+        on:click={() => goto('/versions')}
         color="blue"
         className="hover:scale-105 transition-transform lg:p-8 max-lg:p-2"
       >

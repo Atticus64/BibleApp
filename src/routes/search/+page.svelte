@@ -47,7 +47,7 @@
    * @param {number} chapter
    */
   function urlVerse(book, chapter) {
-    const endpoint = `https://bible-study.vercel.app/chapter/${
+    const endpoint = `https://bible-study.vercel.app/read/${
       $versionSearch.url
     }/${book.toLowerCase()}/${chapter}`
     return endpoint
@@ -73,7 +73,6 @@
           loadingResults.set(false)
         })
         .catch((e) => {
-          console.log('fetch cancelado')
           console.error(e)
           loadingResults.set(false)
         })

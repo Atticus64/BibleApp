@@ -38,6 +38,28 @@ export async function singIn(data) {
 }
 
 /**
+ *
+ * @param {string} book
+ * @returns {Promise<{
+ *     name: string
+ *     abrev: string
+ *     chapters: number
+ *     testament: string
+ * }| undefined>}
+ */
+export async function getInfoBook(book) {
+  const resp = await fetch(`https://bible-api.deno.dev/api/book/${book}`)
+
+  if (!resp.ok) {
+    return
+  }
+
+  const info = await resp.json()
+
+  return info
+}
+
+/**
  * @param {any} data
  * @returns {Promise<Response>}
 */
@@ -72,7 +94,7 @@ export async function singUp(data) {
   return response
 }
 
-export async function signOut () {
+export async function signOut() {
   await fetch(`${API_BASE_URL}/auth/logout`, {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include'
@@ -85,7 +107,7 @@ export async function signOut () {
   })
 }
 
-export async function updateUserInfo () {
+export async function updateUserInfo() {
   try {
     const res = await fetch(`${API_BASE_URL}/user`, {
       credentials: 'include'

@@ -10,11 +10,11 @@ export function goToChapter() {
     const version = bkmark.version
     const chapter = bkmark.chapter
 
-    goto(`/chapter/${version}/${book}/${chapter}`)
+    goto(`/read/${version}/${book}/${chapter}`)
     return
   }
 
-  goto('/chapter/rv1960/Genesis/1')
+  goto('/read/rv1960/Genesis/1')
 }
 
 /**
