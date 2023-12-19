@@ -98,6 +98,12 @@
       return
     }
 
+	localStorage.setItem('bookmark', JSON.stringify({
+		version: versionRead,
+		chapter,
+		book
+	}))
+
     loading = false
     const chapInfo = await resp.json()
     return chapInfo
