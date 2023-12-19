@@ -5,7 +5,7 @@
   import SvelteMarkdown from 'svelte-markdown'
 
   import { user } from '@/state/user'
-  import { books } from '@/constants'
+  import { books, versions } from '@/constants'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
   import { draft, studyMode } from '@/state/study'
@@ -306,7 +306,7 @@
           <ul
             class="list absolute flex h-fit flex-col  rounded bg-gray-50 ring-1 ring-gray-300"
           >
-            {#each versionReads as v}
+            {#each versions as v}
               <button
                 class="cursor-pointer select-none p-6 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
                 disabled={loading}

@@ -41,9 +41,9 @@
   }
 
   function goToPassage() {
-	if ($book === '') {
+	if ($book === ' ' || $book === '' || $book === undefined) {
 		goto('/books')
-	} else if ($version === '') {
+	} else if ($version === ' ' || $version === '' || $version === undefined) {
 		goto(`/versions`)
 	}
 	goto(`/read/${$version}/${$book}/${$chapter}`)
