@@ -110,7 +110,7 @@ export const oldTestament = [
 ]
 
 export const newTestament = [
-	 'Mateo',
+  'Mateo',
   'Marcos',
   'Lucas',
   'Juan',

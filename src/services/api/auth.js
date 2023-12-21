@@ -48,7 +48,7 @@ export async function singIn(data) {
  * }| undefined>}
  */
 export async function getInfoBook(book) {
-  const resp = await fetch(`https://bible-api.deno.dev/api/${book}`)
+  const resp = await fetch(`https://bible-api.deno.dev/api/book/${book}`)
 
   if (!resp.ok) {
     return
