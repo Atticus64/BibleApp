@@ -68,7 +68,7 @@
     hasError = false
     error = ''
 
-    const r = await fetch(`https://bible-api.deno.dev/api/${searchName(book)}`)
+    const r = await fetch(`https://bible-api.deno.dev/api/book/${searchName(book)}`)
     const bookInfo = await r.json()
 
     if (chapters > bookInfo.chapters) {
