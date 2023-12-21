@@ -68,7 +68,7 @@
     hasError = false
     error = ''
 
-    const r = await fetch(`https://bible-api.deno.dev/api/book/${searchName(book)}`)
+    const r = await fetch(`https://bible-api.deno.dev/api/${searchName(book)}`)
     const bookInfo = await r.json()
 
     if (chapters > bookInfo.chapters) {
@@ -85,7 +85,7 @@
     loading = true
 	
     const resp = await fetch(
-      `https://bible-api.deno.dev/api/read/${versionRead === '' ? 'rv1960' : versionRead}/book/${searchName(
+      `https://bible-api.deno.dev/api/read/${versionRead === '' ? 'rv1960' : versionRead}/${searchName(
         book
       )}/${chapter}`
     )
