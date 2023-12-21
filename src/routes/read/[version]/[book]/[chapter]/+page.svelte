@@ -6,6 +6,6 @@
 
 <StudyChapter
   book={data.params.book}
-  version={data.params.version}
+  versionRead={data.params.version}
   chapter={Number(data.params.chapter)}
 />

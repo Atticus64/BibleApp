@@ -56,6 +56,7 @@
   }
 
   onMount(async () => {
+
     info = await getData()
     chapters = info.num_chapters
   })
@@ -79,9 +80,12 @@
     }
     chapters = bookInfo.chapters
 
+	const p = $page.url
+
     loading = true
+	
     const resp = await fetch(
-      `https://bible-api.deno.dev/api/${versionRead === '' ? 'rv1960' : versionRead}/book/${searchName(
+      `https://bible-api.deno.dev/api/read/${versionRead === '' ? 'rv1960' : versionRead}/book/${searchName(
         book
       )}/${chapter}`
     )
@@ -89,7 +93,6 @@
     if (!resp.ok) {
       loading = false
       hasError = true
-      const errorJson = await resp.json()
 
       error =
         'No se encontro el capitulo, intentelo mas tarde o revise que sea correcta su busqueda'
@@ -118,7 +121,7 @@
     localStorage.setItem(
       'bookmark',
       JSON.stringify({
-        versionRead,
+        version: versionRead,
         chapter,
         book
       })
@@ -297,7 +300,7 @@
   <section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-12">
     <div class="flex items-center gap-3">
       <div use:clickOutside on:click_outside={() => (selectversionRead = false)}>
-        <h4>versionRead</h4>
+        <h4>versión</h4>
         <Button
           disabled={loading}
           color="green"
@@ -344,7 +347,7 @@
         </Button>
 
 		{#if selectBook}
-		<dialog class="max-lg:max-w-[50rem]  max-lg:top-[80%] max-h-[30rem]  flex flex-wrap books-dialog p-4 overflow-auto rounded-lg bg-gray-100 dark:text-white gap-3 dark:bg-[#283248]" >
+		<dialog class="max-lg:max-w-[50rem] max-lg:top-[80%] max-h-[30rem]  flex flex-wrap books-dialog p-4 overflow-auto rounded-lg bg-gray-100 dark:text-white gap-3 dark:bg-[#283248]" >
 			{#each books as b}
 			    <button
                 class="select-none p-2 transition-shadow bg-[#a8cae8] hover:bg-[#7faddb]  hover:shadow- rounded-sm dark:bg-[#4366b2] dark:hover:bg-blue-600"
@@ -384,7 +387,7 @@
 		${chapters <= 12 ? 'top-[29%] left-min' : ''}
 		${chapters <= 20 && chapters > 10 ? 'top-[34%] left-med' : ''}
 		${chapters < 50 && chapters > 20 ? 'top-[35%] left-med' : 'top-[40%]'}
-		${chapters > 50 ? 'top-[51%] left-med' : 'top-[40%]'}
+		${chapters > 50 ? 'top-[51%] left-med' : 'top-[40%] left-med'}
 		${chapters >= 20 ? 'max-lg:top-[51%]' : 'max-lg:top-[40%]'}
 		`
 		} >

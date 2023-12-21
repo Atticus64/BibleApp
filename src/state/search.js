@@ -80,10 +80,10 @@ export function searchBible({ version, testament }) {
     let url
 
     if (!testament) {
-      url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
+      url = new URL(`https://bible-api.deno.dev/api/read/${version}/search`)
       url.searchParams.set('q', search)
     } else {
-      url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
+      url = new URL(`https://bible-api.deno.dev/api/read/${version}/search`)
       url.searchParams.set('testament', testament)
       url.searchParams.set('q', search)
     }
@@ -103,7 +103,7 @@ export function searchBible({ version, testament }) {
       return Promise.reject('No hay nada que buscar')
     }
 
-    const url = new URL(`https://bible-api.deno.dev/api/${version}/search`)
+    const url = new URL(`https://bible-api.deno.dev/api/read/${version}/search`)
     url.searchParams.set('q', search)
     if (testament) {
       url.searchParams.set('testament', testament)

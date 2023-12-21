@@ -177,7 +177,11 @@ export const versions = [
   {
     url: 'dhh',
     name: 'Dios Habla Hoy'
-  }
+  },
+  {
+    url: 'pdt',
+    name: 'Palabra de Dios para todos'
+  },
 ]
 
 export const API_BASE_URL = 'https://bible-api.deno.dev'
