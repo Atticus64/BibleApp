@@ -147,7 +147,7 @@
         </li>
         <li>
           <a
-            href="https://docs-bible-api.vercel.app/"
+            href="https://docs-bible-api.netlify.app/"
             target="_blank"
 			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
            >Documentacion del API</a
