@@ -18,10 +18,11 @@ export async function singIn(data) {
 
   if (!response.ok) {
     const error = await response.json()
+    console.log(error)
 
     if (error.message) {
-      if (error.message.includes('User')) {
-        createAlert('El usuario ya existe, cambie el email or username', 'error')
+      if (error.message.includes('User not found')) {
+        createAlert('El usuario no existe, registrese primero', 'error')
         return response
       }
 
@@ -48,7 +49,7 @@ export async function singIn(data) {
  * }| undefined>}
  */
 export async function getInfoBook(book) {
-  const resp = await fetch(`https://bible-api.deno.dev/api/book/${book}`)
+  const resp = await fetch(`${API_BASE_URL}/api/book/${book}`)
 
   if (!resp.ok) {
     return

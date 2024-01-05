@@ -8,7 +8,7 @@ export const draft = writable({
   id: ''
 })
 
-export const studyMode = writable(false)
+export const studyMode = writable(true)
 
 /**
  * @typedef NoteDraft

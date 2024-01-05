@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/constants'
 import { createAlert } from '@/services/alert'
 import { writable } from 'svelte/store'
 
@@ -23,7 +24,8 @@ export const notes = writable([])
  * @param {{ [k: string]: FormDataEntryValue }} formData
  */
 export async function sendNoteToUpdate(id, formData) {
-  const res = await fetch(`https://bible-api.deno.dev/notes/${id}`, {
+  console.log(formData)
+  const res = await fetch(`${API_BASE_URL}/notes/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
@@ -45,7 +47,7 @@ export async function sendNoteToUpdate(id, formData) {
  * @returns {Promise<Response>}
  */
 export async function sendCreateNote(formData) {
-  const response = await fetch('https://bible-api.deno.dev/notes/create', {
+  const response = await fetch(`${API_BASE_URL}/notes/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -54,6 +56,7 @@ export async function sendCreateNote(formData) {
     body: JSON.stringify(formData)
   })
 
+  console.log(response)
   if (!response.ok) {
     createAlert('No se pudo crear la nota', 'error')
     return response

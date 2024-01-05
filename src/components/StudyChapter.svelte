@@ -2,10 +2,7 @@
   import { onMount } from 'svelte'
   import { page } from '$app/stores'
   import { goto } from '$app/navigation'
-  import SvelteMarkdown from 'svelte-markdown'
-
-  import { user } from '@/state/user'
-  import { books, versions } from '@/constants'
+  import { API_BASE_URL, books, versions } from '@/constants'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
   import { draft, studyMode } from '@/state/study'
@@ -14,9 +11,8 @@
   import { clickOutside } from '@/utils/clickOutside.js'
   import { formatName } from '@/utils/chapter'
   import { DEFAULT_NOTE, searchName } from '@/constants'
-  import { sendCreateNote, sendNoteToUpdate } from '@/state/notes'
   import { version } from '@/state/bible'
-  
+  import NoteMenu from './NoteMenu.svelte'
 
   /** @type {string} */
   export let versionRead = 'rv1960'
@@ -26,11 +22,6 @@
 
   /** @type {number} */
   export let chapter = 1
-
-  let md =
-    $draft.body.length === 0
-      ? DEFAULT_NOTE
-      : $draft.body
 
   let error = ''
   let chapters = 55
@@ -56,19 +47,17 @@
   }
 
   onMount(async () => {
-
     info = await getData()
+    //console.log($draft.body.length)
     chapters = info.num_chapters
   })
-
- 
 
   async function getData() {
     if (book === '') return
     hasError = false
     error = ''
 
-    const r = await fetch(`https://bible-api.deno.dev/api/book/${searchName(book)}`)
+    const r = await fetch(`${API_BASE_URL}/api/book/${searchName(book)}`)
     const bookInfo = await r.json()
 
     if (chapters > bookInfo.chapters) {
@@ -80,12 +69,12 @@
     }
     chapters = bookInfo.chapters
 
-	const p = $page.url
+    const p = $page.url
 
     loading = true
-	
+
     const resp = await fetch(
-      `https://bible-api.deno.dev/api/read/${versionRead === '' ? 'rv1960' : versionRead}/${searchName(
+      `${API_BASE_URL}/api/read/${versionRead === '' ? 'rv1960' : versionRead}/${searchName(
         book
       )}/${chapter}`
     )
@@ -101,11 +90,14 @@
       return
     }
 
-	localStorage.setItem('bookmark', JSON.stringify({
-		version: versionRead,
-		chapter,
-		book
-	}))
+    localStorage.setItem(
+      'bookmark',
+      JSON.stringify({
+        version: versionRead,
+        chapter,
+        book
+      })
+    )
 
     loading = false
     const chapInfo = await resp.json()
@@ -160,113 +152,6 @@
   }
 
   /**
-   * 
-   * @param {boolean} loggedIn
-   * @param {string} body
-   * @param {string} title
-   * @param {string} description
-   */
-  function isValidNote(loggedIn, body, title, description) {
-    if (!loggedIn) {
-      createAlert('Necesitas estar autenticado para crear notas', 'error')
-      return false
-    }
-
-    if (body.length < 20) {
-      createAlert('El texto debe ser mayor o igual a 20 caracteres', 'error')
-      return false
-    }
-
-    if (title.length < 8) {
-      createAlert('El titulo debe ser mayor o igual a 8 caracteres', 'error')
-      return false
-    }
-
-    if (title.length > 40) {
-      createAlert('El titulo debe ser menor a 40 caracteres', 'error')
-      return false
-    }
-
-    if (description.length < 10) {
-      createAlert('La descripcion debe ser mayor a 10 caracteres', 'error')
-      return false
-    }
-
-    return true
-  }
-
-  function getCurrentPage() {
-    return `${$page.url.origin}/read/${versionRead}/${searchName(book)}/${chapter}`
-  }
-
-	/**
-   * @param {{ [k: string]: FormDataEntryValue }} formData
-   */
-  async function createNote(formData) {
-    formData.page = getCurrentPage()
-    
-	const response = await sendCreateNote(formData)
-
-	if (!response.ok) {
-		return
-	}
-
-    const data = await response.json()
-
-    draft.set({
-      id: data.id,
-      title: $draft.title,
-      body: $draft.body,
-      description: $draft.description
-    })
-  }
-//  * @param {Event & { readonly submitter: HTMLElement | undefined }} event
-  /**
-	   * @param {Event & { readonly submitter: HTMLElement | null }} event
-   //  * @returns {Promise<void>} 
-   */
-  async function submitNote(event) {
-	if (!(event.target instanceof HTMLFormElement)) return
-
-    if (!isValidNote($user.loggedIn, $draft.body, $draft.title, $draft.description)) {
-      return
-    }
-	
-    const formData = Object.fromEntries(new FormData(event.target))
-
-    if ($draft.id !== '') {
-      updateNote(formData)
-      return
-    }
-
-    createNote(formData)
-  }
-
-  async function handleNewNote() {
-    if (!isValidNote($user.loggedIn, $draft.body, $draft.title, $draft.description)) {
-      return
-    }
-
-    const formData = {
-      title: $draft.title,
-      body: $draft.body,
-      description: $draft.description
-    }
-    createNote(formData)
-  }
-
-  /**
-   * @param {{ [k: string]: FormDataEntryValue }} formData
-   */
-  async function updateNote(formData) {
-    if ($draft.id !== '') {
-	  sendNoteToUpdate($draft.id, formData)
-	}
-  }
-
-  
-
-  /**
    * @param {'book'|'chapter'|'versionRead'} selector
    */
   function unSelect(selector) {
@@ -282,20 +167,13 @@
         break
     }
   }
-
-  $: {
-    draft.update((u) => {
-      u.body = md
-      return u
-    })
-  }
 </script>
 
 <svelte:head>
   <title>{formatName(book)}: {chapter} - Lectura</title>
 </svelte:head>
 
-<div class="w-full">
+<div class="flex w-full flex-col">
   <wc-toast />
   <section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-12">
     <div class="flex items-center gap-3">
@@ -312,9 +190,7 @@
         </Button>
 
         {#if selectversionRead}
-          <ul
-            class="list absolute flex h-fit flex-col  rounded bg-gray-50 ring-1 ring-gray-300"
-          >
+          <ul class="list absolute flex h-fit flex-col rounded bg-gray-50 ring-1 ring-gray-300">
             {#each versions as v}
               <button
                 class="cursor-pointer select-none p-6 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
@@ -346,11 +222,13 @@
           {book === '' ? 'Choose Book' : formatName(book)}
         </Button>
 
-		{#if selectBook}
-		<dialog class="max-lg:max-w-[50rem] max-lg:top-[80%] max-h-[30rem]  flex flex-wrap books-dialog p-4 overflow-auto rounded-lg bg-gray-100 dark:text-white gap-3 dark:bg-[#283248]" >
-			{#each books as b}
-			    <button
-                class="select-none p-2 transition-shadow bg-[#a8cae8] hover:bg-[#7faddb]  hover:shadow- rounded-sm dark:bg-[#4366b2] dark:hover:bg-blue-600"
+        {#if selectBook}
+          <dialog
+            class="books-dialog flex max-h-[30rem] flex-wrap gap-3 overflow-auto rounded-lg bg-gray-100 p-4 dark:bg-[#283248] dark:text-white max-lg:top-[80%] max-lg:max-w-[50rem]"
+          >
+            {#each books as b}
+              <button
+                class="hover:shadow- select-none rounded-sm bg-[#a8cae8] p-2 transition-shadow hover:bg-[#7faddb] dark:bg-[#4366b2] dark:hover:bg-blue-600"
                 disabled={loading}
                 on:click={() => {
                   if (b.toLowerCase() === book.toLowerCase()) {
@@ -360,12 +238,11 @@
                   updateData(b.toLowerCase(), 'book')
                 }}
               >
-                 {b}
+                {b}
               </button>
             {/each}
-   
-		</dialog>
-		{/if}
+          </dialog>
+        {/if}
       </div>
 
       <div use:clickOutside on:click_outside={() => (selectChapter = false)} class="">
@@ -379,21 +256,22 @@
         >
           {chapter === 0 ? 'Select your chapter' : chapter}
         </Button>
-		
+
         {#if selectChapter}
-		<dialog class={`max-lg:max-w-[50rem] max-lg:left-0 max-h-[30rem]  flex flex-wrap chapters-dialog p-4 overflow-auto rounded-lg bg-gray-100 dark:text-white gap-3 dark:bg-[#283248]
-		max-lg:w-[20rem] left-min
-		${chapters <= 7 ? 'top-[29%] left-minus' : ''}
-		${chapters <= 12 ? 'top-[29%] left-min' : ''}
-		${chapters <= 20 && chapters > 10 ? 'top-[34%] left-med' : ''}
-		${chapters < 50 && chapters > 20 ? 'top-[35%] left-med' : 'top-[40%]'}
-		${chapters > 50 ? 'top-[51%] left-med' : 'top-[40%] left-med'}
+          <dialog
+            class={`chapters-dialog left-min flex  max-h-[30rem] flex-wrap gap-3 overflow-auto rounded-lg bg-gray-100 p-4 dark:bg-[#283248] dark:text-white max-lg:left-0
+		max-lg:w-[20rem] max-lg:max-w-[50rem]
+		${chapters <= 7 ? 'left-minus top-[29%]' : ''}
+		${chapters <= 12 ? 'left-min top-[29%]' : ''}
+		${chapters <= 20 && chapters > 10 ? 'left-med top-[34%]' : ''}
+		${chapters < 50 && chapters > 20 ? 'left-med top-[35%]' : 'top-[40%]'}
+		${chapters > 50 ? 'left-med top-[51%]' : 'left-med top-[40%]'}
 		${chapters >= 20 ? 'max-lg:top-[51%]' : 'max-lg:top-[40%]'}
-		`
-		} >
-			{#each { length: chapters } as _, c}
+		`}
+          >
+            {#each { length: chapters } as _, c}
               <button
-                class="select-none w-[3rem] p-4 transition-shadow bg-[#a8cae8] hover:bg-[#7faddb]  hover:shadow-sm rounded-sm dark:bg-[#4366b2] dark:hover:bg-blue-600"
+                class="w-[3rem] select-none rounded-sm bg-[#a8cae8] p-4 transition-shadow hover:bg-[#7faddb] hover:shadow-sm dark:bg-[#4366b2] dark:hover:bg-blue-600"
                 on:click={() => {
                   let newChapter = c + 1 // index start at 0
                   if (newChapter === chapter) {
@@ -406,9 +284,7 @@
                 {c + 1}
               </button>
             {/each}
-
-		</dialog>
-
+          </dialog>
         {/if}
       </div>
     </div>
@@ -438,10 +314,9 @@
         Capítulo anterior
       </Button>
 
-	  
       <Button
-	  disabled={loading}
-	  className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+        disabled={loading}
+        className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
         on:click={() => {
           if (chapter + 1 > chapters) {
             createAlert('Error ese capitulo no esta disponible', 'error')
@@ -455,55 +330,53 @@
         Siguiente capítulo
       </Button>
       <Button
-	  disabled={loading}
-	  className="dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
-	  on:click={() => {
-		  const url = `${$page.url.origin}/read/${versionRead}/${book}/${chapter}`
+        disabled={loading}
+        className="dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
+        on:click={() => {
+          const url = `${$page.url.origin}/read/${versionRead}/${book}/${chapter}`
           navigator.clipboard
-		  .writeText(url)
-		  .then(() => {
-			  createAlert('Url copiada al portapapeles', 'success')
+            .writeText(url)
+            .then(() => {
+              createAlert('Url copiada al portapapeles', 'success')
             })
             .catch((err) => {
-				createAlert('Error al copiar url', 'error')
+              createAlert('Error al copiar url', 'error')
             })
         }}
         color="green"
-		>
+      >
         Compartir capítulo
-	</Button>
-</div>
+      </Button>
+    </div>
 
-<div class="flex items-center gap-4">
-	<Button
-	  className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
-	  disabled={loading}
-	  on:click={() => {
-		version.set(versionRead)
-		goto('/books?testament=old')
-		  
-	  }}
-	  color="blue"
-	>
-	  Antiguo Testamento
-	</Button>
-	
-	<Button
-	  className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
-	  disabled={loading}
-	  on:click={() => {
-		version.set(versionRead)
-		goto('/books?testament=new')
-	  }}
-	  color="blue"
-	>
-	  Nuevo Testamento
-	</Button>
-</div>
+    <div class="flex items-center gap-4">
+      <Button
+        className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+        disabled={loading}
+        on:click={() => {
+          version.set(versionRead)
+          goto('/books?testament=old')
+        }}
+        color="blue"
+      >
+        Antiguo Testamento
+      </Button>
 
+      <Button
+        className="dark:text-white dark:bg-blue-500 dark:border-none dark:hover:bg-blue-600"
+        disabled={loading}
+        on:click={() => {
+          version.set(versionRead)
+          goto('/books?testament=new')
+        }}
+        color="blue"
+      >
+        Nuevo Testamento
+      </Button>
+    </div>
   </section>
 
-  {#if loading }
+  {#if loading}
     <div class="max-md flex justify-center self-center text-center align-middle">
       <section class="mt-4 flex flex-col items-center justify-center align-middle">
         <Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
@@ -513,64 +386,15 @@
   {/if}
 
   {#if !hasError && info}
-    <div class="flex max-w-full flex-row">
-	{#if !loading} 
-      <section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
-        <Passage studyMode={$studyMode} {info} />
-      </section>
-	{/if}
+    <div class="flex max-w-full flex-row max-lg:flex-col">
+      {#if !loading}
+        <section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
+          <Passage studyMode={$studyMode} {info} />
+        </section>
+      {/if}
 
       {#if $studyMode && !loading}
-        <section class="max-lg:hidden xl:w-1/2 xl:max-w-full 2xl:w-1/2 2xl:max-w-full">
-          <div class="m-10 h-[13rem] justify-center overflow-auto p-4">
-            <SvelteMarkdown source={md} />
-          </div>
-          <div class="h-[26rem]">
-            <form on:submit|preventDefault={submitNote}>
-              <div class="">
-                <label
-                  for="title"
-                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Titulo</label
-                >
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="titulo de mi nota"
-                  bind:value={$draft.title}
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  for="description"
-                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                  >Descripción</label
-                >
-                <input
-                  type="text"
-                  name="description"
-                  id="description"
-                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="descripción de mi nota"
-                  required
-                  bind:value={$draft.description}
-                />
-              </div>
-              <textarea
-                name="body"
-                class="mt-2 block h-[15rem] w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                bind:value={md}
-              />
-
-              <div class="flex flex-row justify-end gap-4">
-                <Button type="submit">Guardar nota</Button>
-                <Button on:click={handleNewNote}>Crear Nueva Nota</Button>
-              </div>
-            </form>
-          </div>
-        </section>
+        <NoteMenu className="max-lg:hidden" version={versionRead} {book} {chapter} />
       {/if}
     </div>
   {/if}
@@ -591,71 +415,64 @@
 
 <style>
   .books-dialog {
-	position: fixed;
-	width: fit-content;
-	overflow: auto;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	border-radius: 5px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-	  
+    position: fixed;
+    width: fit-content;
+    overflow: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
-  
+
   .chapters-dialog {
-	position: fixed;
-	overflow: auto;
-	/*top: 50%;*/
-	/*left: 50%;*/
-	transform: translate(-50%, -50%);
-	border-radius: 5px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-	  
+    position: fixed;
+    overflow: auto;
+    /*top: 50%;*/
+    /*left: 50%;*/
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   .left-mobile {
-
-	left: 30%;
+    left: 30%;
   }
 
   .left-min {
-	left: 10%;
+    left: 10%;
   }
-.left-minus {
-	left: 0%;
+  .left-minus {
+    left: 0%;
   }
-
 
   .left-mid {
-	left: 20%;
+    left: 20%;
   }
 
   .left-zero {
-	left: 0%;
+    left: 0%;
   }
 
   .left-med {
-	left: 50%;
+    left: 50%;
   }
 
   @media (max-width: 600px) {
-	.chapters-dialog {
-		left: 50%;
-	}
+    .chapters-dialog {
+      left: 50%;
+    }
   }
 
   @media (min-width: 1024px) {
-	.left-minus {
-		left: -20%;
-	}
+    .left-minus {
+      left: -20%;
+    }
   }
 
-
-  
-
   .books-dialog::backdrop {
-	background: #000;
-	opacity: 0.5;
-	backdrop-filter: blur(4px);
+    background: #000;
+    opacity: 0.5;
+    backdrop-filter: blur(4px);
   }
 </style>

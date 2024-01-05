@@ -185,22 +185,31 @@ export const versions = [
 ]
 
 export const API_BASE_URL = 'https://bible-api.deno.dev'
+//export const API_BASE_URL = 'http://localhost:8000'
 
 export const DEFAULT_NOTE = `
-# titulo 1 
-## titulo 2 
-### titulo 3
----
-* lista
-* desordenada 
----
-1. lista
-2. ordenada
----
-**imagen**
+ <div>
+    <h1>titulo 1</h1>
+    <h2>titulo 2</h2>
+    <h3>titulo 3</h3>
 
-*lista*
-![](https://i.postimg.cc/wBZFwwBN/boat.jpg)`
+    <ul>
+      <li>lista</li>
+      <li>desordenada</li>
+    </ul>
+    <ol>
+      <li>lista</li>
+      <li>ordenada</li>
+    </ol>
+
+    <hr>
+    <strong>imagen</strong>
+    <blockquote>
+      <p>Cita a resaltar</p>
+    </blockquote>
+
+  </div>`
+
 
 export function searchName(name: string) {
   if (name.includes('-')) {

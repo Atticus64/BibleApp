@@ -6,16 +6,52 @@ p {
   line-height: 1.5;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  /* -webkit-box-shadow: 0 0 0px 1000px #1b1b6c inset; */
+  background-color: #1b1b6c;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 body {
   @apply bg-white text-black dark:bg-[#1e293b] dark:text-white;
 }
+
+blockquote {
+  max-width: 100%;
+  width: 100%;
+  white-space: pre-wrap;
+  word-break: break-word;
+  caret-color: rgba(255, 255, 255, 0.81);
+  padding-left: .7rem;
+  padding-right: 2px;
+  border-left: 3px solid currentcolor;
+  padding-left: 14px;
+  padding-right: 14px;
+  width: 100%;
+}
+
+input {
+  text-decoration: none;
+  outline: none;
+}
+
+
 
 a:hover {
   color: cornflowerblue;
 }
 
 ::selection {
-	background-color: blue;
+  background-color: blue;
   color: white;
 }
 
@@ -38,10 +74,10 @@ h3 {
   font-size: large;
 }
 
-ul > li {
+ul>li {
   list-style: disc;
 }
 
-ol > li {
+ol>li {
   list-style: decimal;
 }

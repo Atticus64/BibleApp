@@ -8,6 +8,7 @@
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
   import { Stretch } from 'svelte-loading-spinners'
+  import { API_BASE_URL } from '@/constants'
 
   let loadingNotes = true
   let hasError = false
@@ -17,8 +18,7 @@
   }
 
   onMount(async () => {
-
-    await fetch('https://bible-api.deno.dev/notes', {
+    await fetch(`${API_BASE_URL}/notes`, {
       headers: {
         'Content-Type': 'application/json',
         WithCredentials: 'include'
@@ -59,7 +59,7 @@
     if (result.isConfirmed) {
       notes.set($notes.filter((note) => note.id !== id))
 
-      const res = await fetch(`https://bible-api.deno.dev/notes/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/notes/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       })
@@ -78,18 +78,18 @@
 
 <wc-toast />
 {#if loadingNotes}
-    <div class="max-md flex justify-center flex-col self-center text-start align-middle">
-		<span class="self-center">
-			<Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
-		</span>
-	    <h4>Cargando Notas</h4>
-	</div>
+  <div class="max-md flex flex-col justify-center self-center text-start align-middle">
+    <span class="self-center">
+      <Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
+    </span>
+    <h4>Cargando Notas</h4>
+  </div>
 {:else if !loadingNotes && !hasError}
   {#if $notes.length === 0}
     <p>No hay notas</p>
   {:else}
     <ul
-      class="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 focus:ring-primary-300 flex flex-row gap-3 rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 max-sm:flex-col 2xl:flex"
+      class="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 focus:ring-primary-300 flex flex-row flex-wrap gap-3 rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 max-sm:flex-col 2xl:flex"
     >
       {#each $notes as note}
         <li
