@@ -168,7 +168,7 @@
           bind:value={$draft.description}
         />
       </div>
-      <Editor content={$draft.body} createNote={handleNewNote} />
+      <Editor content={$draft.body} createNote={handleNewNote} manageNote={false} />
     </form>
   </div>
 </section>

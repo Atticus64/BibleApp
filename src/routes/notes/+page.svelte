@@ -106,15 +106,7 @@
           <div class="m-4 flex justify-end gap-4 align-middle">
             <Button
               on:click={() => {
-                studyMode.set(true)
-                draft.set({
-                  title: note.title,
-                  description: note.description,
-                  id: note.id,
-                  body: note.body
-                })
-
-                goto(note.page ?? '/')
+                goto(`/notes/${note.id}`)
               }}>Ver nota</Button
             >
             <Button on:click={() => deleteNote(note.id)}>Eliminar nota</Button>

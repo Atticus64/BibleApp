@@ -21,6 +21,19 @@ import { writable } from 'svelte/store'
 export const notes = writable([])
 
 /**
+ * @type {import("svelte/store").Writable<Note>}
+ */
+export const editableNote = writable({
+  body: '',
+  description: '',
+  title: '',
+  id: '',
+  page: ''
+})
+
+export const editable = writable(true)
+
+/**
  * @param {string} id
  * @param {{ [k: string]: FormDataEntryValue }} formData
  */
@@ -62,6 +75,28 @@ export async function sendCreateNote(formData) {
   }
 
   createAlert('Nota creada', 'success')
+
+  return response
+}
+
+/**
+ * 
+ * @param {string} id 
+ * @returns 
+ */
+export async function getNote(id) {
+  const response = await fetch(`${API_BASE_URL}/notes/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+  })
+
+  if (!response.ok) {
+    createAlert('No se pudo encontrar la nota', 'error')
+    return response
+  }
 
   return response
 }

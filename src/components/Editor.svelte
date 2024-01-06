@@ -12,7 +12,12 @@
   import Create from './icons/Create.svelte'
   import Save from './icons/Save.svelte'
   import { DEFAULT_NOTE } from '@/constants'
-  import Exit from './icons/Exit.svelte'
+  import { editable, editableNote } from '@/state/notes'
+  import Lock from './icons/Lock.svelte'
+  import Unlock from './icons/Unlock.svelte'
+  import Secure from './icons/Secure.svelte'
+
+  export let manageNote = false
 
   /** @type {string} */
   export let content
@@ -27,10 +32,15 @@
 
   onMount(() => {
     editor = new Editor({
+      editable: true,
       element: element,
       extensions: [StarterKit, Image],
       content: content.length <= 0 ? DEFAULT_NOTE : content,
       onUpdate: () => {
+        if (manageNote) {
+          $editableNote.body = editor.getHTML()
+          return
+        }
         $draft.body = editor.getHTML()
       },
       onTransaction: () => {
@@ -45,6 +55,12 @@
       }
     })
   })
+
+  $: {
+    if (editor) {
+      editor.setEditable($editable)
+    }
+  }
 
   onDestroy(() => {
     if (editor) {
@@ -66,6 +82,7 @@
         >
           <div class="flex flex-wrap gap-2">
             <button
+              disabled={!$editable}
               on:click={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
               class:active={editor.isActive('heading', { level: 1 })}
               type="button"
@@ -74,10 +91,11 @@
               cursor-pointer rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white
               `}
             >
-              <HeadingOne className="h-6 w-6" color="text-gray-500" />
+              <HeadingOne className="h-6 w-6" />
               <span class="sr-only">Heading 1</span>
             </button>
             <button
+              disabled={!$editable}
               on:click={() => {
                 editor.chain().focus().toggleHeading({ level: 2 }).run()
               }}
@@ -87,11 +105,12 @@
               cursor-pointer rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white
               `}
             >
-              <HeadingTwo className="h-6 w-6" color="text-gray-500" />
+              <HeadingTwo className="h-6 w-6" />
 
               <span class="sr-only">Heading 2</span>
             </button>
             <button
+              disabled={!$editable}
               on:click={() => {
                 editor.chain().focus().setHeading({ level: 3 }).run()
               }}
@@ -101,11 +120,12 @@
               `}
               type="button"
             >
-              <HeadingThree className="h-6 w-6" color="text-gray-500" />
+              <HeadingThree className="h-6 w-6" />
 
               <span class="sr-only">Heading 3</span>
             </button>
             <button
+              disabled={!$editable}
               on:click={() => {
                 editor.chain().focus().setParagraph().run()
               }}
@@ -115,11 +135,12 @@
               cursor-pointer rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white
               `}
             >
-              <Paragraph className="h-6 w-6" color="text-gray-500" />
+              <Paragraph className="h-6 w-6" />
 
               <span class="sr-only">Paragraph</span>
             </button>
             <button
+              disabled={!$editable}
               class:active={editor.isActive('blockquote')}
               on:click={() => {
                 editor.chain().focus().toggleBlockquote().run()
@@ -130,7 +151,7 @@
               cursor-pointer rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white
               `}
             >
-              <BlockQuote className="h-6 w-6" color="text-gray-500" />
+              <BlockQuote className="h-6 w-6" />
 
               <span class="sr-only">Blockquote</span>
             </button>
@@ -141,7 +162,7 @@
                 class="flex h-12 w-fit items-center justify-end gap-2 rounded-lg bg-[#a8cae8] p-3 text-black transition-colors hover:bg-[#7faddb] dark:border-none dark:bg-[#4267b3] dark:text-white dark:hover:bg-blue-600"
               >
                 <span> Crear </span>
-                <Create className="h-6 w-6" color="text-white" />
+                <Create className="h-6 w-6" />
               </button>
 
               <button
@@ -149,7 +170,21 @@
                 class="flex h-12 w-fit items-center justify-center gap-2 rounded-lg bg-[#a8cae8] p-3 text-black transition-colors hover:bg-[#7faddb] dark:border-none dark:bg-[#4267b3] dark:text-white dark:hover:bg-blue-600"
               >
                 <span> Guardar </span>
-                <Save className="h-6 w-6" color="text-white" />
+                <Save className="h-6 w-6" />
+              </button>
+              <button
+                on:click={(e) => {
+                  e.preventDefault()
+                  editable.set(!$editable)
+                }}
+                class="flex h-12 w-fit items-center justify-center gap-2 rounded-lg bg-[#a8cae8] p-3 text-black transition-colors hover:bg-[#7faddb] dark:border-none dark:bg-[#4267b3] dark:text-white dark:hover:bg-blue-600"
+              >
+                {$editable ? 'Edicion activa' : 'Edicion Desactivada'}
+                {#if $editable}
+                  <Unlock />
+                {:else}
+                  <Secure />
+                {/if}
               </button>
             </div>
           </div>

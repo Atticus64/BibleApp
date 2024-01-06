@@ -109,19 +109,38 @@ export async function signOut() {
 
 export async function updateUserInfo() {
   try {
+
+    const local = localStorage.getItem('user')
+    const existLocal = local !== null
+    if (existLocal) {
+      const usr = JSON.parse(local)
+
+      user.set({
+        email: usr.email,
+        loggedIn: true,
+        tag: usr.tag
+      })
+
+      return user
+    }
+
     const res = await fetch(`${API_BASE_URL}/user`, {
       credentials: 'include'
     })
 
     if (res.ok) {
       const info = await res.json()
+      localStorage.setItem('user', JSON.stringify(info))
       user.set({
         tag: info.tag,
         loggedIn: true,
         email: info.email
       })
+
+      return user
     }
   } catch (error) {
     console.error(error)
+    return null
   }
 }

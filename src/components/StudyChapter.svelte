@@ -191,7 +191,7 @@
           }}
           class="absolute right-3 cursor-pointer flex-row self-end rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white lg:hidden"
         >
-          <Exit className="h-6 w-6" color="text-white" />
+          <Exit className="h-6 w-6" />
         </button>
         <NoteMenu className="lg:hidden" version={versionRead} {book} {chapter} />
       </div>
