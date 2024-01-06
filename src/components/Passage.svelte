@@ -47,24 +47,27 @@
     : 'm-4 w-full max-w-full'}
 >
   <h3 class="mt-4 text-3xl">{formatName(info.name)}: {info.chapter}</h3>
-  <ul class="flex flex-col gap-2">
-    {#each info.vers as v}
-      {#if v.study}
-        <h3 class="p-2 text-3xl">{v.study}</h3>
-      {/if}
-      <p class="verse text-2xl">
-        <b>
-          {v.number}
-        </b>
-        {v.verse}
-      </p>
-    {/each}
-  </ul>
+
+  {#if info.vers && info.vers.length > 0}
+    <ul class="flex flex-col gap-2 p-4">
+      {#each info.vers as v}
+        {#if v.study}
+          <h3 class="p-2 text-3xl">{v.study}</h3>
+        {/if}
+        <p class="verse text-2xl">
+          <b>
+            {v.number}
+          </b>
+          {v.verse}
+        </p>
+      {/each}
+    </ul>
+  {/if}
 </section>
 
 <style>
   .verse {
-    max-width: 75ch;
+    max-width: 50ch;
     text-wrap: balance;
   }
 
