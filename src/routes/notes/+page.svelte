@@ -9,6 +9,8 @@
   import Button from '@/components/Button.svelte'
   import { Stretch } from 'svelte-loading-spinners'
   import { API_BASE_URL } from '@/constants'
+  import { draft, studyMode } from '@/state/study'
+  import { goto } from '$app/navigation'
 
   let loadingNotes = true
   let hasError = false
@@ -102,7 +104,19 @@
             {note.description}
           </p>
           <div class="m-4 flex justify-end gap-4 align-middle">
-            <Button>Ver nota</Button>
+            <Button
+              on:click={() => {
+                studyMode.set(true)
+                draft.set({
+                  title: note.title,
+                  description: note.description,
+                  id: note.id,
+                  body: note.body
+                })
+
+                goto(note.page ?? '/')
+              }}>Ver nota</Button
+            >
             <Button on:click={() => deleteNote(note.id)}>Eliminar nota</Button>
           </div>
         </li>

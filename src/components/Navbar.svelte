@@ -20,10 +20,10 @@
     QuestionMarkIcon
   } from './icons'
   import Swal from 'sweetalert2'
+  import { studyMode } from '@/state/study'
 
   let showMenu = false
   let mobileMenu = false
-
 
   if ($darkTheme) {
     import('@sweetalert2/theme-dark/dark.css')
@@ -35,7 +35,7 @@
     await signOut()
     showMenu = false
 
-	const result = await Swal.fire({
+    const result = await Swal.fire({
       title: 'Quieres ir a la pagina de Login?',
       icon: 'warning',
       showCancelButton: true,
@@ -44,10 +44,9 @@
       confirmButtonText: 'Si ir a Login'
     })
 
-	if (result.isConfirmed) {
-		goto('/login') 
-	}
-
+    if (result.isConfirmed) {
+      goto('/login')
+    }
   }
 
   /**
@@ -57,15 +56,15 @@
     mobileMenu = false
     goto(path)
   }
-
 </script>
 
-<header class="sticky top-0 z-30 h-20 dark:bg-[#293548] bg-gray-100 sm:h-28 xl:h-24">
+<header class="sticky top-0 z-30 h-20 bg-gray-100 dark:bg-[#293548] sm:h-28 xl:h-24">
   <div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
     <ul class="flex items-center gap-4 sm:hidden">
       <button
         on:click={() => {
           mobileMenu = !mobileMenu
+          studyMode.set(false)
           showMenu = false
         }}
       >
@@ -75,7 +74,7 @@
       {#if mobileMenu}
         <ul
           on:mouseleave={() => (mobileMenu = false)}
-          class="fixed top-16 flex h-60 p-4 w-5/12 flex-col content-center justify-center divide-y divide-gray-100 rounded-lg bg-white align-middle shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
+          class="fixed top-16 flex h-60 w-5/12 flex-col content-center justify-center divide-y divide-gray-100 rounded-lg bg-white p-4 align-middle shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
         >
           <button
             on:click={() => goToPage('/search')}
@@ -104,7 +103,6 @@
               Notas <NoteIcon />
             </span>
           </button>
-         
         </ul>
       {/if}
 
@@ -163,15 +161,15 @@
         </Link>
         <button
           on:click={() => goToChapter()}
-          class={`link block h-1/4 px-4 py-1 text-lg font-semibold tracking-widest transition-colors hover:text-[#7faddb] ${$page.url.pathname.startsWith('/chapter') ? 'text-black dark:text-white' : ''}`}
-		  aria-current={$page.url.pathname.startsWith('/chapter') ? 'page' : null}
+          class={`link block h-1/4 px-4 py-1 text-lg font-semibold tracking-widest transition-colors hover:text-[#7faddb] ${
+            $page.url.pathname.startsWith('/chapter') ? 'text-black dark:text-white' : ''
+          }`}
+          aria-current={$page.url.pathname.startsWith('/chapter') ? 'page' : null}
         >
-          <span class="flex flex-row items-center gap-2 align-middle" 
-		  >
+          <span class="flex flex-row items-center gap-2 align-middle">
             Leer <span>
-				<BookOpenIcon />
-
-			</span> 
+              <BookOpenIcon />
+            </span>
           </span>
         </button>
         <Link href="/notes" text="Notas">
@@ -190,7 +188,7 @@
               alt={$user.tag}
               data-dropdown-toggle="userDropdown"
               data-dropdown-placement="bottom-start"
-              class="w-10 h-10 cursor-pointer rounded-full"
+              class="h-10 w-10 cursor-pointer rounded-full"
             />
           </button>
 
@@ -222,7 +220,6 @@
     </nav>
   </div>
 </header>
-
 
 <style lang="postcss">
   .link[aria-current='page'] > span > span {

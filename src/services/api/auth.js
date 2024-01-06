@@ -18,7 +18,6 @@ export async function singIn(data) {
 
   if (!response.ok) {
     const error = await response.json()
-    console.log(error)
 
     if (error.message) {
       if (error.message.includes('User not found')) {

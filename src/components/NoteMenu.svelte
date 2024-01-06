@@ -6,6 +6,7 @@
   import { user } from '@/state/user'
   import { page } from '$app/stores'
   import { searchName } from '@/constants'
+  import { fade, scale } from 'svelte/transition'
 
   export let className = ''
   /**
@@ -100,7 +101,6 @@
     const formData = Object.fromEntries(new FormData(event.target))
     formData.body = $draft.body
 
-    console.log(formData)
     if ($draft.id !== '') {
       sendNoteToUpdate($draft.id, formData)
       return
@@ -129,12 +129,16 @@
 </script>
 
 <section
+  transition:scale={{ duration: 200 }}
   class={`
    ${className}
   mt-3 flex flex-col gap-6 xl:w-1/2 xl:max-w-full 2xl:w-1/2 2xl:max-w-full`}
 >
   <div class="h-[26rem]">
-    <form on:submit|preventDefault={submitNote} class="flex flex-col gap-2">
+    <form
+      on:submit|preventDefault={submitNote}
+      class="flex max-h-[40rem] flex-col gap-2 max-lg:top-5"
+    >
       <div>
         <label for="title" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
           >Titulo</label

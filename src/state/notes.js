@@ -8,6 +8,7 @@ import { writable } from 'svelte/store'
  * @property {string} description
  * @property {string} id
  * @property {string} body
+ * @property {string | undefined} page
  */
 
 /**
@@ -24,7 +25,6 @@ export const notes = writable([])
  * @param {{ [k: string]: FormDataEntryValue }} formData
  */
 export async function sendNoteToUpdate(id, formData) {
-  console.log(formData)
   const res = await fetch(`${API_BASE_URL}/notes/${id}`, {
     method: 'PUT',
     headers: {
@@ -56,7 +56,6 @@ export async function sendCreateNote(formData) {
     body: JSON.stringify(formData)
   })
 
-  console.log(response)
   if (!response.ok) {
     createAlert('No se pudo crear la nota', 'error')
     return response

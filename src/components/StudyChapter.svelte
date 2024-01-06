@@ -5,14 +5,17 @@
   import { API_BASE_URL, books, versions } from '@/constants'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
-  import { draft, studyMode } from '@/state/study'
+  import { studyMode } from '@/state/study'
   import Passage from '@/components/Passage.svelte'
   import { Stretch } from 'svelte-loading-spinners'
   import { clickOutside } from '@/utils/clickOutside.js'
   import { formatName } from '@/utils/chapter'
-  import { DEFAULT_NOTE, searchName } from '@/constants'
+  import { searchName } from '@/constants'
   import { version } from '@/state/bible'
   import NoteMenu from './NoteMenu.svelte'
+  import Note from './icons/Note.svelte'
+  import Exit from './icons/Exit.svelte'
+  import { scale } from 'svelte/transition'
 
   /** @type {string} */
   export let versionRead = 'rv1960'
@@ -48,7 +51,6 @@
 
   onMount(async () => {
     info = await getData()
-    //console.log($draft.body.length)
     chapters = info.num_chapters
   })
 
@@ -68,9 +70,7 @@
       }
     }
     chapters = bookInfo.chapters
-
     const p = $page.url
-
     loading = true
 
     const resp = await fetch(
@@ -173,10 +173,47 @@
   <title>{formatName(book)}: {chapter} - Lectura</title>
 </svelte:head>
 
-<div class="flex w-full flex-col">
+<div class="flex w-full flex-col flex-wrap">
   <wc-toast />
-  <section class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-12">
-    <div class="flex items-center gap-3">
+  {#if $studyMode && !loading}
+    <section
+      transition:scale={{
+        duration: 300
+      }}
+      class="h-50 fixed left-0 right-0 top-20 z-50 items-center justify-center p-2 lg:hidden"
+    >
+      <!-- Modal content -->
+      <div class="relative h-[42em] rounded-lg bg-white p-4 shadow dark:bg-gray-700">
+        <button
+          on:click={(e) => {
+            e.preventDefault()
+            studyMode.set(!$studyMode)
+          }}
+          class="absolute right-3 cursor-pointer flex-row self-end rounded p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white lg:hidden"
+        >
+          <Exit className="h-6 w-6" color="text-white" />
+        </button>
+        <NoteMenu className="lg:hidden" version={versionRead} {book} {chapter} />
+      </div>
+    </section>
+  {/if}
+  <section
+    class="flex flex-col flex-wrap justify-between gap-4 sm:flex-row sm:items-center sm:gap-12"
+  >
+    <button
+      class="w-30 h-30 fixed bottom-6 right-5 opacity-80 lg:hidden"
+      on:click={() => {
+        studyMode.set(!$studyMode)
+      }}
+    >
+      <Note
+        className="select-none rounded-md p-2 dark:text-gray-300 bg-[#a8cae8] transition-shadow hover:bg-[#7faddb] dark:bg-[#4366b2] dark:hover:bg-blue-600"
+        width="5rem"
+        height="5rem"
+      />
+    </button>
+
+    <div class="flex flex-wrap items-center gap-3">
       <div use:clickOutside on:click_outside={() => (selectversionRead = false)}>
         <h4>versión</h4>
         <Button
@@ -289,7 +326,7 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-4 sm:self-end">
+    <div class="flex flex-wrap items-center gap-4 sm:self-end">
       <Button
         id="selectBook"
         on:click={() => studyMode.set(!$studyMode)}
