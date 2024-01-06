@@ -1,7 +1,6 @@
 <script>
   /** @type {string} */
   export let className = ''
-  export let color = ''
   export let width = '2rem'
   export let height = '2rem'
 </script>
