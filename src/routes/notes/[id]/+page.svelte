@@ -37,8 +37,6 @@
       return
     }
 
-    console.log(formData.body)
-
     createAlert('Nota actualizada', 'success')
   }
 

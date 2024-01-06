@@ -95,16 +95,27 @@ export async function singUp(data) {
 }
 
 export async function signOut() {
-  await fetch(`${API_BASE_URL}/auth/logout`, {
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include'
-  })
 
-  user.set({
-    tag: '',
-    email: '',
-    loggedIn: false
-  })
+  try {
+    const resp = await fetch(`${API_BASE_URL}/auth/logout`, {
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include'
+    })
+
+    user.set({
+      tag: '',
+      email: '',
+      loggedIn: false
+    })
+
+    localStorage.removeItem('user')
+    if (!resp.ok) {
+      return null
+    }
+
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export async function updateUserInfo() {
