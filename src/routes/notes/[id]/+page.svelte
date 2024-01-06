@@ -1,13 +1,10 @@
 <script>
   import { goto } from '$app/navigation'
-  import Button from '@/components/Button.svelte'
   import Editor from '@/components/Editor.svelte'
-  import Create from '@/components/icons/Create.svelte'
-  import Lock from '@/components/icons/Lock.svelte'
   import { API_BASE_URL } from '@/constants'
   import { createAlert } from '@/services/alert.js'
+  import { updateUserInfo } from '@/services/api/auth.js'
   import { editable, getNote, editableNote, sendCreateNote } from '@/state/notes.js'
-  import { draft } from '@/state/study.js'
   import { user } from '@/state/user.js'
   import { isValidNote } from '@/utils/note.js'
   import { onMount } from 'svelte'
@@ -117,6 +114,10 @@
   }
 
   onMount(async () => {
+    if (!$user.loggedIn) {
+      await updateUserInfo()
+    }
+
     if (!$user.loggedIn) {
       goto('/login')
     }

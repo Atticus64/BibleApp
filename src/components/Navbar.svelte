@@ -29,7 +29,19 @@
     import('@sweetalert2/theme-dark/dark.css')
   }
 
-  onMount(async () => updateUserInfo())
+  onMount(async () => {
+    const data = await updateUserInfo()
+
+    if (!data) {
+      return
+    }
+
+    user.set({
+      email: data.email,
+      loggedIn: true,
+      tag: data.tag
+    })
+  })
 
   async function logOut() {
     await signOut()

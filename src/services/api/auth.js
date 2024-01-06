@@ -34,10 +34,39 @@ export async function singIn(data) {
     createAlert(message, 'error')
   }
 
+  /**
+   * @type {usrDat}
+   */
+  const usr = await response.json()
+
+  if (usr) {
+    const userInfo = {
+      tag: usr.user,
+      email: usr.email,
+      loggedIn: true
+    }
+
+    user.set({
+      email: usr.email,
+      tag: usr.user,
+      loggedIn: true
+    })
+
+    localStorage.setItem('user', JSON.stringify(userInfo))
+  }
+
   return response
 }
 
 /**
+ * @typedef usrDat {
+ * @property {string} user
+ * @property {string} email
+ * @property {boolean} loggedIn
+ * } 
+ */
+/**
+ * 
  *
  * @param {string} book
  * @returns {Promise<{
@@ -91,6 +120,24 @@ export async function singUp(data) {
     createAlert(message, 'error')
   }
 
+
+  /** @type {usrDat} */
+  const usrData = await response.json()
+
+  user.set({
+    tag: usrData.user,
+    email: usrData.email,
+    loggedIn: true
+  })
+
+  const info = {
+    tag: usrData.user,
+    email: usrData.email,
+    loggedIn: true
+  }
+
+  localStorage.setItem('user', JSON.stringify(info))
+
   return response
 }
 
@@ -124,32 +171,16 @@ export async function updateUserInfo() {
     const local = localStorage.getItem('user')
     const existLocal = local !== null
     if (existLocal) {
+
+      /**
+       * @type {import('@/state/user').User}
+       */
       const usr = JSON.parse(local)
 
-      user.set({
-        email: usr.email,
-        loggedIn: true,
-        tag: usr.tag
-      })
 
-      return user
+      return usr
     }
 
-    const res = await fetch(`${API_BASE_URL}/user`, {
-      credentials: 'include'
-    })
-
-    if (res.ok) {
-      const info = await res.json()
-      localStorage.setItem('user', JSON.stringify(info))
-      user.set({
-        tag: info.tag,
-        loggedIn: true,
-        email: info.email
-      })
-
-      return user
-    }
   } catch (error) {
     console.error(error)
     return null
