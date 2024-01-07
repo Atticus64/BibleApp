@@ -1,7 +1,7 @@
 <script>
   import Button from '@/components/Button.svelte'
   import PageMenu from '@/components/PageMenu.svelte'
-  import { TESTAMENTS, versions } from '@/constants'
+  import { API_BASE_URL, TESTAMENTS, versions } from '@/constants'
   import {
     searchResults,
     pattern,
@@ -47,9 +47,7 @@
    * @param {number} chapter
    */
   function urlVerse(book, chapter) {
-    const endpoint = `https://bible-study.vercel.app/read/${
-      $versionSearch.url
-    }/${book.toLowerCase()}/${chapter}`
+    const endpoint = `${API_BASE_URL}/read/${$versionSearch.url}/${book.toLowerCase()}/${chapter}`
     return endpoint
   }
 
