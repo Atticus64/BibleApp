@@ -182,6 +182,10 @@ export const versions = [
     url: 'pdt',
     name: 'Palabra de Dios para todos'
   },
+  {
+    url: 'kjv',
+    name: 'King James Version'
+  }
 ]
 
 export const API_BASE_URL = import.meta.env.VITE_PUBLIC_API_URL ?? 'http://localhost:8000'
