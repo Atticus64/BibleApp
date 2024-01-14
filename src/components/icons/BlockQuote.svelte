@@ -1,8 +1,8 @@
 <script>
   /** @type {string} */
   export let className = ''
-  export let width = 24
-  export let height = 24
+  export let width = '24'
+  export let height = '24'
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {width} {height} class={className} viewBox="0 0 16 16"

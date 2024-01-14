@@ -1,9 +1,9 @@
 <script>
   /** @type {number=} */
-  export let width = 24
+  export let width = '24'
 
   /** @type {number=} */
-  export let height = 24
+  export let height = '24'
 </script>
 
 <svg

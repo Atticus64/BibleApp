@@ -2,8 +2,8 @@
   /** @type {string} */
   export let className = ''
   export let color = ''
-  export let width = 24
-  export let height = 24
+  export let width = '24'
+  export let height = '24'
 </script>
 
 <svg

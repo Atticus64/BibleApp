@@ -1,8 +1,8 @@
 <script>
   /** @type {string} */
   export let className = ''
-  export let width = 24
-  export let height = 24
+  export let width = '24'
+  export let height = '24'
   export let color = ''
 </script>
 

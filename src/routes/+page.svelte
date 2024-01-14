@@ -10,6 +10,7 @@
   import Lightning from '@/components/icons/Lightning.svelte'
   import ZeroAdds from '@/components/icons/ZeroAdds.svelte'
   import { goto } from '$app/navigation'
+  import Accordion from '@/components/Accordion.svelte'
 </script>
 
 <div class="flex flex-col items-start p-0 sm:flex-row sm:p-6">
@@ -60,7 +61,7 @@
   <div
     class="grid w-full justify-center gap-2 align-middle max-lg:grid-flow-row lg:h-[60vh] lg:grid-flow-col"
   >
-    <div class="h-fit w-[30ch] lg:h-[22em] border-gray-400 p-4 lg:border-r ">
+    <div class="h-fit w-[30ch] border-gray-400 p-4 lg:h-[22em] lg:border-r">
       <h3 class="flex flex-col place-items-center justify-center align-middle text-2xl">
         <ZeroAdds color="#7faddb" width="6rem" height="6rem" />
         <span> Cero Publicidad </span>
@@ -70,7 +71,7 @@
         ningún tipo de publicidad.
       </p>
     </div>
-    <div class="h-fit w-[30ch] lg:h-[22em] border-gray-400 p-4 lg:border-r">
+    <div class="h-fit w-[30ch] border-gray-400 p-4 lg:h-[22em] lg:border-r">
       <h3 class="flex flex-col place-items-center justify-center align-middle text-2xl">
         <Lock color="#7faddb" width="6rem" height="6rem" />
         <span> Seguridad </span>
@@ -81,7 +82,7 @@
       </p>
     </div>
 
-    <div class="h-fit lg:h-[22em] w-[30ch] border-gray-400 p-4 lg:border-r">
+    <div class="h-fit w-[30ch] border-gray-400 p-4 lg:h-[22em] lg:border-r">
       <h3 class="flex flex-col place-items-center justify-center align-middle text-2xl">
         <OpenSource color="#7faddb" width="6rem" height="6rem" />
         <span> Codigo Abierto </span>
@@ -104,36 +105,29 @@
   </div>
 </section>
 
-<section id="faq" class="flex h-[80vh] flex-col gap-4">
+<section id="faq" class="flex h-full flex-col gap-4">
   <span class="flex flex-row justify-center align-middle">
     <h2 class="text-5xl text-[#6092d1]">Preguntas Frecuentes</h2>
   </span>
-  <div class="text-column questions grid gap-10">
-    <details open>
-      <summary class="question p-4 text-3xl font-bold">
-        ¿Que versiones de la Biblia contiene la aplicación?
-      </summary>
-
-      <p class="light:text-gray-500 text-2xl dark:text-gray-200">
+  <div class="text-column questions m-4 grid gap-5">
+    <Accordion title="¿Que versiones de la Biblia contiene la aplicación?">
+      <p class="light:text-gray-500 text-lg font-medium dark:text-gray-200">
         La aplicación contiene las versiones:
         <li>Reina Valera 1960</li>
         <li>Reina Valera 1995</li>
         <li>Nueva Version Internacional</li>
         <li>Dios Habla Hoy</li>
       </p>
-    </details>
-
-    <details open>
-      <summary class="question p-4 text-3xl font-bold">
-        ¿La informacion proviene de una API?
-      </summary>
-      <p class="light:text-gray-500 text-2xl dark:text-gray-200">
+    </Accordion>
+    <Accordion title="¿La informacion proviene de una API?">
+      <p class="light:text-gray-500 text-lg dark:text-gray-200">
         Si utilizo una API que desarrollé, se llama BibleApi que es open-source y cualquiera la
         puede utilizar
         <li>
-          <a href="https://bible-api.deno.dev/api" target="_blank" 
-
-			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
+          <a
+            href="https://bible-api.deno.dev/api"
+            target="_blank"
+            class="text-blue-700 underline hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500"
             >API de la Biblia</a
           >
         </li>
@@ -141,7 +135,7 @@
           <a
             href="https://github.com/Atticus64/BibleApi"
             target="_blank"
-			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
+            class="text-blue-700 underline hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500"
             >Codigo fuente del API</a
           >
         </li>
@@ -149,50 +143,40 @@
           <a
             href="https://docs-bible-api.netlify.app/"
             target="_blank"
-			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
-           >Documentacion del API</a
+            class="text-blue-700 underline hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500"
+            >Documentacion del API</a
           >
         </li>
       </p>
-    </details>
+    </Accordion>
 
-	<details open>
-      <summary class="question p-4 text-3xl font-bold">
-        ¿Donde puedo encontrar el Código Fuente?
-      </summary>
-
+    <Accordion title="¿Donde puedo encontrar el Código Fuente?">
       <p class="light:text-gray-500 text-2xl dark:text-gray-200">
-		El código fuente se encuentra en github
+        El código fuente se encuentra en github
 
-		<li>
-			<a href="https://github.com/Atticus64/BibleApp"
+        <li>
+          <a
+            href="https://github.com/Atticus64/BibleApp"
+            class="text-blue-700 underline hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500"
+            target="_blank"
+          >
+            Código de la aplicación
+          </a>
+        </li>
 
-			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
-			target="_blank"
-			>
-				Código de la aplicación 
-			</a>
-		</li>
+        <li>
+          <a
+            href="https://github.com/Atticus64/BibleApi"
+            class="text-blue-700 underline hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500"
+            target="_blank"
+          >
+            Código fuente del API
+          </a>
+        </li>
+      </p>
+    </Accordion>
 
-		<li>
-
-			<a href="https://github.com/Atticus64/BibleApi"
-			  class="text-blue-700 hover:text-blue-500 dark:text-blue-200 dark:hover:text-blue-500 underline"
-			  target="_blank"
-			>
-	
-				Código fuente del API
-			</a>
-		</li>
-	  </p>
-
-	</details>
-
-    <details open>
-      <summary class="question p-4 text-3xl font-bold">
-        ¿Tienes algun problema con la aplicación o sugerencia?
-      </summary>
-
+    <Accordion title="¿Tiene algún problema con la aplicación o sugerencia?">
       <p class="light:text-gray-500 text-2xl dark:text-gray-200">
         Comunicate al correo
         <a
@@ -212,7 +196,7 @@
 
         Y lo arreglare en la medida de lo posible 😄
       </p>
-    </details>
+    </Accordion>
   </div>
 </section>
 
@@ -245,10 +229,6 @@
   @media (max-width: 800px) {
     .questions {
       grid-template-columns: repeat(1, 1fr);
-    }
-
-    .question {
-      font-size: x-large;
     }
   }
 </style>
