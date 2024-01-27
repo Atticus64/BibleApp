@@ -23,6 +23,7 @@
 
   /** @type {boolean} */
   export let studyMode = false
+  export let className = ''
 
   /** @type {PassageInfo} */
   export let info = {
@@ -42,9 +43,11 @@
 
 <section
   transition:scale={{ duration: 300 }}
-  class={studyMode
-    ? 'm-4 h-[40rem] lg:overflow-auto xl:overflow-auto 2xl:overflow-auto'
-    : 'm-4 w-full max-w-full'}
+  class={`${
+    studyMode
+      ? 'm-4 h-[40rem] lg:overflow-auto xl:overflow-auto 2xl:overflow-auto'
+      : 'm-4 w-full max-w-full'
+  } ${className}`}
 >
   <h3 class="mt-4 text-3xl">{formatName(info.name)}: {info.chapter}</h3>
 

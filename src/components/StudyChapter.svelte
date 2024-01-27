@@ -426,7 +426,7 @@
     <div class="flex max-w-full flex-row max-lg:flex-col">
       {#if !loading}
         <section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
-          <Passage studyMode={$studyMode} {info} />
+          <Passage className="max-lg:mb-28" studyMode={$studyMode} {info} />
         </section>
       {/if}
 
