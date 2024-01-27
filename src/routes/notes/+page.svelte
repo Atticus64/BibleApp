@@ -33,10 +33,13 @@
           notes.set(info)
         } else {
           hasError = true
+          localStorage.removeItem('user')
+          createAlert('No se pudo cargar las notas', 'error')
         }
       })
       .catch((err) => {
-        hasError = true
+        console.log(err)
+        localStorage.removeItem('user')
         createAlert(err, 'error')
         return
       })
