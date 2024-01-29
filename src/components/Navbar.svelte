@@ -8,7 +8,7 @@
   import { signOut, updateUserInfo } from '@/services/api/auth'
 
   import Link from './Link.svelte'
-  import { darkTheme } from '@/state/dark'
+  import { darkTheme } from '@/state/config'
   import Logo from './Logo.svelte'
   import Switch from './Switch.svelte'
   import {

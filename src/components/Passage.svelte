@@ -1,18 +1,17 @@
 <script context="module">
   /**
+   * @typedef {object} Verse
+   * @prop {string} study
+   * @prop {number} number
+   * @prop {string} verse
+   */
+  /**
    * @typedef {object} PassageInfo
    * @prop {number} num_chapters
    * @prop {string} testament
    * @prop {string} name
    * @prop {string} chapter
    * @prop {Array<Verse>} vers
-   */
-
-  /**
-   * @typedef {object} Verse
-   * @prop {string} study
-   * @prop {number} number
-   * @prop {string} verse
    */
 </script>
 
@@ -25,6 +24,10 @@
   export let studyMode = false
   export let className = ''
 
+  /**
+   * @type {number}
+   */
+  export let fontSize
   /** @type {PassageInfo} */
   export let info = {
     num_chapters: 50,
@@ -49,15 +52,15 @@
       : 'm-4 w-full max-w-full'
   } ${className}`}
 >
-  <h3 class="mt-4 text-3xl">{formatName(info.name)}: {info.chapter}</h3>
+  <h3 class={`mt-4 text-3xl`}>{formatName(info.name)}: {info.chapter}</h3>
 
   {#if info.vers && info.vers.length > 0}
     <ul class="flex flex-col gap-2 p-4">
       {#each info.vers as v}
         {#if v.study}
-          <h3 class="p-2 text-3xl">{v.study}</h3>
+          <h3 class="p-2" style={`font-size: ${fontSize + 10}px`}>{v.study}</h3>
         {/if}
-        <p class="verse text-2xl">
+        <p class="verse" style={`font-size: ${fontSize}px`}>
           <b>
             {v.number}
           </b>

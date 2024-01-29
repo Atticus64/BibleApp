@@ -6,6 +6,7 @@
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
   import { studyMode } from '@/state/study'
+  import { fontSize, setFontSize } from '@/state/config'
   import Passage from '@/components/Passage.svelte'
   import { Stretch } from 'svelte-loading-spinners'
   import { clickOutside } from '@/utils/clickOutside.js'
@@ -16,6 +17,8 @@
   import Note from './icons/Note.svelte'
   import Exit from './icons/Exit.svelte'
   import { scale } from 'svelte/transition'
+  import IncreaseFont from './icons/IncreaseFont.svelte'
+  import DecreaseFont from './icons/DecreaseFont.svelte'
 
   /** @type {string} */
   export let versionRead = 'rv1960'
@@ -52,6 +55,11 @@
   onMount(async () => {
     info = await getData()
     chapters = info.num_chapters
+
+    let configFontSize = localStorage.getItem('fontSize')
+    if (configFontSize) {
+      fontSize.set(parseInt(configFontSize))
+    }
   })
 
   async function getData() {
@@ -166,6 +174,18 @@
         selectversionRead = !selectversionRead
         break
     }
+  }
+
+  function increaseFont() {
+    if ($fontSize === 25) return
+
+    setFontSize($fontSize + 1)
+  }
+
+  function decreaseFont() {
+    if ($fontSize === 16) return
+
+    setFontSize($fontSize - 1)
   }
 </script>
 
@@ -410,6 +430,13 @@
       >
         Nuevo Testamento
       </Button>
+
+      <Button color="blue" on:click={increaseFont} disabled={$fontSize === 25}>
+        <IncreaseFont width="1.5rem" height="1.5rem" />
+      </Button>
+      <Button color="blue" on:click={decreaseFont} disabled={$fontSize === 16}>
+        <DecreaseFont width="1.5rem" height="1.5rem" />
+      </Button>
     </div>
   </section>
 
@@ -426,7 +453,7 @@
     <div class="flex max-w-full flex-row max-lg:flex-col">
       {#if !loading}
         <section class={$studyMode ? 'max-w-full xl:w-1/2 2xl:w-2/4' : 'w-full max-w-full'}>
-          <Passage className="max-lg:mb-28" studyMode={$studyMode} {info} />
+          <Passage fontSize={$fontSize} className="max-lg:mb-28" studyMode={$studyMode} {info} />
         </section>
       {/if}
 

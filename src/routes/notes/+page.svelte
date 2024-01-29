@@ -2,14 +2,12 @@
   import { onMount } from 'svelte'
   import Swal from 'sweetalert2'
 
-  import { user } from '@/state/user'
   import { notes } from '@/state/notes'
-  import { darkTheme } from '@/state/dark'
+  import { darkTheme } from '@/state/config'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
   import { Stretch } from 'svelte-loading-spinners'
   import { API_BASE_URL } from '@/constants'
-  import { draft, studyMode } from '@/state/study'
   import { goto } from '$app/navigation'
 
   let loadingNotes = true

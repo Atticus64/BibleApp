@@ -1,5 +1,5 @@
 <script>
-  import { darkTheme } from '@/state/dark'
+  import { darkTheme } from '@/state/config'
 
   export let className = ''
   let darkMode = false
@@ -14,9 +14,6 @@
       ? document.documentElement.classList.add('dark')
       : document.documentElement.classList.remove('dark')
   }
-
-  
-  
 </script>
 
 <div class={className}>
