@@ -47,7 +47,9 @@
    * @param {number} chapter
    */
   function urlVerse(book, chapter) {
-    const endpoint = `${API_BASE_URL}/read/${$versionSearch.url}/${book.toLowerCase()}/${chapter}`
+    const endpoint = `https://bible-study.vercel.app/read/${
+      $versionSearch.url
+    }/${book.toLowerCase()}/${chapter}`
     return endpoint
   }
 
