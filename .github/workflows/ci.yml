@@ -8,7 +8,7 @@ jobs:
   lint:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    name: 'Lint code: node-18, ubuntu-latest'
+    name: 'Lint code: node-24, ubuntu-latest'
     steps:
       - uses: actions/checkout@v3
 
