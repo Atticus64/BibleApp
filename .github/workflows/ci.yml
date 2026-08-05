@@ -8,7 +8,11 @@ jobs:
   lint:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     name: 'Lint code: node-22, ubuntu-latest'
+=======
+    name: 'Lint code: node-24, ubuntu-latest'
+>>>>>>> d66b5e15dc56edac9e81db7ec5771f086e171944
     steps:
       - uses: actions/checkout@v4
 
@@ -17,10 +21,17 @@ jobs:
         with:
           version: 11
 
+<<<<<<< HEAD
       - name: Set node 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
+=======
+      - name: Set node 24
+        uses: actions/setup-node@v3
+        with:
+          node-version: 24
+>>>>>>> d66b5e15dc56edac9e81db7ec5771f086e171944
           cache: 'pnpm'
 
       - name: Install dependencies
