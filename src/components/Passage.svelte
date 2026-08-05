@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
   /**
    * @typedef {object} Verse
    * @prop {string} study
@@ -20,28 +20,24 @@
 
   import { scale } from 'svelte/transition'
 
-  /** @type {boolean} */
-  export let studyMode = false
-  export let className = ''
-
-  /**
-   * @type {number}
-   */
-  export let fontSize
-  /** @type {PassageInfo} */
-  export let info = {
-    num_chapters: 50,
-    testament: 'Antiguo Testamento',
-    name: 'Genesis',
-    chapter: '',
-    vers: [
-      {
-        study: '',
-        number: 0,
-        verse: ''
-      }
-    ]
-  }
+  let {
+    studyMode = false,
+    className = '',
+    fontSize,
+    info = {
+      num_chapters: 50,
+      testament: 'Antiguo Testamento',
+      name: 'Genesis',
+      chapter: '',
+      vers: [
+        {
+          study: '',
+          number: 0,
+          verse: ''
+        }
+      ]
+    }
+  } = $props()
 </script>
 
 <section
@@ -52,11 +48,11 @@
       : 'm-4 w-full max-w-full'
   } ${className}`}
 >
-  <h3 class={`mt-4 text-3xl`}>{formatName(info.name)}: {info.chapter}</h3>
+  <h3 class="mt-4 text-3xl">{formatName(info.name)}: {info.chapter}</h3>
 
   {#if info.vers && info.vers.length > 0}
     <ul class="flex flex-col gap-2 p-4">
-      {#each info.vers as v}
+      {#each info.vers as v (v.number)}
         {#if v.study}
           <h3 class="p-2" style={`font-size: ${fontSize + 10}px`}>{v.study}</h3>
         {/if}

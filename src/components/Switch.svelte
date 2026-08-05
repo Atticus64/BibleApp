@@ -1,12 +1,12 @@
 <script>
-  import { darkTheme } from '@/state/config'
+  import { darkTheme } from '@/state/config.svelte.js'
 
-  export let className = ''
-  let darkMode = false
+  let { className = '' } = $props()
+  let darkMode = $state(false)
 
   function handleSwitchDarkMode() {
-    darkMode = !$darkTheme
-    darkTheme.set(darkMode)
+    darkMode = !darkTheme.value
+    darkTheme.value = darkMode
 
     localStorage.setItem('theme', darkMode ? 'dark' : 'light')
 
@@ -17,8 +17,13 @@
 </script>
 
 <div class={className}>
-  <input checked={$darkTheme} on:click={handleSwitchDarkMode} type="checkbox" id="theme-toggle" />
-  <label for="theme-toggle" class={className} />
+  <input
+    checked={darkTheme.value}
+    onclick={handleSwitchDarkMode}
+    type="checkbox"
+    id="theme-toggle"
+  />
+  <label for="theme-toggle" class={className}></label>
 </div>
 
 <style lang="postcss">

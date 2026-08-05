@@ -1,6 +1,5 @@
 <script>
-  /** @type {string} */
-  export let className = ''
+  let { className = '' } = $props()
 </script>
 
 <svg

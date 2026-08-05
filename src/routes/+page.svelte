@@ -10,6 +10,7 @@
   import Lightning from '@/components/icons/Lightning.svelte'
   import ZeroAdds from '@/components/icons/ZeroAdds.svelte'
   import { goto } from '$app/navigation'
+  import { resolve } from '$app/paths'
   import Accordion from '@/components/Accordion.svelte'
 </script>
 
@@ -38,7 +39,7 @@
       class="min-lg:place-items-start m-4 flex font-bold max-lg:justify-around max-lg:text-xl max-md:justify-center max-md:gap-4 max-sm:flex-col max-sm:place-content-center max-sm:align-middle lg:gap-3 lg:text-2xl"
     >
       <Button
-        on:click={() => goto('/versions')}
+        onclick={() => goto(resolve('/versions'))}
         color="blue"
         className="hover:scale-105 transition-transform lg:p-8 max-lg:p-2"
       >

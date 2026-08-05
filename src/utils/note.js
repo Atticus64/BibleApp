@@ -1,5 +1,4 @@
-import { createAlert } from "@/services/alert"
-import { user } from "@/state/user"
+import { createAlert } from '@/services/alert'
 
 /**
  *
@@ -35,36 +34,4 @@ export function isValidNote(loggedIn, body, title, description) {
   }
 
   return true
-}
-
-/**
- * @typedef Data
- * @property {string} title
- * @property {string} body
- * @property {string} description
- */
-
-/**
-   * @param {{
-   *     title: string
-   *     body: string
-   *     description: string
-   *     id: string
-   * }} draft
-   * @param {import('@/state/user').User} user
-   * @returns {Promise<Data | null>}
-   */
-async function createFormNote(user, draft) {
-
-  if (!isValidNote(user.loggedIn, draft.body, draft.title, draft.description)) {
-    return null
-  }
-
-  const formData = {
-    title: draft.title,
-    body: draft.body,
-    description: draft.description
-  }
-
-  return formData
 }

@@ -3,7 +3,7 @@
   import { Editor } from '@tiptap/core'
   import Image from '@tiptap/extension-image'
   import StarterKit from '@tiptap/starter-kit'
-  import { draft, studyMode } from '@/state/study'
+  import { draft } from '@/state/study.svelte.js'
   import HeadingOne from './icons/HeadingOne.svelte'
   import HeadingTwo from './icons/HeadingTwo.svelte'
   import HeadingThree from './icons/HeadingThree.svelte'
@@ -12,23 +12,17 @@
   import Create from './icons/Create.svelte'
   import Save from './icons/Save.svelte'
   import { DEFAULT_NOTE } from '@/constants'
-  import { editable, editableNote } from '@/state/notes'
+  import { editable, editableNote } from '@/state/notes.svelte.js'
   import Lock from './icons/Lock.svelte'
   import Unlock from './icons/Unlock.svelte'
   import Secure from './icons/Secure.svelte'
 
-  export let manageNote = false
+  let { manageNote = false, content, createNote } = $props()
 
-  /** @type {string} */
-  export let content
-  /**
-   * @type {(e: MouseEvent) => Promise<void>}
-   */
-  export let createNote
   /** @type {Element | undefined} */
   let element
   /** @type {Editor} */
-  let editor
+  let editor = $state(/** @type {any} */ (undefined))
 
   onMount(() => {
     editor = new Editor({
@@ -38,10 +32,10 @@
       content: content.length <= 0 ? DEFAULT_NOTE : content,
       onUpdate: () => {
         if (manageNote) {
-          $editableNote.body = editor.getHTML()
+          editableNote.value.body = editor.getHTML()
           return
         }
-        $draft.body = editor.getHTML()
+        draft.value.body = editor.getHTML()
       },
       onTransaction: () => {
         // force re-render so `editor.isActive` works as expectedo
@@ -56,11 +50,9 @@
     })
   })
 
-  $: {
-    if (editor) {
-      editor.setEditable($editable)
-    }
-  }
+  $effect(() => {
+    editor?.setEditable(editable.value)
+  })
 
   onDestroy(() => {
     if (editor) {
@@ -82,8 +74,8 @@
         >
           <div class="flex flex-wrap gap-2">
             <button
-              disabled={!$editable}
-              on:click={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              disabled={!editable.value}
+              onclick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
               class:active={editor.isActive('heading', { level: 1 })}
               type="button"
               class={`
@@ -95,8 +87,8 @@
               <span class="sr-only">Heading 1</span>
             </button>
             <button
-              disabled={!$editable}
-              on:click={() => {
+              disabled={!editable.value}
+              onclick={() => {
                 editor.chain().focus().toggleHeading({ level: 2 }).run()
               }}
               type="button"
@@ -110,8 +102,8 @@
               <span class="sr-only">Heading 2</span>
             </button>
             <button
-              disabled={!$editable}
-              on:click={() => {
+              disabled={!editable.value}
+              onclick={() => {
                 editor.chain().focus().setHeading({ level: 3 }).run()
               }}
               class={`
@@ -125,8 +117,8 @@
               <span class="sr-only">Heading 3</span>
             </button>
             <button
-              disabled={!$editable}
-              on:click={() => {
+              disabled={!editable.value}
+              onclick={() => {
                 editor.chain().focus().setParagraph().run()
               }}
               type="button"
@@ -140,9 +132,9 @@
               <span class="sr-only">Paragraph</span>
             </button>
             <button
-              disabled={!$editable}
+              disabled={!editable.value}
               class:active={editor.isActive('blockquote')}
-              on:click={() => {
+              onclick={() => {
                 editor.chain().focus().toggleBlockquote().run()
               }}
               type="button"
@@ -158,7 +150,7 @@
 
             <div class="flex flex-row gap-4">
               <button
-                on:click={createNote}
+                onclick={createNote}
                 class="flex h-12 w-fit items-center justify-end gap-2 rounded-lg bg-[#a8cae8] p-3 text-black transition-colors hover:bg-[#7faddb] dark:border-none dark:bg-[#4267b3] dark:text-white dark:hover:bg-blue-600"
               >
                 <span> Crear </span>
@@ -173,14 +165,14 @@
                 <Save className="h-6 w-6" />
               </button>
               <button
-                on:click={(e) => {
+                onclick={(e) => {
                   e.preventDefault()
-                  editable.set(!$editable)
+                  editable.value = !editable.value
                 }}
                 class="flex h-12 w-fit items-center justify-center gap-2 rounded-lg bg-[#a8cae8] p-3 text-black transition-colors hover:bg-[#7faddb] dark:border-none dark:bg-[#4267b3] dark:text-white dark:hover:bg-blue-600"
               >
-                {$editable ? 'Edicion activa' : 'Edicion Desactivada'}
-                {#if $editable}
+                {editable.value ? 'Edicion activa' : 'Edicion Desactivada'}
+                {#if editable.value}
                   <Unlock />
                 {:else}
                   <Secure />
@@ -192,7 +184,7 @@
       </div>
     </div>
   {/if}
-  <div bind:this={element} />
+  <div bind:this={element}></div>
 </div>
 
 <style>

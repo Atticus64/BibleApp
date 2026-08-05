@@ -1,14 +1,15 @@
 <script>
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
-  import { page } from '$app/stores'
+  import { resolve } from '$app/paths'
+  import { page } from '$app/state'
 
-  import { user } from '@/state/user'
+  import { user } from '@/state/user.svelte.js'
   import { goToChapter } from '@/utils/chapter'
   import { signOut, updateUserInfo } from '@/services/api/auth'
 
   import Link from './Link.svelte'
-  import { darkTheme } from '@/state/config'
+  import { darkTheme } from '@/state/config.svelte.js'
   import Logo from './Logo.svelte'
   import Switch from './Switch.svelte'
   import {
@@ -20,12 +21,12 @@
     QuestionMarkIcon
   } from './icons'
   import Swal from 'sweetalert2'
-  import { studyMode } from '@/state/study'
+  import { studyMode } from '@/state/study.svelte.js'
 
-  let showMenu = false
-  let mobileMenu = false
+  let showMenu = $state(false)
+  let mobileMenu = $state(false)
 
-  if ($darkTheme) {
+  if (darkTheme.value) {
     import('@sweetalert2/theme-dark/dark.css')
   }
 
@@ -36,11 +37,9 @@
       return
     }
 
-    user.set({
-      email: data.email,
-      loggedIn: true,
-      tag: data.tag
-    })
+    user.email = data.email
+    user.loggedIn = true
+    user.tag = data.tag
   })
 
   async function logOut() {
@@ -57,7 +56,7 @@
     })
 
     if (result.isConfirmed) {
-      goto('/login')
+      goto(resolve('/login'))
     }
   }
 
@@ -66,7 +65,7 @@
    */
   function goToPage(path) {
     mobileMenu = false
-    goto(path)
+    goto(resolve(/** @type {any} */ (path)))
   }
 </script>
 
@@ -74,9 +73,9 @@
   <div class="mx-auto flex h-full max-w-screen-xl items-center justify-between px-3">
     <ul class="flex items-center gap-4 sm:hidden">
       <button
-        on:click={() => {
+        onclick={() => {
           mobileMenu = !mobileMenu
-          studyMode.set(false)
+          studyMode.value = false
           showMenu = false
         }}
       >
@@ -85,11 +84,11 @@
 
       {#if mobileMenu}
         <ul
-          on:mouseleave={() => (mobileMenu = false)}
+          onmouseleave={() => (mobileMenu = false)}
           class="fixed top-16 flex h-60 w-5/12 flex-col content-center justify-center divide-y divide-gray-100 rounded-lg bg-white p-4 align-middle shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
         >
           <button
-            on:click={() => goToPage('/search')}
+            onclick={() => goToPage('/search')}
             class="flex h-1/3 w-full items-center px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="bordertext-xl flex flex-row items-center gap-2 align-middle">
@@ -97,7 +96,7 @@
             </span>
           </button>
           <button
-            on:click={() => {
+            onclick={() => {
               mobileMenu = false
               goToChapter()
             }}
@@ -108,7 +107,7 @@
             </span>
           </button>
           <button
-            on:click={() => goToPage('/notes')}
+            onclick={() => goToPage('/notes')}
             class="block h-1/3 w-full px-4 py-1 text-xl hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             <span class="flex flex-row items-center gap-2 align-middle">
@@ -118,17 +117,17 @@
         </ul>
       {/if}
 
-      {#if $user.loggedIn}
+      {#if user.loggedIn}
         <button
-          on:click={() => {
+          onclick={() => {
             showMenu = !showMenu
             mobileMenu = false
           }}
         >
           <img
             id="avatarButton"
-            src={`https://api.dicebear.com/6.x/initials/svg?seed=${$user.tag}`}
-            alt={$user.tag}
+            src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.tag}`}
+            alt={user.tag}
             data-dropdown-toggle="userDropdown"
             data-dropdown-placement="bottom-start"
             class="h-10 w-10 cursor-pointer rounded-full"
@@ -138,17 +137,18 @@
 
         {#if showMenu}
           <div
-            on:mouseleave={() => (showMenu = false)}
+            role="group"
+            onmouseleave={() => (showMenu = false)}
             class="items-centerrounded-lg fixed top-16 h-fit w-52 divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:hidden"
           >
             <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-              <p><b>tag: </b>{$user.tag}</p>
-              <p><b>Email: </b>{$user.email}</p>
+              <p><b>tag: </b>{user.tag}</p>
+              <p><b>Email: </b>{user.email}</p>
             </div>
 
             <div class="">
               <button
-                on:click={logOut}
+                onclick={logOut}
                 class="block w-full px-4 py-2 text-start text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
                 >Cerrar Sesión</button
               >
@@ -172,11 +172,11 @@
           <SearchIcon />
         </Link>
         <button
-          on:click={() => goToChapter()}
+          onclick={() => goToChapter()}
           class={`link block h-1/4 px-4 py-1 text-lg font-semibold tracking-widest transition-colors hover:text-[#7faddb] ${
-            $page.url.pathname.startsWith('/chapter') ? 'text-black dark:text-white' : ''
+            page.url.pathname.startsWith('/chapter') ? 'text-black dark:text-white' : ''
           }`}
-          aria-current={$page.url.pathname.startsWith('/chapter') ? 'page' : null}
+          aria-current={page.url.pathname.startsWith('/chapter') ? 'page' : null}
         >
           <span class="flex flex-row items-center gap-2 align-middle">
             Leer <span>
@@ -187,17 +187,17 @@
         <Link href="/notes" text="Notas">
           <NoteIcon />
         </Link>
-        {#if $user.loggedIn}
+        {#if user.loggedIn}
           <button
-            on:click={() => {
+            onclick={() => {
               showMenu = !showMenu
               mobileMenu = false
             }}
           >
             <img
               id="avatarButton"
-              src={`https://api.dicebear.com/6.x/initials/svg?seed=${$user.tag}`}
-              alt={$user.tag}
+              src={`https://api.dicebear.com/6.x/initials/svg?seed=${user.tag}`}
+              alt={user.tag}
               data-dropdown-toggle="userDropdown"
               data-dropdown-placement="bottom-start"
               class="h-10 w-10 cursor-pointer rounded-full"
@@ -206,17 +206,18 @@
 
           {#if showMenu}
             <div
-              on:mouseleave={() => (showMenu = false)}
+              role="group"
+              onmouseleave={() => (showMenu = false)}
               class="min-xl:[5%] items-centerrounded-lg fixed top-[5rem] h-fit w-fit divide-y divide-gray-100 bg-white shadow dark:divide-gray-600 dark:bg-gray-700 sm:right-1 lg:right-8 2xl:right-[10%]"
             >
               <div class="px-4 py-3 text-lg text-gray-900 dark:text-white">
-                <p><b>tag: </b>{$user.tag}</p>
-                <p><b>Email: </b>{$user.email}</p>
+                <p><b>tag: </b>{user.tag}</p>
+                <p><b>Email: </b>{user.email}</p>
               </div>
 
               <div class="">
                 <button
-                  on:click={logOut}
+                  onclick={logOut}
                   class="block w-full px-4 py-2 text-start text-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
                   >Cerrar Sesión</button
                 >

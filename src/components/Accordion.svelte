@@ -3,11 +3,9 @@
   import DownArrow from './icons/DownArrow.svelte'
   import RightArrow from './icons/RightArrow.svelte'
 
-  let isOpen = true
+  let isOpen = $state(true)
 
-  export let title = ''
-  let className = ''
-  export { className }
+  let { title = '', className = '', children } = $props()
 
   //const colors =
   //' bg-white px-2 py-2  leading-none text-black transition-colors hover:bg-neutral-100 dark:bg-[#43beed] dark:hover:bg-[#85d3f4]'
@@ -22,7 +20,7 @@
   >
     <h2 class="">
       <button
-        on:click={() => (isOpen = !isOpen)}
+        onclick={() => (isOpen = !isOpen)}
         class={`
             flex
             w-full cursor-pointer items-start justify-center gap-2
@@ -48,11 +46,11 @@
     </h2>
     {#if isOpen}
       <div
-        class={` content overflow-hidden  border border-b-2 border-t-0 border-gray-200 p-5 dark:border-gray-700 dark:bg-gray-900 dark:text-white`}
+        class="content overflow-hidden border border-b-2 border-t-0 border-gray-200 p-5 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
         transition:slide
       >
         <div class="px-5 py-4">
-          <slot />
+          {@render children()}
         </div>
       </div>
     {/if}

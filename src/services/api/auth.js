@@ -1,4 +1,4 @@
-import { user } from '@/state/user'
+import { user } from '@/state/user.svelte.js'
 import { API_BASE_URL } from '@/constants'
 import { createAlert } from '@/services/alert'
 
@@ -46,7 +46,7 @@ export async function singIn(data) {
       loggedIn: true
     }
 
-    user.set({
+    Object.assign(user, {
       email: usr.email,
       tag: usr.user,
       loggedIn: true
@@ -63,10 +63,10 @@ export async function singIn(data) {
  * @property {string} user
  * @property {string} email
  * @property {boolean} loggedIn
- * } 
+ * }
  */
 /**
- * 
+ *
  *
  * @param {string} book
  * @returns {Promise<{
@@ -120,11 +120,10 @@ export async function singUp(data) {
     createAlert(message, 'error')
   }
 
-
   /** @type {usrDat} */
   const usrData = await response.json()
 
-  user.set({
+  Object.assign(user, {
     tag: usrData.user,
     email: usrData.email,
     loggedIn: true
@@ -142,14 +141,13 @@ export async function singUp(data) {
 }
 
 export async function signOut() {
-
   try {
     const resp = await fetch(`${API_BASE_URL}/auth/logout`, {
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
     })
 
-    user.set({
+    Object.assign(user, {
       tag: '',
       email: '',
       loggedIn: false
@@ -159,7 +157,6 @@ export async function signOut() {
     if (!resp.ok) {
       return null
     }
-
   } catch (error) {
     console.error(error)
   }
@@ -167,20 +164,16 @@ export async function signOut() {
 
 export async function updateUserInfo() {
   try {
-
     const local = localStorage.getItem('user')
     const existLocal = local !== null
     if (existLocal) {
-
       /**
-       * @type {import('@/state/user').User}
+       * @type {import('@/state/user.svelte.js').User}
        */
       const usr = JSON.parse(local)
 
-
       return usr
     }
-
   } catch (error) {
     console.error(error)
     return null

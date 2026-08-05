@@ -1,20 +1,19 @@
 <script>
-  import { page } from '$app/stores'
+  import { page } from '$app/state'
+  import { resolve } from '$app/paths'
 
-  /** @type {string} */
-  export let href
-
-  /** @type {string} */
-  export let text
+  let { href, text, children } = $props()
 </script>
 
-<li class="link" aria-current={$page.url.pathname === href ? 'page' : null}>
+<li class="link" aria-current={page.url.pathname === resolve(href) ? 'page' : null}>
   <a
-    {href}
+    href={resolve(href)}
     class="flex items-center text-lg font-semibold tracking-widest transition-colors hover:text-[#7faddb] dark:font-normal dark:hover:text-[#7faddb]"
   >
-    <span class={$page.url.pathname === href ? 'text-black dark:text-white' : ''}>{text}</span>
-    <slot />
+    <span class={page.url.pathname === resolve(href) ? 'text-black dark:text-white' : ''}
+      >{text}</span
+    >
+    {@render children()}
   </a>
 </li>
 

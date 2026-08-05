@@ -1,9 +1,5 @@
 <script>
-  /** @type {string} */
-  export let className = ''
-  export let color = ''
-  export let width = '2rem'
-  export let height = '2rem'
+  let { className = '', color = '', width = '2rem', height = '2rem' } = $props()
 </script>
 
 <svg

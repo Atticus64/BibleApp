@@ -2,18 +2,19 @@
   import { onMount } from 'svelte'
   import Swal from 'sweetalert2'
 
-  import { notes } from '@/state/notes'
-  import { darkTheme } from '@/state/config'
+  import { notes } from '@/state/notes.svelte.js'
+  import { darkTheme } from '@/state/config.svelte.js'
   import { createAlert } from '@/services/alert'
   import Button from '@/components/Button.svelte'
   import { Stretch } from 'svelte-loading-spinners'
   import { API_BASE_URL } from '@/constants'
   import { goto } from '$app/navigation'
+  import { resolve } from '$app/paths'
 
-  let loadingNotes = true
-  let hasError = false
+  let loadingNotes = $state(true)
+  let hasError = $state(false)
 
-  if ($darkTheme) {
+  if (darkTheme.value) {
     import('@sweetalert2/theme-dark/dark.css')
   }
 
@@ -28,7 +29,7 @@
       .then(async (res) => {
         if (res.ok) {
           const info = await res.json()
-          notes.set(info)
+          notes.value = info
         } else {
           hasError = true
           localStorage.removeItem('user')
@@ -60,7 +61,7 @@
     })
 
     if (result.isConfirmed) {
-      notes.set($notes.filter((note) => note.id !== id))
+      notes.value = notes.value.filter((note) => note.id !== id)
 
       const res = await fetch(`${API_BASE_URL}/notes/${id}`, {
         method: 'DELETE',
@@ -79,7 +80,7 @@
   }
 </script>
 
-<wc-toast />
+<wc-toast></wc-toast>
 {#if loadingNotes}
   <div class="max-md flex flex-col justify-center self-center text-start align-middle">
     <span class="self-center">
@@ -88,13 +89,13 @@
     <h4>Cargando Notas</h4>
   </div>
 {:else if !loadingNotes && !hasError}
-  {#if $notes.length === 0}
+  {#if notes.value.length === 0}
     <p>No hay notas</p>
   {:else}
     <ul
       class="bg-primary-700 hover:bg-primary-800 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 focus:ring-primary-300 flex flex-row flex-wrap gap-3 rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 max-sm:flex-col 2xl:flex"
     >
-      {#each $notes as note}
+      {#each notes.value as note (note.id)}
         <li
           class="base-card block max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow dark:border-gray-700 dark:bg-gray-800"
         >
@@ -106,11 +107,13 @@
           </p>
           <div class="m-4 flex justify-end gap-4 align-middle">
             <Button
-              on:click={() => {
-                goto(`/notes/${note.id}`)
-              }}>Ver nota</Button
+              onclick={() => {
+                goto(resolve(`/notes/${note.id}`))
+              }}
             >
-            <Button on:click={() => deleteNote(note.id)}>Eliminar nota</Button>
+              Ver nota
+            </Button>
+            <Button onclick={() => deleteNote(note.id)}>Eliminar nota</Button>
           </div>
         </li>
       {/each}
@@ -125,7 +128,7 @@
       <p>Debes estar autenticado</p>
 
       <a
-        href="/login"
+        href={resolve('/login')}
         class="transition-colors', my-4 self-center bg-green-300 p-5 font-semibold text-black hover:bg-green-200 dark:bg-teal-200 dark:hover:bg-teal-400"
         >Go to Login</a
       >

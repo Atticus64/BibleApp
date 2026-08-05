@@ -10,12 +10,12 @@
     loadingResults,
     versionSearch,
     testament
-  } from '@/state/search'
+  } from '@/state/search.svelte.js'
   import { clickOutside } from '@/utils/clickOutside'
   import { Stretch } from 'svelte-loading-spinners'
 
-  let selectVersion = false
-  let selectTestament = false
+  let selectVersion = $state(false)
+  let selectTestament = $state(false)
 
   /** @type {number} */
   let timeout
@@ -31,7 +31,7 @@
     switch (prop) {
       case 'testament':
         if (typeof value === 'object') {
-          testament.set(value)
+          testament.value = value
           selectTestament = false
         }
         break
@@ -39,7 +39,7 @@
   }
 
   function handleSearch() {
-    search($versionSearch.url, $testament.url, true)
+    search(versionSearch.value.url, testament.value.url, true)
   }
 
   /**
@@ -48,7 +48,7 @@
    */
   function urlVerse(book, chapter) {
     const endpoint = `https://bible-study.vercel.app/read/${
-      $versionSearch.url
+      versionSearch.value.url
     }/${book.toLowerCase()}/${chapter}`
     return endpoint
   }
@@ -67,24 +67,24 @@
       const { query, controller } = searchBible({ version, testament })
       ctr = controller
 
-      query($pattern)
+      query(pattern.value)
         .then((d) => {
-          searchResults.set(d)
-          loadingResults.set(false)
+          searchResults.value = d
+          loadingResults.value = false
         })
         .catch((e) => {
           console.error(e)
-          loadingResults.set(false)
+          loadingResults.value = false
         })
     }
 
-    page.set(1)
+    page.value = 1
 
-    if (!$pattern) {
+    if (!pattern.value) {
       return
     }
 
-    loadingResults.set(true)
+    loadingResults.value = true
     if (!timer) {
       getResults()
       return
@@ -99,9 +99,9 @@
     }, 500)
   }
 
-  $: {
-    search($versionSearch.url, $testament.url, false)
-  }
+  $effect(() => {
+    search(versionSearch.value.url, testament.value.url, false)
+  })
 </script>
 
 <form class="m-2 pb-2">
@@ -115,8 +115,8 @@
       class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
       placeholder="Jesús, la verdad, pedro, etc..."
       required
-      bind:value={$pattern}
-      on:input={handleSearch}
+      bind:value={pattern.value}
+      oninput={handleSearch}
     />
     <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
       <svg
@@ -140,9 +140,10 @@
 
 <div class="flex items-center gap-3">
   <div
+    role="group"
     use:clickOutside
-    on:click_outside={() => (selectTestament = false)}
-    on:mouseleave={() => (selectTestament = false)}
+    onclick_outside={() => (selectTestament = false)}
+    onmouseleave={() => (selectTestament = false)}
   >
     <h4>Testamento</h4>
     <Button
@@ -150,19 +151,19 @@
       type="button"
       id="selectBook"
       className="w-12 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
-      on:click={() => (selectTestament = !selectTestament)}
+      onclick={() => (selectTestament = !selectTestament)}
     >
-      {$testament.name === '' ? 'Antiguo y Nuevo Testamento' : $testament.name}
+      {testament.value.name === '' ? 'Antiguo y Nuevo Testamento' : testament.value.name}
     </Button>
 
     {#if selectTestament}
       <ul
         class="list absolute flex h-fit flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
       >
-        {#each TESTAMENTS as t}
+        {#each TESTAMENTS as t (t.url)}
           <button
             class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
-            on:click={() => {
+            onclick={() => {
               updateData(t, 'testament')
             }}
           >
@@ -173,28 +174,29 @@
     {/if}
   </div>
   <div
+    role="group"
     use:clickOutside
-    on:click_outside={() => (selectVersion = false)}
-    on:mouseleave={() => (selectVersion = false)}
+    onclick_outside={() => (selectVersion = false)}
+    onmouseleave={() => (selectVersion = false)}
   >
     <h4>Version</h4>
     <Button
       color="green"
       id="selectBook"
       className="w-12 dark:text-white dark:bg-green-800 dark:border-none dark:hover:bg-green-600"
-      on:click={() => (selectVersion = !selectVersion)}
+      onclick={() => (selectVersion = !selectVersion)}
     >
-      {$versionSearch.name === '' ? 'Ingresa tu version' : $versionSearch.name}
+      {versionSearch.value.name === '' ? 'Ingresa tu version' : versionSearch.value.name}
     </Button>
 
     {#if selectVersion}
       <ul
         class="list absolute flex h-fit flex-col overflow-auto rounded bg-gray-50 ring-1 ring-gray-300"
       >
-        {#each versions as v}
+        {#each versions as v (v.url)}
           <button
-            on:click={() => {
-              versionSearch.set(v)
+            onclick={() => {
+              versionSearch.value = v
               selectVersion = false
             }}
             class="cursor-pointer select-none p-2 hover:bg-gray-200 dark:bg-[#1e293b] dark:hover:bg-[#445268]"
@@ -207,17 +209,17 @@
   </div>
 </div>
 
-{#if $loadingResults}
+{#if loadingResults.value}
   <div class="max-md flex justify-center self-center text-center align-middle">
     <section class="mt-4 flex flex-col items-center justify-center align-middle">
       <Stretch size="60" color="#FF3E00" unit="px" duration="1s" />
       <h4>Cargando Resultados</h4>
     </section>
   </div>
-{:else if $searchResults.data.length === 0}
+{:else if searchResults.value.data.length === 0}
   <p>No hay resultados</p>
-{:else if $searchResults.data.length > 0}
-  {#each $searchResults.data as vers}
+{:else if searchResults.value.data.length > 0}
+  {#each searchResults.value.data as vers (vers.id)}
     <div
       class="m-2 flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-6 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
     >
@@ -230,13 +232,14 @@
       <a
         href={urlVerse(vers.book, vers.chapter)}
         target="_blank"
+        rel="external"
         class="w-fit p-2 text-blue-500 underline">Leer este pasaje</a
       >
     </div>
   {/each}
 
   <div class="flex justify-center align-middle">
-    <PageMenu pageCount={$searchResults.meta.pageCount} />
+    <PageMenu pageCount={searchResults.value.meta.pageCount} />
   </div>
 {:else}
   <p>No se han podido obtener resultados</p>

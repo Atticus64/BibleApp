@@ -1,7 +1,7 @@
 <script>
   import StudyChapter from '@/components/StudyChapter.svelte'
 
-  export let data
+  let { data } = $props()
 </script>
 
 <StudyChapter

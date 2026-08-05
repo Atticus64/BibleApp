@@ -1,13 +1,11 @@
-import { writable } from 'svelte/store'
-
 /**
  * @typedef User
  * @property {boolean} loggedIn
  * @property {string} tag
- *  @property {string} email
- *  */
+ * @property {string} email
+ */
 
-export const user = writable({
+export const user = $state({
   loggedIn: false,
   tag: '',
   email: ''

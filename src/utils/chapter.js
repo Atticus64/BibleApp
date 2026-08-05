@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation'
+import { resolve } from '$app/paths'
 
 export function goToChapter() {
   const bkString = localStorage.getItem('bookmark')
@@ -10,11 +11,11 @@ export function goToChapter() {
     const version = bkmark.version
     const chapter = bkmark.chapter
 
-    goto(`/read/${version}/${book}/${chapter}`)
+    goto(resolve(`/read/${version}/${book}/${chapter}`))
     return
   }
 
-  goto('/read/rv1960/Genesis/1')
+  goto(resolve('/read/rv1960/Genesis/1'))
 }
 
 /**

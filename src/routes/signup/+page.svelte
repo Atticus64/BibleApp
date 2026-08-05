@@ -1,29 +1,31 @@
 <script>
   import { goto } from '$app/navigation'
+  import { resolve } from '$app/paths'
   import { singUp, updateUserInfo } from '@/services/api/auth'
 
   /**
    * @param {Event & { readonly submitter: HTMLElement | null }} event
    */
   async function onSubmit(event) {
+    event.preventDefault()
     const form = event.target
     if (!(form instanceof HTMLFormElement)) return
 
     const formData = Object.fromEntries(new FormData(form))
     const response = await singUp(formData)
 
-	if (!response.ok) {
-		return
-	}
-	
+    if (!response.ok) {
+      return
+    }
+
     await updateUserInfo()
 
-    goto('/')
+    goto(resolve('/'))
   }
 </script>
 
 <section>
-  <wc-toast />
+  <wc-toast></wc-toast>
   <div class="mx-auto flex flex-col items-center justify-center px-6 py-8 lg:py-0">
     <div
       class="w-full rounded-lg bg-white shadow dark:border dark:border-gray-700 dark:bg-gray-800 sm:max-w-md md:mt-0 xl:p-0"
@@ -34,7 +36,7 @@
         >
           Crea tu cuenta
         </h1>
-        <form class="space-y-4 md:space-y-6" on:submit|preventDefault={onSubmit}>
+        <form class="space-y-4 md:space-y-6" onsubmit={onSubmit}>
           <div>
             <label for="user" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
               >Nombre de usuario

@@ -1,14 +1,15 @@
 <script>
   import { goto } from '$app/navigation'
+  import { resolve } from '$app/paths'
   import Button from '@/components/Button.svelte'
   import { createAlert } from '@/services/alert.js'
   import { getInfoBook } from '@/services/api/auth.js'
-  import { book, chapter, version } from '@/state/bible'
+  import { book, chapter, version } from '@/state/bible.svelte.js'
   import { formatName, goToChapter } from '@/utils/chapter'
   import { onMount } from 'svelte'
 
-  export let data
-  let chapters = 0
+  let { data } = $props()
+  let chapters = $state(0)
 
   /**
    *
@@ -34,21 +35,21 @@
    * @param {number} chapt
    */
   function setChapter(chapt) {
-    chapter.set(chapt)
+    chapter.value = chapt
     goToPassage()
   }
 
   function goToPassage() {
-    if ($book === ' ' || $book === '' || $book === undefined) {
-      goto('/books')
-    } else if ($version === ' ' || $version === '' || $version === undefined) {
-      goto(`/versions`)
+    if (book.value === ' ' || book.value === '' || book.value === undefined) {
+      goto(resolve('/books'))
+    } else if (version.value === ' ' || version.value === '' || version.value === undefined) {
+      goto(resolve('/versions'))
     }
-    goto(`/read/${$version}/${$book}/${$chapter}`)
+    goto(resolve(`/read/${version.value}/${book.value}/${chapter.value}`))
   }
 </script>
 
-<wc-toast />
+<wc-toast></wc-toast>
 <section class="flex flex-col gap-6">
   <div class="flex flex-row justify-center align-middle">
     <h2>
@@ -59,9 +60,9 @@
   <div class="flex flex-row justify-center gap-4 p-4 align-middle">
     <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
       {#if chapters > 0}
-        {#each { length: chapters } as _, i}
+        {#each { length: chapters } as _, i (i)}
           <button
-            on:click={() => setChapter(i + 1)}
+            onclick={() => setChapter(i + 1)}
             class="w-[10rem] select-none rounded-sm bg-[#a8cae8] p-4 text-2xl transition-shadow hover:bg-[#7faddb] hover:shadow dark:bg-[#4366b2] dark:hover:bg-blue-600"
           >
             {i + 1}
@@ -72,7 +73,7 @@
   </div>
 </section>
 
-<Button color="blue" className="self-center w-fit p-4" on:click={() => window.history.back()}>
+<Button color="blue" className="self-center w-fit p-4" onclick={() => window.history.back()}>
   <span> Back </span>
   <svg xmlns="http://www.w3.org/2000/svg" width="3rem" height="3em" viewBox="0 0 1024 1024"
     ><path fill="currentColor" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64" /><path

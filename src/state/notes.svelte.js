@@ -1,6 +1,5 @@
 import { API_BASE_URL } from '@/constants'
 import { createAlert } from '@/services/alert'
-import { writable } from 'svelte/store'
 
 /**
  * @typedef Note
@@ -12,26 +11,24 @@ import { writable } from 'svelte/store'
  */
 
 /**
- * @typedef {import("svelte/store").Writable<Note[]>} Notes
+ * @type {{ value: Note[] }}
  */
+export const notes = $state({ value: [] })
 
 /**
- * @type {Notes}
+ * @type {{ value: Note }}
  */
-export const notes = writable([])
-
-/**
- * @type {import("svelte/store").Writable<Note>}
- */
-export const editableNote = writable({
-  body: '',
-  description: '',
-  title: '',
-  id: '',
-  page: ''
+export const editableNote = $state({
+  value: {
+    body: '',
+    description: '',
+    title: '',
+    id: '',
+    page: ''
+  }
 })
 
-export const editable = writable(true)
+export const editable = $state({ value: true })
 
 /**
  * @param {string} id
@@ -80,9 +77,9 @@ export async function sendCreateNote(formData) {
 }
 
 /**
- * 
- * @param {string} id 
- * @returns 
+ *
+ * @param {string} id
+ * @returns
  */
 export async function getNote(id) {
   const response = await fetch(`${API_BASE_URL}/notes/${id}`, {
@@ -90,7 +87,7 @@ export async function getNote(id) {
     headers: {
       'Content-Type': 'application/json'
     },
-    credentials: 'include',
+    credentials: 'include'
   })
 
   if (!response.ok) {

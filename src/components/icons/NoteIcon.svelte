@@ -1,9 +1,5 @@
 <script>
-  /** @type {number=} */
-  export let width = '24'
-
-  /** @type {number=} */
-  export let height = '24'
+  let { width = '24', height = '24' } = $props()
 </script>
 
 <svg

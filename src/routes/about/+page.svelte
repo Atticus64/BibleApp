@@ -70,7 +70,7 @@
 
         Y lo arreglare en la medida de lo posible 😄
       </p>
-      <p />
+      <p></p>
     </div>
   </div>
 </div>
@@ -93,7 +93,5 @@
     .questions {
       grid-template-columns: repeat(1, 1fr);
     }
-
-
   }
 </style>

@@ -1,5 +1,5 @@
+import { SvelteURL } from 'svelte/reactivity'
 import { API_BASE_URL } from '@/constants'
-import { writable } from 'svelte/store'
 
 /**
  * @typedef Verse
@@ -34,35 +34,37 @@ import { writable } from 'svelte/store'
  * @property {MetaData} meta
  */
 
-/**
- * @typedef {import("svelte/store").Writable<Result>} SearchResult
- */
-
-/** @type {SearchResult} */
-export const searchResults = writable({
-  data: [],
-  meta: {
-    page: 0,
-    pageCount: 0,
-    pageSize: 0,
-    total: 0
+/** @type {{ value: Result }} */
+export const searchResults = $state({
+  value: {
+    data: [],
+    meta: {
+      page: 0,
+      pageCount: 0,
+      pageSize: 0,
+      total: 0
+    }
   }
 })
 
-export const loadingResults = writable(false)
+export const loadingResults = $state({ value: false })
 
-export const pattern = writable('')
+export const pattern = $state({ value: '' })
 
-export const page = writable(1)
+export const page = $state({ value: 1 })
 
-export const versionSearch = writable({
-  name: 'Reina Valera 1960',
-  url: 'rv1960'
+export const versionSearch = $state({
+  value: {
+    name: 'Reina Valera 1960',
+    url: 'rv1960'
+  }
 })
 
-export const testament = writable({
-  name: '',
-  url: ''
+export const testament = $state({
+  value: {
+    name: '',
+    url: ''
+  }
 })
 
 /**
@@ -77,19 +79,19 @@ export function searchBible({ version, testament }) {
       return Promise.reject('No hay nada que buscar')
     }
 
-    /** @type {URL} */
+    /** @type {SvelteURL} */
     let url
 
     if (!testament) {
-      url = new URL(`${API_BASE_URL}/api/read/${version}/search`)
+      url = new SvelteURL(`${API_BASE_URL}/api/read/${version}/search`)
       url.searchParams.set('q', search)
     } else {
-      url = new URL(`${API_BASE_URL}/api/read/${version}/search`)
+      url = new SvelteURL(`${API_BASE_URL}/api/read/${version}/search`)
       url.searchParams.set('testament', testament)
       url.searchParams.set('q', search)
     }
 
-    return fetch(url, {
+    return fetch(url.href, {
       signal: controller.signal
     }).then((res) => res.json())
   }
@@ -104,7 +106,7 @@ export function searchBible({ version, testament }) {
       return Promise.reject('No hay nada que buscar')
     }
 
-    const url = new URL(`${API_BASE_URL}/api/read/${version}/search`)
+    const url = new SvelteURL(`${API_BASE_URL}/api/read/${version}/search`)
     url.searchParams.set('q', search)
     if (testament) {
       url.searchParams.set('testament', testament)
@@ -112,7 +114,7 @@ export function searchBible({ version, testament }) {
 
     url.searchParams.set('page', page.toString())
 
-    return fetch(url, {
+    return fetch(url.href, {
       signal: controller.signal
     }).then((res) => res.json())
   }
