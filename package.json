@@ -8,8 +8,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint --fix src/**/*.{js,svelte}",
+    "lint:check": "eslint src/**/*.{js,svelte}",
     "validate": "pnpm format && pnpm check && pnpm lint",
     "format": "prettier --write src/**/*.{svelte,html,json}",
+    "format:check": "prettier --check src/**/*.{svelte,html,json}",
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json"
   },
   "devDependencies": {
